@@ -1,5 +1,6 @@
 package com.example.buensaborback.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,12 +14,13 @@ import lombok.*;
 public class ArticuloManufacturadoDetalle extends Base {
     private Integer cantidad;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "articulo_insumo_id")
     private ArticuloInsumo articuloInsumo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "articulo_manufacturado_id")
+    @JsonBackReference
     private ArticuloManufacturado articuloManufacturado;
 
 //    @ManyToOne

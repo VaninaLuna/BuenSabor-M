@@ -2,6 +2,7 @@ package com.example.buensaborback.domain.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,9 +28,11 @@ public abstract class Articulo extends Base{
     protected Double precioVenta;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "articulo_id") // Nombre de la columna en la tabla Imagen que referencia al Articulo
+    //@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "articulo", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JoinColumn(name = "articulo_id") // Nombre de la columna en la tabla Imagen que referencia al Articulo
     @Builder.Default
+    @JsonManagedReference
     protected Set<Imagen> imagenes = new HashSet<>();
 
     @ManyToOne
