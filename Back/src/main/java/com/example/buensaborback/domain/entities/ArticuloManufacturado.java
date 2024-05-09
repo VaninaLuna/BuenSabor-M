@@ -22,7 +22,7 @@ public class ArticuloManufacturado extends Articulo{
     private String preparacion;
 
     @OneToMany(mappedBy = "articuloManufacturado", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JoinColumn(name= "articulo_manufacturado_id")
+//    @JoinColumn(name= "articulo_manufacturado_id")
     @Builder.Default
     @JsonManagedReference
     private Set<ArticuloManufacturadoDetalle> articuloManufacturadoDetalles = new HashSet<>();

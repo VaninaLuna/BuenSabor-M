@@ -18,7 +18,7 @@ public class ArticuloManufacturadoDetalle extends Base {
     @JoinColumn(name = "articulo_insumo_id")
     private ArticuloInsumo articuloInsumo;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "articulo_manufacturado_id")
     @JsonBackReference
     private ArticuloManufacturado articuloManufacturado;
