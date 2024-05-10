@@ -7,13 +7,14 @@ import { deleteArticuloInsumoXId, getArticulosInsumos } from '../servicios/Funci
 export function GrillaArticuloInsumo() {
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState(false);
-    
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
     const [articulosInsumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
-    
-    const getListadoArticulosInsumos =  async () => {
-        const datos:ArticuloInsumo[] = await getArticulosInsumos();
+
+    const getListadoArticulosInsumos = async () => {
+        const datos: ArticuloInsumo[] = await getArticulosInsumos();
         setArticulosInsumos(datos);
-      }
+    };
 
 
     const handleOpenCreate = () => {
@@ -29,29 +30,31 @@ export function GrillaArticuloInsumo() {
     const handleClose = () => {
         setShowModal(false);
         setEditing(false);
+        setSelectedId(null);
     };
 
     const deleteArticuloInsumo = async (idArticuloInsumo:number) => {
         await deleteArticuloInsumoXId(idArticuloInsumo);
         window.location.reload();
-      }
+    }
 
     useEffect(() => {
-        getListadoArticulosInsumos();        
+        getListadoArticulosInsumos();
     }, []);
 
 
     return (
         <>
-            <Button onClick={handleOpenCreate}>
+            <Button variant="info" style={{margin: 50}} onClick={handleOpenCreate}>
                 Crear Articulo Insumo
             </Button>
             <ModalArticuloInsumo
                 handleClose={handleClose}
                 showModal={showModal}
                 editing={editing}
+                selectedId={selectedId}
             />
-             <br/>
+            <br/>
             <div className="row">
                 <div className="col">
                 <b>ID</b>
@@ -83,15 +86,12 @@ export function GrillaArticuloInsumo() {
                 <div className="col">
                 <b>Es Para Elaborar</b>
                 </div>
-                <div className="col">
-                <b>Modificar</b>
-                </div>
-                <div className="col">
-                <b>Eliminar</b>
-                </div>
+                <div className="col" style={{minWidth:"200px"}}>
+                <b>Opciones</b>
+                </div>               
             </div>
             <hr/>
-            {articulosInsumos.map((articuloInsumo:ArticuloInsumo, index) => 
+            {articulosInsumos.map((articuloInsumo:ArticuloInsumo, index) =>
             <div className="row" key={index}>
                 <div className="col" style={{maxWidth:"80px"}}>
                 {articuloInsumo.id}
@@ -124,12 +124,10 @@ export function GrillaArticuloInsumo() {
                 <div className="col">
                 {articuloInsumo.esParaElaborar ? 'Si' : 'No'}
                 </div>
-                <div className="col">
-                <a className="btn btn-info" style={{ marginBottom:10 }} onClick={handleOpenEdit}>Modificar</a>
+                <div className="col" style={{minWidth:"200px"}}>
+                    <Button variant="outline-warning" onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
+                    <Button variant="outline-danger" onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
                 </div>
-                <div className="col">
-                <a className="btn btn-danger" style={{ marginBottom:10 }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</a>
-                </div>               
             </div> )}
         </>
     );
