@@ -10,7 +10,7 @@ export default class ArticuloInsumo{
     stockActual:number = 0;
     stockMaximo:number = 0;
     esParaElaborar:boolean = false;
-    imagen:Imagen[] = [];
+    imagenes:Imagen[] = [];
     unidadMedida:UnidadMedida = new UnidadMedida();
     categoria:Categoria = new Categoria();
 }

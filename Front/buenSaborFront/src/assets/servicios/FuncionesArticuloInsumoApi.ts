@@ -2,8 +2,8 @@ import ArticuloInsumo from "../entidades/ArticuloInsumo";
 
 
 //GET
-export async function getArticuloInsumo() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:9000/instrumento/all';
+export async function getArticulosInsumos() {
+    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloInsumo/all';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -15,12 +15,12 @@ export async function getArticuloInsumo() {
         const json = await response.json();
         return json as ArticuloInsumo[];
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }
 
 export async function getArticuloInsumoPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:9000/instrumento/${id}`;
+    const INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -32,17 +32,17 @@ export async function getArticuloInsumoPorID(id: number) {
         const json = await response.json();
         return json as ArticuloInsumo;
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }
 
 //POST - PUT
-export async function saveArticuloInsumo(instrumento?: ArticuloInsumo) {
-    let endpoint = 'http://localhost:9000/instrumento';
+export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
+    let endpoint = 'http://localhost:8080/articuloInsumo';
     let method: string = "POST";
 
-    if (instrumento && instrumento.id != '') {
-        endpoint = `http://localhost:9000/instrumento/${instrumento.id}`;
+    if (articuloInsumo && articuloInsumo.id !== 0) {
+        endpoint = `http://localhost:8080/articuloInsumo/${articuloInsumo.id}`;
         method = "PUT";
     }
 
@@ -51,13 +51,13 @@ export async function saveArticuloInsumo(instrumento?: ArticuloInsumo) {
         "headers": {
             "Content-Type": 'application/json'
         },
-        "body": JSON.stringify(instrumento)
+        "body": JSON.stringify(articuloInsumo)
     });
 }
 
 //DELETE
-export async function deleteArticuloInsumo(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:9000/instrumento/${id}`
+export async function deleteArticuloInsumoXId(id: number) {
+    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
@@ -65,12 +65,12 @@ export async function deleteArticuloInsumo(id: number) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al eliminar el instrumento: ${response.status} ${response.statusText}`);
+            throw new Error(`Error al eliminar el articuloInsumo: ${response.status} ${response.statusText}`);
         }
 
         const isDeleted = await response.json();
         return isDeleted as boolean;
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }

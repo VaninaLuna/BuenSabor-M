@@ -1,6 +1,8 @@
-export function GrillaArticuloManufacturado(){
-    return(
+
+export function GrillaArticuloManufacturado() {
+    return (
         <>
+
         </>
     )
 }
