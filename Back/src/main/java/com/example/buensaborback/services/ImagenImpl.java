@@ -1,5 +1,6 @@
 package com.example.buensaborback.services;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.Imagen;
 import com.example.buensaborback.repositories.ImagenRepository;
 import jakarta.transaction.Transactional;
@@ -30,5 +31,13 @@ public class ImagenImpl implements ImagenService{
     public Imagen findById(Long id) throws Exception {
         return imagenRepository.findById(id).
                 orElseThrow(() -> new NoSuchElementException("No existe una imagen con ese id"));
+    }
+    @Override
+    public Imagen save(Imagen imagen) throws Exception {
+        try {
+            return imagenRepository.save(imagen);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 }

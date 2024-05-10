@@ -118,6 +118,17 @@ public class BuenSaborBackApplication {
 //                    .build();
 //            articuloManufacturadoRepository.save(hamburguesasConPapas);
 //
+//            ArticuloManufacturado pizza = ArticuloManufacturado.builder()
+//                    .denominacion("pizza")
+//                    .descripcion("La mejor pizza del pais")
+//                    .unidadMedida(unidadMedidaUnidad)
+//                    .precioVenta(180.0)
+//                    .tiempoEstimadoMinutos(20)
+//                    .preparacion("pizza con anana")
+//                    .categoria(frituras) // categoria en articulo manufacturado
+//                    .build();
+//            articuloManufacturadoRepository.save(pizza);
+//
 //            logger.info("----------------Crear imagen para articulo manufacturado---------------------");
 //            Imagen imagenBurguer = Imagen.builder()
 //                    .url("https://mandolina.co/wp-content/uploads/2023/03/648366622-1024x683.jpg")
@@ -139,6 +150,13 @@ public class BuenSaborBackApplication {
 //                    .cantidad(10)
 //                    .build();
 //            articuloManufacturadoDetalleRepository.save(detalle2);
+//
+//            ArticuloManufacturadoDetalle detalle3 = ArticuloManufacturadoDetalle.builder()
+//                    .articuloInsumo(hamburguesa)
+//                    .articuloManufacturado(pizza)
+//                    .cantidad(5)
+//                    .build();
+//            articuloManufacturadoDetalleRepository.save(detalle3);
 //
 //        };
 //    }

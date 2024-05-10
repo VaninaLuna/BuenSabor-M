@@ -14,7 +14,7 @@ import lombok.*;
 public class ArticuloManufacturadoDetalle extends Base {
     private Integer cantidad;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "articulo_insumo_id")
     private ArticuloInsumo articuloInsumo;
 

@@ -1,5 +1,6 @@
 package com.example.buensaborback.services;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.ArticuloManufacturadoDetalle;
 import com.example.buensaborback.repositories.ArticuloManufacturadoDetalleRepository;
 import jakarta.transaction.Transactional;
@@ -29,5 +30,22 @@ public class ArticuloManufacturadoDetalleImpl implements ArticuloManufacturadoDe
     public ArticuloManufacturadoDetalle findById(Long id) throws Exception {
         return articuloManufacturadoDetalleRepository.findById(id).
                 orElseThrow(() -> new NoSuchElementException("No existe un Articulo Manufacturado Detalle con ese id"));
+    }
+
+    @Override
+    public ArticuloManufacturadoDetalle save(ArticuloManufacturadoDetalle articuloManufacturadoDetalle) throws Exception {
+        try {
+            return articuloManufacturadoDetalleRepository.save(articuloManufacturadoDetalle);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+    @Override
+    public List<ArticuloManufacturadoDetalle> saveAll(List<ArticuloManufacturadoDetalle> articuloManufacturadoDetalleList) throws Exception {
+        try {
+            return articuloManufacturadoDetalleRepository.saveAll(articuloManufacturadoDetalleList);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 }

@@ -34,15 +34,6 @@ public class ArticuloManufacturadoController {
         }
     }
 
-//    @GetMapping("/allArticuloInsumo")
-//    public ResponseEntity<List<ArticuloManufacturado>> getByCategoriaId(@PathVariable Long idCategoria){
-//        try {
-//            return ResponseEntity.ok(articuloManufacturadoService.findByCategoriaInstrumento_Id(idCategoria));
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @PostMapping
     public ResponseEntity<ArticuloManufacturado> save(@RequestBody ArticuloManufacturado articuloManufacturado){
         try {
