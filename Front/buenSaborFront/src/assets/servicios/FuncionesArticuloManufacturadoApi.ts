@@ -1,7 +1,7 @@
 import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 
 //GET
-export async function getArticuloManufacturado() {
+export async function getArticulosManufacturados() {
     const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloManufacturado/all';
 
     try {
@@ -14,11 +14,11 @@ export async function getArticuloManufacturado() {
         const json = await response.json();
         return json as ArticuloManufacturado[];
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloManufacturado')
     }
 }
 
-export async function getArticuloManufacturadoPorID(id: number) {
+export async function getArticuloManufacturadoXId(id: number) {
     const INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloManufacturado/${id}`;
 
     try {
@@ -31,7 +31,7 @@ export async function getArticuloManufacturadoPorID(id: number) {
         const json = await response.json();
         return json as ArticuloManufacturado;
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloManufacturado')
     }
 }
 
@@ -40,12 +40,12 @@ export async function getArticuloManufacturadoPorID(id: number) {
 
 
 //POST - PUT
-export async function saveArticuloManufacturado(instrumento?: ArticuloManufacturado) {
-    let endpoint = 'http://localhost:9000/instrumento';
+export async function saveArticuloManufacturado(articuloManufacturado?: ArticuloManufacturado) {
+    let endpoint = 'http://localhost:8080/articuloManufacturado';
     let method: string = "POST";
 
-    if (instrumento && instrumento.id !== 0) {
-        endpoint = `http://localhost:9000/instrumento/${instrumento.id}`;
+    if (articuloManufacturado && articuloManufacturado.id !== 0) {
+        endpoint = `http://localhost:8080/articuloManufacturado/${articuloManufacturado.id}`;
         method = "PUT";
     }
 
@@ -54,13 +54,13 @@ export async function saveArticuloManufacturado(instrumento?: ArticuloManufactur
         "headers": {
             "Content-Type": 'application/json'
         },
-        "body": JSON.stringify(instrumento)
+        "body": JSON.stringify(articuloManufacturado)
     });
 }
 
 //DELETE
-export async function deleteArticuloManufacturado(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:9000/instrumento/${id}`
+export async function deleteArticuloManufacturadoXId(id: number) {
+    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloManufacturado/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
@@ -68,12 +68,12 @@ export async function deleteArticuloManufacturado(id: number) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al eliminar el instrumento: ${response.status} ${response.statusText}`);
+            throw new Error(`Error al eliminar el articuloManufacturado: ${response.status} ${response.statusText}`);
         }
 
         const isDeleted = await response.json();
         return isDeleted as boolean;
     } catch (e) {
-        throw new Error('Error al hacer fetch de instrumentos')
+        throw new Error('Error al hacer fetch de articuloManufacturado')
     }
 }
