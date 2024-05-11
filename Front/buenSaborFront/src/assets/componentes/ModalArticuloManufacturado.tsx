@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import Categoria from '../entidades/Categoria';
 import { getCategorias } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
@@ -30,7 +30,6 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         handleClose();
 
         // Limpia el estado
-        setArticulosInsumos([]);
         setImagenes(['']);
         setTxtValidacion("");
     };
@@ -210,16 +209,17 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                         <Form.Control type="text" name="denominacion" value={manufacturado?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Precio de Venta</Form.Label>
-                        <Form.Control type="number" name="precioVenta" value={manufacturado?.precioVenta} onChange={handleInputChange} />
-                    </Form.Group>
+                    <Row>
+                        <Form.Group as={Col} className="mb-3">
+                            <Form.Label>Precio de Venta</Form.Label>
+                            <Form.Control type="number" name="precioVenta" value={manufacturado?.precioVenta} onChange={handleInputChange} />
+                        </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Tiempo Estimado en Minutos</Form.Label>
-                        <Form.Control type="number" name="tiempoEstimadoMinutos" value={manufacturado?.tiempoEstimadoMinutos} onChange={handleInputChange} />
-                    </Form.Group>
-
+                        <Form.Group as={Col} className="mb-3">
+                            <Form.Label>Tiempo Estimado en Minutos</Form.Label>
+                            <Form.Control type="number" name="tiempoEstimadoMinutos" value={manufacturado?.tiempoEstimadoMinutos} onChange={handleInputChange} />
+                        </Form.Group>
+                    </Row>
                     <Form.Group className="mb-3">
                         <Form.Label>Descripcion</Form.Label>
                         <Form.Control type="text" name="descripcion" value={manufacturado?.descripcion} onChange={handleInputChange} />
@@ -253,18 +253,23 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                     </Form.Group>
 
                     {manufacturado.articuloManufacturadoDetalles.map((detalle, index) => (
-                        <Form.Group className="mb-3" key={index}>
-                            <Form.Label>Agregar insumo {index + 1}</Form.Label>
-                            <Form.Select aria-label="insumo" name="insumo" value={detalle.articuloInsumo.id} 
-                            onChange={e => handleSelectInsumoChange(e, index)}>
-                                <option value={0}>Seleccionar un Insumo</option>
-                                {insumos.map((insumo: ArticuloInsumo) =>
-                                    <option key={insumo.id} value={insumo.id}> {insumo.denominacion} </option>
-                                )}
-                            </Form.Select>
-                            <Form.Label>Cantidad</Form.Label>
-                            <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
-                        </Form.Group>
+                         <Row key={index}>
+                         <Form.Group as={Col} className="mb-3">
+                             <Form.Label>Agregar insumo {index + 1}</Form.Label>
+                             <Form.Select aria-label="insumo" name="insumo" value={detalle.articuloInsumo.id} 
+                             onChange={e => handleSelectInsumoChange(e, index)}>
+                                 <option value={0}>Seleccionar un Insumo</option>
+                                 {insumos.map((insumo: ArticuloInsumo) =>
+                                     <option key={insumo.id} value={insumo.id}> {insumo.denominacion} </option>
+                                 )}
+                             </Form.Select>
+                         </Form.Group>
+     
+                         <Form.Group as={Col} className="mb-3">
+                             <Form.Label>Cantidad</Form.Label>
+                             <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
+                         </Form.Group>
+                     </Row>
                     ))}
                     <Button variant="secondary" onClick={handleAddDetalle}>Agregar Insumo</Button>
 
