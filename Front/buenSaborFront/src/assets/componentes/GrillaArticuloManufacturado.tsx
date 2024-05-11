@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import { deleteArticuloManufacturadoXId, getArticulosManufacturados } from "../servicios/FuncionesArticuloManufacturadoApi";
 import { Button } from "react-bootstrap";
+import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 
 export function GrillaArticuloManufacturado() {
     
-    // const [showModal, setShowModal] = useState(false);
-    // const [editing, setEditing] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
     
     
     const [articulosmanufacturados, setArticulosmanufacturados] = useState<ArticuloManufacturado[]>([]);
@@ -17,19 +19,19 @@ export function GrillaArticuloManufacturado() {
     };
 
     const handleOpenCreate = () => {
-        // setShowModal(true);
-        // setEditing(false);
+        setShowModal(true);
+        setEditing(false);
     };
 
     const handleOpenEdit = () => {
-        // setShowModal(true);
-        // setEditing(true);
+        setShowModal(true);
+        setEditing(true);
     };
 
-    // const handleClose = () => {
-    //     setShowModal(false);
-    //     setEditing(false);
-    // };
+    const handleClose = () => {
+        setShowModal(false);
+        setEditing(false);
+    };
 
     const deleteArticuloManufacturado = async (idArticuloManufacturado:number) => {
         await deleteArticuloManufacturadoXId(idArticuloManufacturado);
@@ -45,7 +47,13 @@ export function GrillaArticuloManufacturado() {
         <Button variant="info" style={{margin: 50}} onClick={handleOpenCreate}>
                 Crear Articulo Manufacturado
             </Button>
-        <br/>
+            <ModalArticuloManufacturado
+                handleClose={handleClose}
+                showModal={showModal}
+                editing={editing}
+                selectedId={selectedId}
+            />
+            <br/>
             <div className="row">
                 <div className="col">
                 <b>ID</b>
@@ -111,7 +119,7 @@ export function GrillaArticuloManufacturado() {
                 </div>   
                 <div className="col" style={{minWidth:"300px"}}>
                     <Button variant="outline-info" onClick={handleOpenEdit}>Insumos</Button>
-                    <Button variant="outline-warning" onClick={handleOpenEdit}>Modificar</Button>
+                    <Button variant="outline-warning" onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
                     <Button variant="outline-danger" onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
                 </div>               
             </div> )}
