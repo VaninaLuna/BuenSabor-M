@@ -56,7 +56,7 @@ export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
 }
 
 //DELETE
-export async function deleteArticuloInsumoXId(id: number) {
+export async function deleteArticuloInsumoPorID(id: number) {
     const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`
 
     try {

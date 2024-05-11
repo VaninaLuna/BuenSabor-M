@@ -59,7 +59,7 @@ export async function saveArticuloManufacturado(articuloManufacturado?: Articulo
 }
 
 //DELETE
-export async function deleteArticuloManufacturadoXId(id: number) {
+export async function deleteArticuloManufacturadoPorID(id: number) {
     const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloManufacturado/${id}`
 
     try {

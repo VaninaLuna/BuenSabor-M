@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { deleteArticuloInsumoXId, getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
 
 export function GrillaArticuloInsumo() {
     const [showModal, setShowModal] = useState(false);
@@ -33,8 +33,15 @@ export function GrillaArticuloInsumo() {
         setSelectedId(null);
     };
 
+
+    // --------------PARA LOS MODALES DE CATEGORIA Y UNIDAD DE MEDIDA----------------
+    const handleOpenCreateCategoria = () => {};
+    const handleOpenCreateUnidadMedida = () => {};
+    //-------------------------------------------------------------------------------
+
+
     const deleteArticuloInsumo = async (idArticuloInsumo:number) => {
-        await deleteArticuloInsumoXId(idArticuloInsumo);
+        await deleteArticuloInsumoPorID(idArticuloInsumo);
         window.location.reload();
     }
 
@@ -129,6 +136,14 @@ export function GrillaArticuloInsumo() {
                     <Button variant="outline-danger" onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
                 </div>
             </div> )}
+
+
+            <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateCategoria}>
+                Crear Categoria
+            </Button>
+            <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateUnidadMedida}>
+                Crear Unidad de Medida
+            </Button>
         </>
     );
 }

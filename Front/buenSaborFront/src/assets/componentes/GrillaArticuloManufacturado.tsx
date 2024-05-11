@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
-import { deleteArticuloManufacturadoXId, getArticulosManufacturados } from "../servicios/FuncionesArticuloManufacturadoApi";
+import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../servicios/FuncionesArticuloManufacturadoApi";
 import { Button, Accordion } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 
@@ -34,7 +34,7 @@ export function GrillaArticuloManufacturado() {
     };
 
     const deleteArticuloManufacturado = async (idArticuloManufacturado:number) => {
-        await deleteArticuloManufacturadoXId(idArticuloManufacturado);
+        await deleteArticuloManufacturadoPorID(idArticuloManufacturado);
         window.location.reload();
       }
 
