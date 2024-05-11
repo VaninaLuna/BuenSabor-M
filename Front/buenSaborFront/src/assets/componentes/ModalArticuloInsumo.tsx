@@ -15,19 +15,30 @@ interface ModalProps {
 }
 
 export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
-    
-    const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
-    const [categorias, setCategoria] = useState<Categoria[]>([]);
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<number>(0);
-    const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
-    const [unidadMedidaSeleccionada, setUnidadMedidaSeleccionada] = useState<number>(0);
-    const [txtValidacion, setTxtValidacion] = useState<string>("");
-    const [imagenes, setImagenes] = useState<string[]>(['']);
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const [categorias, setCategoria] = useState<Categoria[]>([]);
+    const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
+    const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
+    const [imagenes, setImagenes] = useState<string[]>(['']);
+    const [txtValidacion, setTxtValidacion] = useState<string>("");
+
+    const handleCloseAndClear = () => {
+        // Llama a handleClose
+        handleClose();
+
+        // Limpia el estado de imagenes
+        setImagenes(['']);
+        setTxtValidacion("");
+    };
+
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
         const newImagenes = [...imagenes];
         newImagenes[index] = e.target.value;
         setImagenes(newImagenes);
+
+        // Limpiamos el mensaje de validación
+        setTxtValidacion("");
     }
 
     const handleAddImage = () => {
@@ -41,75 +52,104 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
 
         getUnidades()
             .then(data => setUnidadesMedida(data))
-            .catch(e => console.error(e));   
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            .catch(e => console.error(e));
     }, [])
 
     useEffect(() => {
-        if (insumo.categoria) {
-            setCategoriaSeleccionada(insumo.categoria.id);
-        }
-    }, [insumo]);
-
-    useEffect(() => {
         if (!selectedId) {
-            setArticuloInsumo(new ArticuloInsumo());            
-        } else {            
+            setArticuloInsumo(new ArticuloInsumo());
+        } else {
             getArticuloInsumoPorID(selectedId)
                 .then(data => {
                     setArticuloInsumo(data)
-                    setCategoriaSeleccionada(data.categoria.id)
-                    setUnidadMedidaSeleccionada(data.unidadMedida.id)
                     setImagenes(data.imagenes.map(img => img.url));
                 })
                 .catch(e => console.error(e));
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedId])
 
-    const save = async () => {
-        if(insumo?.denominacion === undefined || insumo.denominacion === ""){
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        let value: string | boolean;
+
+        if (e.target.type === 'checkbox') {
+            value = (e.target as HTMLInputElement).checked;
+        } else {
+            value = e.target.value;
+        }
+
+        // Limpiamos el mensaje de validación
+        setTxtValidacion("");
+
+        if (e.target.name === 'categoria') {
+            const selectedCategoria = categorias.find(categoria => categoria.id === Number(value));
+            if (selectedCategoria) {
+                setArticuloInsumo({ ...insumo, categoria: selectedCategoria });
+            }
+        } else if (e.target.name === 'unidadMedida') {
+            const selectedUnidadMedida = unidades.find(unidad => unidad.id === Number(value));
+            if (selectedUnidadMedida) {
+                setArticuloInsumo({ ...insumo, unidadMedida: selectedUnidadMedida });
+            }
+        } else {
+            setArticuloInsumo({ ...insumo, [e.target.name]: value });
+        }
+    };
+
+    // Manejador de envío del formulario
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        if (insumo?.denominacion === undefined || insumo.denominacion === "") {
             setTxtValidacion("Debe ingresar una denominacion");
             return;
         }
-        if(insumo.precioVenta === undefined || insumo.precioVenta === 0){
+        if (insumo.precioVenta === undefined || insumo.precioVenta === 0) {
             setTxtValidacion("Debe ingresar un precio de venta");
             return;
         }
-        if(!insumo.imagenes){
-            setTxtValidacion("Debe ingresar un modelo");
+        if (!insumo.imagenes || imagenes.every(url => url === "")) {
+            setTxtValidacion("Debe ingresar al menos una imagen");
             return;
         }
-        if(insumo.unidadMedida.denominacion === undefined || insumo.unidadMedida.denominacion === ""){
+        if (insumo.unidadMedida.denominacion === undefined || insumo.unidadMedida.denominacion === "") {
             setTxtValidacion("Debe ingresar una unidad de medida");
             return;
         }
-        if(insumo.categoria.denominacion === undefined || insumo.categoria.denominacion === ""){
+        if (insumo.categoria.denominacion === undefined || insumo.categoria.denominacion === "") {
             setTxtValidacion("Debe ingresar una categoria");
             return;
         }
-        if(insumo.precioCompra === undefined || insumo.precioCompra === 0){
+        if (insumo.precioCompra === undefined || insumo.precioCompra === 0) {
             setTxtValidacion("Debe ingresar un precioCompra");
             return;
         }
-        if(insumo.stockActual === undefined || insumo.stockActual === 0){
+        if (insumo.stockActual === undefined || insumo.stockActual === 0) {
             setTxtValidacion("Debe ingresar un stock Actual");
             return;
         }
-        if(insumo.stockMaximo === undefined || insumo.stockMaximo === 0){
+        if (insumo.stockMaximo === undefined || insumo.stockMaximo === 0) {
             setTxtValidacion("Debe ingresar un stock Maximo");
             return;
         }
 
+
         // Creas nuevos objetos de imagen con las URLs proporcionadas
         const nuevasImagenes = imagenes.map((url) => ({ id: 0, url }));
+        console.log("NUEVAS IMAGENES" + JSON.stringify(nuevasImagenes))
+
+        // Creas una copia del estado del insumo
+        const insumoActualizado = { ...insumo };
+
+        // Actualizas la copia del insumo
+        insumoActualizado.imagenes = nuevasImagenes;
+
         // Luego, asignas el array de nuevas imágenes al estado del insumo
-        insumo.imagenes = nuevasImagenes;
+        setArticuloInsumo(insumoActualizado);
 
-        console.log(insumo);
-
-       await saveArticuloInsumo(insumo).then(handleClose);       
-    }
+        console.log(JSON.stringify(insumoActualizado));
+        await saveArticuloInsumo(insumoActualizado);
+        window.location.reload();
+    };
 
     return (
         <Modal show={showModal} onHide={handleClose}>
@@ -118,35 +158,30 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
             </Modal.Header>
 
             <Modal.Body>
-                <Form> {/* onSubmit={save} */}
+                <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
-                        <Form.Control type="text" name="denominacion" defaultValue={insumo?.denominacion} 
-                        onChange={e => insumo.denominacion = String(e.target.value)}/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Precio de Compra</Form.Label>
-                        <Form.Control type="number" name="precioCompra" defaultValue={insumo?.precioCompra}
-                        onChange={e => insumo.precioCompra = Number(e.target.value)}/>
+                        <Form.Control type="text" name="denominacion" value={insumo?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Precio de Venta</Form.Label>
-                        <Form.Control type="number" name="precioVenta" defaultValue={insumo?.precioVenta}
-                        onChange={e => insumo.precioVenta = Number(e.target.value)}/>
+                        <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Precio de Compra</Form.Label>
+                        <Form.Control type="number" name="precioCompra" value={insumo?.precioCompra} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Stock Actual</Form.Label>
-                        <Form.Control type="number" name="stockActual" defaultValue={insumo?.stockActual}
-                        onChange={e => insumo.stockActual = Number(e.target.value)}/>
+                        <Form.Control type="number" name="stockActual" value={insumo?.stockActual} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Stock Maximo</Form.Label>
-                        <Form.Control type="number" name="stockMaximo" defaultValue={insumo?.stockMaximo}
-                        onChange={e => insumo.stockMaximo = Number(e.target.value)}/>
+                        <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -155,59 +190,40 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                             id="custom-switch"
                             label="¿Es para elaborar?"
                             name="esParaElaborar"
-                            defaultChecked={insumo?.esParaElaborar}
-                            onChange={e => insumo.esParaElaborar = Boolean(e.target.value)}
+                            checked={insumo?.esParaElaborar}
+                            onChange={handleInputChange}
                         />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Categoria</Form.Label>
-                        <Form.Select aria-label="categoria" name="categoria" defaultValue={categoriaSeleccionada} 
-                         onChange={e => {
-                            const categoriaId = Number(e.target.value);
-                            setCategoriaSeleccionada(categoriaId);
-                            const categoria = categorias.find(c => c.id === categoriaId);
-                            if (categoria && insumo) {
-                                insumo.categoria = categoria;
-                            }
-                        }}>
-                            <option value={0}>Selecciona una Categoría</option>
-                            {categorias.map((categoria: Categoria) => 
-                                <option key={categoria.id} value={categoria.id}>{categoria.denominacion}</option>
+                        <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange}>
+                            <option value={0}>Seleccionar Categoria</option>
+
+                            {categorias.map((categoria: Categoria) =>
+                                <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
                             )}
                         </Form.Select>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Unidad de medida</Form.Label>
-                        <Form.Select aria-label="unidad" name="unidadMedida" defaultValue={unidadMedidaSeleccionada} 
-                         onChange={e => {
-                            const unidadMedidaId = Number(e.target.value);
-                            setUnidadMedidaSeleccionada(unidadMedidaId);
-                            const unidadMedida = unidades.find(u => u.id === unidadMedidaId);
-                            if (unidadMedida && insumo) {
-                                insumo.unidadMedida = unidadMedida;
-                            }
-                        }}>
-                            <option value={0}>Selecciona una Unidad de Medida</option>
-                            {unidades.map((unidad: UnidadMedida) => 
-                                <option key={unidad.id} value={unidad.id}>{unidad.denominacion}</option>
+                        <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange}>
+                            <option value={0}>Seleccionar Unidad de medida</option>
+
+                            {unidades.map((unidad: UnidadMedida) =>
+                                <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
                             )}
                         </Form.Select>
                     </Form.Group>
 
-                    {/* <Form.Group className="mb-3">
-                        <Form.Label>Agregar URL de la Imagen</Form.Label>
-                        <Form.Control type="text" name="urlImagen" defaultValue={insumo?.imagenes[0]?.url}
-                        onChange={e => insumo.imagenes[0].url = String(e.target.value)}/>
-                    </Form.Group> */}
-                     {imagenes.map((imagen, index) => (
+                    {imagenes.map((imagen, index) => (
                         <Form.Group className="mb-3" key={index}>
                             <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
                             <Form.Control
                                 type="text"
                                 name={`urlImagen${index}`}
-                                defaultValue={imagen}
+                                value={imagen}
                                 onChange={e => handleImageChange(e, index)}
                             />
                         </Form.Group>
@@ -215,21 +231,17 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                     <Button variant="secondary" onClick={handleAddImage}>Agregar otra imagen</Button>
 
                     <div>
-                        <p style={{ color: 'red', lineHeight : 5, padding: 5 }}>{txtValidacion}</p>
+                        <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
 
-                    <Button variant="primary" onClick={save}>
+                    <Button variant="primary" type="submit">
                         Guardar
                     </Button>
-
-                    {/* <Button variant="primary" type="submit">
-                        Guardar
-                    </Button> */}
                 </Form>
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>Cerrar</Button>
+                <Button variant="secondary" onClick={handleCloseAndClear}>Cerrar</Button>
             </Modal.Footer>
         </Modal>
     );
