@@ -18,7 +18,7 @@ export async function getArticulosManufacturados() {
     }
 }
 
-export async function getArticuloManufacturadoXId(id: number) {
+export async function getArticuloManufacturadoPorID(id: number) {
     const INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloManufacturado/${id}`;
 
     try {
