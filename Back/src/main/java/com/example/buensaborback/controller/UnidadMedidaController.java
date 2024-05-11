@@ -1,6 +1,7 @@
 package com.example.buensaborback.controller;
 
 import com.example.buensaborback.domain.entities.ArticuloInsumo;
+import com.example.buensaborback.domain.entities.Categoria;
 import com.example.buensaborback.domain.entities.UnidadMedida;
 import com.example.buensaborback.services.ArticuloInsumoService;
 import com.example.buensaborback.services.UnidadMedidaService;
@@ -31,6 +32,33 @@ public class UnidadMedidaController {
     public ResponseEntity<UnidadMedida> getOne(@PathVariable Long id){
         try {
             return ResponseEntity.ok(unidadMedidaService.findById(id));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<UnidadMedida> save(@RequestBody UnidadMedida unidadMedida){
+        try {
+            return ResponseEntity.ok(unidadMedidaService.save(unidadMedida));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UnidadMedida> update(@PathVariable Long id, @RequestBody UnidadMedida unidadMedida){
+        try {
+            return ResponseEntity.ok(unidadMedidaService.update(id,unidadMedida));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(unidadMedidaService.delete(id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
