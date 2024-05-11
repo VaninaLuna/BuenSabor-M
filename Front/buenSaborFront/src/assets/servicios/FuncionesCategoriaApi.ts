@@ -33,3 +33,41 @@ export async function getCategoriaPorID(id: number) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }
+
+export async function saveCategoria(categoria?: Categoria) {
+    let endpoint = 'http://localhost:8080/categoria';
+    let method: string = "POST";
+
+    if (categoria && categoria.id !== 0) {
+        endpoint = `http://localhost:8080/categoria/${categoria.id}`;
+        method = "PUT";
+    }
+
+    await fetch(endpoint, {
+        "method": method,
+        "headers": {
+            "Content-Type": 'application/json'
+        },
+        "body": JSON.stringify(categoria)
+    });
+}
+
+//DELETE
+export async function deleteCategoriaPorID(id: number) {
+    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/categoria/${id}`
+
+    try {
+        const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al eliminar la categoria: ${response.status} ${response.statusText}`);
+        }
+
+        const isDeleted = await response.json();
+        return isDeleted as boolean;
+    } catch (e) {
+        throw new Error('Error al hacer fetch de categoria')
+    }
+}
