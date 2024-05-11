@@ -45,7 +45,7 @@ export function GrillaArticuloInsumo() {
 
     return (
         <>
-            <Button variant="info" style={{margin: 50}} onClick={handleOpenCreate}>
+            <Button variant="secondary" size="lg" style={{margin: 50}} onClick={handleOpenCreate}>
                 Crear Articulo Insumo
             </Button>
             <ModalArticuloInsumo
