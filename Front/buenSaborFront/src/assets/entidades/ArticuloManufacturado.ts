@@ -7,7 +7,7 @@ export default class ArticuloManufacturado{
     id:number = 0;
     denominacion:string = "";
     precioVenta:number = 0;
-    descripcion:number = 0;
+    descripcion:string = "";
     tiempoEstimadoMinutos:number = 0;
     preparacion:string = "";    
     imagenes:Imagen[] = [];
