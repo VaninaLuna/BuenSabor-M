@@ -32,4 +32,40 @@ public class CategoriaServiceImpl implements CategoriaService{
                 orElseThrow(() -> new NoSuchElementException("No exiaste una categoria"));
     }
 
+    @Override
+    public Categoria save(Categoria categoria) throws Exception {
+        try {
+            return categoriaRepository.save(categoria);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Categoria update(Long id, Categoria categoria) throws Exception {
+        try {
+            if (!categoriaRepository.existsById(id)) {
+                throw new NoSuchElementException("No existe un articulo insumo con ese Id");
+            }
+
+            categoria.setId(id);
+            return categoriaRepository.save(categoria);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) throws Exception {
+        try {
+            if (!categoriaRepository.existsById(id)) {
+                throw new NoSuchElementException("No existe un articulo insumo con ese Id");
+            }
+            categoriaRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
 }

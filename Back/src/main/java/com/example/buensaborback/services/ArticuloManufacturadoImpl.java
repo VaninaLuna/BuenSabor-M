@@ -55,7 +55,6 @@ public class ArticuloManufacturadoImpl implements ArticuloManufacturadoService{
         }
     }
 
-
     @Override
     public boolean delete(Long id) throws Exception {
         try {

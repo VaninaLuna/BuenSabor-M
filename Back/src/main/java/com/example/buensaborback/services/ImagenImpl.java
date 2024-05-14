@@ -32,6 +32,7 @@ public class ImagenImpl implements ImagenService{
         return imagenRepository.findById(id).
                 orElseThrow(() -> new NoSuchElementException("No existe una imagen con ese id"));
     }
+
     @Override
     public Imagen save(Imagen imagen) throws Exception {
         try {

@@ -26,13 +26,11 @@ public class ArticuloInsumoImpl implements ArticuloInsumoService{
         }
     }
 
-
     @Override
     public ArticuloInsumo findById(Long id) throws Exception {
         return articuloInsumoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe un articulo insumo con ese Id"));
     }
-
 
     @Override
     public ArticuloInsumo save(ArticuloInsumo articuloInsumo) throws Exception {
@@ -42,8 +40,6 @@ public class ArticuloInsumoImpl implements ArticuloInsumoService{
             throw new Exception(e.getMessage());
         }
     }
-
-
 
     @Override
     public ArticuloInsumo update(Long id, ArticuloInsumo articuloInsumo) throws Exception {
@@ -58,7 +54,6 @@ public class ArticuloInsumoImpl implements ArticuloInsumoService{
             throw new Exception(e.getMessage());
         }
     }
-
 
     @Override
     public boolean delete(Long id) throws Exception {
