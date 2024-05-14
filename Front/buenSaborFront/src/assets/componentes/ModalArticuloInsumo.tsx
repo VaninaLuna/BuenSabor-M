@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Categoria from '../entidades/Categoria';
-import { getCategorias } from '../servicios/FuncionesCategoriaApi';
+import { getCategorias, saveCategoria } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidades } from '../servicios/FuncionesUnidadMedida';
+import { getUnidades, saveUnidadMedida } from '../servicios/FuncionesUnidadMedida';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
 import { getArticuloInsumoPorID, saveArticuloInsumo } from '../servicios/FuncionesArticuloInsumoApi';
 
@@ -20,6 +20,10 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
     const [imagenes, setImagenes] = useState<string[]>(['']);
+    const [visibleCategoria, setVisibleCategoria] = useState<boolean>(false);
+    const [visibleUnidad, setVisibleUnidad] = useState<boolean>(false);
+    const [nuevaCategoria, setNuevaCategoria] = useState<string>("");
+    const [nuevaUnidad, setNuevaUnidad] = useState<string>("");
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
@@ -53,7 +57,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         getUnidades()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
-    }, [])
+    }, [visibleUnidad, visibleCategoria])
 
     useEffect(() => {
         if (!selectedId) {
@@ -80,7 +84,11 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         // Limpiamos el mensaje de validación
         setTxtValidacion("");
 
-        if (e.target.name === 'categoria') {
+        if (e.target.name === 'categoriaNueva') {
+            setNuevaCategoria(value as string)
+        } else if (e.target.name === 'unidadNueva') {
+            setNuevaUnidad(value as string)
+        } else if (e.target.name === 'categoria') {
             const selectedCategoria = categorias.find(categoria => categoria.id === Number(value));
             if (selectedCategoria) {
                 setArticuloInsumo({ ...insumo, categoria: selectedCategoria });
@@ -152,7 +160,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     };
 
     return (
-        <Modal show={showModal} onHide={handleClose}>
+        <Modal show={showModal} onHide={handleCloseAndClear}>
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Insumo</Modal.Title>
             </Modal.Header>
@@ -195,27 +203,96 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Categoria</Form.Label>
-                        <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange}>
-                            <option value={0}>Seleccionar Categoria</option>
+                    <Row>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Categoria</Form.Label>
+                            <Row>
+                                <Col>
+                                    <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
+                                        <option value={0}>Seleccionar Categoria</option>
+                                        {categorias.map((categoria: Categoria) =>
+                                            <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
+                                        )}
+                                    </Form.Select>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button variant="secondary" onClick={() => { setVisibleCategoria(true) }}>+</Button>
+                                </Col>
+                            </Row>
+                        </Form.Group>
+                    </Row>
+                    {
+                        visibleCategoria &&
+                        <Row>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Crear nueva categoria</Form.Label>
+                                <Form.Control type="text" name="categoriaNueva" onChange={handleInputChange} />
+                            </Form.Group>
 
-                            {categorias.map((categoria: Categoria) =>
-                                <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                            )}
-                        </Form.Select>
-                    </Form.Group>
+                            <Row className="justify-content-md-center g-2">
+                                <Col xs lg="2">
+                                    <Button variant="secondary" onClick={async () => {
+                                        await saveCategoria({ id: 0, denominacion: nuevaCategoria })
+                                        setVisibleCategoria(false)
+                                        setNuevaCategoria("");
+                                    }}>Guardar</Button>
+                                </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Unidad de medida</Form.Label>
-                        <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange}>
-                            <option value={0}>Seleccionar Unidad de medida</option>
+                                <Col xs lg="2">
+                                    <Button variant="secondary" onClick={() => {
+                                        setVisibleCategoria(false)
+                                        setNuevaCategoria("");
+                                    }}>NoGuardar</Button>
+                                </Col>
+                            </Row>
+                        </Row>
+                    }
 
-                            {unidades.map((unidad: UnidadMedida) =>
-                                <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
-                            )}
-                        </Form.Select>
-                    </Form.Group>
+
+                    <Row>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Unidad de medida</Form.Label>
+                            <Row>
+                                <Col>
+                                    <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange} hidden={nuevaUnidad.length != 0}>
+                                        <option value={0}>Seleccionar Unidad de medida</option>
+                                        {unidades.map((unidad: UnidadMedida) =>
+                                            <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
+                                        )}
+                                    </Form.Select>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button variant="secondary" onClick={() => { setVisibleUnidad(true) }}>+</Button>
+                                </Col>
+                            </Row>
+                        </Form.Group>
+                    </Row>
+                    {
+                        visibleUnidad &&
+                        <Row>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Crear nueva Unidad</Form.Label>
+                                <Form.Control type="text" name="unidadNueva" onChange={handleInputChange} />
+                            </Form.Group>
+
+                            <Row className="justify-content-md-center g-2">
+                                <Col xs lg="2">
+                                    <Button variant="secondary" onClick={async () => {
+                                        await saveUnidadMedida({ id: 0, denominacion: nuevaUnidad })
+                                        setVisibleUnidad(false)
+                                        setNuevaUnidad("");
+                                    }}>Guardar</Button>
+                                </Col>
+
+                                <Col xs lg="2">
+                                    <Button variant="secondary" onClick={() => {
+                                        setVisibleUnidad(false)
+                                        setNuevaUnidad("");
+                                    }}>NoGuardar</Button>
+                                </Col>
+                            </Row>
+                        </Row>
+                    }
 
                     {imagenes.map((imagen, index) => (
                         <Form.Group className="mb-3" key={index}>
