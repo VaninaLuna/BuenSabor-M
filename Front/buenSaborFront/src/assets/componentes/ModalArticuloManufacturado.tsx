@@ -197,7 +197,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
     };
 
     return (
-        <Modal show={showModal} onHide={handleClose}>
+        <Modal show={showModal} onHide={handleCloseAndClear}>
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Manufacturado</Modal.Title>
             </Modal.Header>
