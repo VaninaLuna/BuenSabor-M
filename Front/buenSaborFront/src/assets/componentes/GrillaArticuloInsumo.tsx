@@ -20,6 +20,7 @@ export function GrillaArticuloInsumo() {
     const handleOpenCreate = () => {
         setShowModal(true);
         setEditing(false);
+        setSelectedId(null)
     };
 
     const handleOpenEdit = () => {
@@ -35,8 +36,8 @@ export function GrillaArticuloInsumo() {
 
 
     // --------------PARA LOS MODALES DE CATEGORIA Y UNIDAD DE MEDIDA----------------
-    const handleOpenCreateCategoria = () => {};
-    const handleOpenCreateUnidadMedida = () => {};
+    //const handleOpenCreateCategoria = () => {};
+    //const handleOpenCreateUnidadMedida = () => {};
     //-------------------------------------------------------------------------------
 
 
@@ -93,13 +94,13 @@ export function GrillaArticuloInsumo() {
                 <div className="col">
                 <b>Es Para Elaborar</b>
                 </div>
-                <div className="col" style={{minWidth:"200px"}}>
+                <div className="col" style={{minWidth:"220px"}}>
                 <b>Opciones</b>
                 </div>               
             </div>
             <hr/>
             {articulosInsumos.map((articuloInsumo:ArticuloInsumo, index) =>
-            <div className="row" key={index}>
+            <div className="row m-2" key={index}>
                 <div className="col" style={{maxWidth:"80px"}}>
                 {articuloInsumo.id}
                 </div>
@@ -110,8 +111,11 @@ export function GrillaArticuloInsumo() {
                 {articuloInsumo.precioVenta}
                 </div>
                 <div className="col">
-                <img src={articuloInsumo.imagenes[0].url} 
-                    alt={articuloInsumo.denominacion} width="50px"/>
+                {articuloInsumo.imagenes && articuloInsumo.imagenes[0] ? 
+                        <img src={articuloInsumo.imagenes[0].url} 
+                            alt={articuloInsumo.denominacion} width="50px"/>
+                        : 'No image'
+                    }
                 </div>
                 <div className="col">
                 {articuloInsumo.unidadMedida.denominacion}
@@ -131,19 +135,18 @@ export function GrillaArticuloInsumo() {
                 <div className="col">
                 {articuloInsumo.esParaElaborar ? 'Si' : 'No'}
                 </div>
-                <div className="col" style={{minWidth:"200px"}}>
-                    <Button variant="outline-warning" onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
-                    <Button variant="outline-danger" onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
+                <div className="col d-flex" style={{minWidth:"200px"}}>
+                    <Button variant="outline-warning" style={{ maxHeight:"40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
+                    <Button variant="outline-danger" style={{maxHeight:"40px"}} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
                 </div>
             </div> )}
 
-
-            <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateCategoria}>
+            {/* <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateCategoria}>
                 Crear Categoria
             </Button>
             <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateUnidadMedida}>
                 Crear Unidad de Medida
-            </Button>
+            </Button> */}
         </>
     );
 }

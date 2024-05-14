@@ -172,26 +172,36 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         <Form.Control type="text" name="denominacion" value={insumo?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Precio de Venta</Form.Label>
-                        <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Precio de Compra</Form.Label>
-                        <Form.Control type="number" name="precioCompra" value={insumo?.precioCompra} onChange={handleInputChange} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Stock Actual</Form.Label>
-                        <Form.Control type="number" name="stockActual" value={insumo?.stockActual} onChange={handleInputChange} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Stock Maximo</Form.Label>
-                        <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
-                    </Form.Group>
-
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Precio de Compra</Form.Label>
+                                <Form.Control type="number" name="precioCompra" value={insumo?.precioCompra} onChange={handleInputChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs="auto">
+                            <Form.Group className="mb-3">
+                                <Form.Label>Precio de Venta</Form.Label>
+                                <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Stock Actual</Form.Label>
+                                <Form.Control type="number" name="stockActual" value={insumo?.stockActual} onChange={handleInputChange} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs="auto">
+                            <Form.Group className="mb-3">
+                                <Form.Label>Stock Maximo</Form.Label>
+                                <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    
                     <Form.Group className="mb-3">
                         <Form.Check // prettier-ignore
                             type="switch"
@@ -229,9 +239,9 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="text" name="categoriaNueva" onChange={handleInputChange} />
                             </Form.Group>
 
-                            <Row className="justify-content-md-center g-2">
+                            <Row className="justify-content-md-center g-2" style={{ marginTop: 0, marginBottom: '20px' }}>
                                 <Col xs lg="2">
-                                    <Button variant="secondary" onClick={async () => {
+                                    <Button variant="secondary" style={{ maxHeight:"40px" }} onClick={async () => {
                                         await saveCategoria({ id: 0, denominacion: nuevaCategoria })
                                         setVisibleCategoria(false)
                                         setNuevaCategoria("");
@@ -239,7 +249,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 </Col>
 
                                 <Col xs lg="2">
-                                    <Button variant="secondary" onClick={() => {
+                                    <Button variant="secondary" style={{ maxHeight:"40px", marginLeft: '10px' }} onClick={() => {
                                         setVisibleCategoria(false)
                                         setNuevaCategoria("");
                                     }}>NoGuardar</Button>
@@ -275,9 +285,9 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="text" name="unidadNueva" onChange={handleInputChange} />
                             </Form.Group>
 
-                            <Row className="justify-content-md-center g-2">
+                            <Row className="justify-content-md-center g-2" style={{ marginTop: 0, marginBottom: '20px' }}>
                                 <Col xs lg="2">
-                                    <Button variant="secondary" onClick={async () => {
+                                    <Button variant="secondary" style={{ maxHeight:"40px" }} onClick={async () => {
                                         await saveUnidadMedida({ id: 0, denominacion: nuevaUnidad })
                                         setVisibleUnidad(false)
                                         setNuevaUnidad("");
@@ -285,7 +295,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 </Col>
 
                                 <Col xs lg="2">
-                                    <Button variant="secondary" onClick={() => {
+                                    <Button variant="secondary" style={{ maxHeight:"40px", marginLeft: '10px' }} onClick={() => {
                                         setVisibleUnidad(false)
                                         setNuevaUnidad("");
                                     }}>NoGuardar</Button>

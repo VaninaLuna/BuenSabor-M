@@ -44,7 +44,7 @@ export function GrillaArticuloManufacturado() {
 
     return (
         <>
-        <Button variant="secondary" size="lg" style={{margin: 50}} onClick={handleOpenCreate}>
+            <Button variant="secondary" size="lg" style={{margin: 50}} onClick={handleOpenCreate}>
                 Crear Articulo Manufacturado
             </Button>
             <ModalArticuloManufacturado
@@ -128,8 +128,8 @@ export function GrillaArticuloManufacturado() {
                 </div>   
                 <div className="col" style={{minWidth:"200px"}}>
                     {/* <Button variant="outline-info" onClick={handleOpenEdit}>Insumos</Button> */}
-                    <Button variant="outline-warning" onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
-                    <Button variant="outline-danger" onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
+                    <Button variant="outline-warning" style={{ maxHeight:"40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
+                    <Button variant="outline-danger" style={{maxHeight:"40px"}} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
                 </div>               
             </div> )}
        
