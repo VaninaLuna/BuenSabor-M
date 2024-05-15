@@ -3,7 +3,7 @@ import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import Categoria from '../entidades/Categoria';
 import { getCategorias } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidades } from '../servicios/FuncionesUnidadMedida';
+import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
 import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../servicios/FuncionesArticuloManufacturadoApi';
 import ArticuloManufacturado from '../entidades/ArticuloManufacturado';
@@ -90,7 +90,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             .then(data => setCategoria(data))
             .catch(e => console.error(e));
 
-        getUnidades()
+        getUnidadesMedidas()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
 
