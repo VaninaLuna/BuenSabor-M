@@ -12,6 +12,7 @@ export function Navegador() {
           <Nav className="me-auto">
             <Nav.Link href={"/grillaInsumo"}>Articulos Insumo</Nav.Link>
             <Nav.Link href={"/grillaManufacturado"}>Ariticulos Manufacturados</Nav.Link>
+            <Nav.Link href={"/grillaCategoriaUnidadMedida"}>Categoria y Unidad de Medida</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

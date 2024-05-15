@@ -8,15 +8,17 @@ import { GrillaArticuloInsumo } from './assets/componentes/GrillaArticuloInsumo.
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navegador } from './assets/componentes/Navegador.tsx'
 import React from 'react'
+import { GrillaCategoriaUnidadMedida } from './assets/componentes/GrillaCategoriaUnidadMedida.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <Navegador />
     <BrowserRouter>
-      <Navegador />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/grillaManufacturado" element={<GrillaArticuloManufacturado />} />
         <Route path="/grillaInsumo" element={<GrillaArticuloInsumo />} />
+        <Route path="/grillaCategoriaUnidadMedida" element={<GrillaCategoriaUnidadMedida />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
