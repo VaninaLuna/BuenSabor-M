@@ -3,7 +3,7 @@ import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Categoria from '../entidades/Categoria';
 import { getCategorias, saveCategoria } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidades, saveUnidadMedida } from '../servicios/FuncionesUnidadMedida';
+import { getUnidadesMedidas, saveUnidadMedida } from '../servicios/FuncionesUnidadMedidaApi';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
 import { getArticuloInsumoPorID, saveArticuloInsumo } from '../servicios/FuncionesArticuloInsumoApi';
 
@@ -54,7 +54,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
             .then(data => setCategoria(data))
             .catch(e => console.error(e));
 
-        getUnidades()
+        getUnidadesMedidas()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
     }, [visibleUnidad, visibleCategoria])
