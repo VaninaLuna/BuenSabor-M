@@ -16,7 +16,6 @@ export function GrillaArticuloInsumo() {
         setArticulosInsumos(datos);
     };
 
-
     const handleOpenCreate = () => {
         setShowModal(true);
         setEditing(false);
@@ -34,13 +33,6 @@ export function GrillaArticuloInsumo() {
         setSelectedId(null);
     };
 
-
-    // --------------PARA LOS MODALES DE CATEGORIA Y UNIDAD DE MEDIDA----------------
-    //const handleOpenCreateCategoria = () => {};
-    //const handleOpenCreateUnidadMedida = () => {};
-    //-------------------------------------------------------------------------------
-
-
     const deleteArticuloInsumo = async (idArticuloInsumo:number) => {
         await deleteArticuloInsumoPorID(idArticuloInsumo);
         window.location.reload();
@@ -49,7 +41,6 @@ export function GrillaArticuloInsumo() {
     useEffect(() => {
         getListadoArticulosInsumos();
     }, []);
-
 
     return (
         <>
@@ -140,13 +131,6 @@ export function GrillaArticuloInsumo() {
                     <Button variant="outline-danger" style={{maxHeight:"40px"}} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
                 </div>
             </div> )}
-
-            {/* <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateCategoria}>
-                Crear Categoria
-            </Button>
-            <Button variant="secondary" style={{margin: 50}} onClick={handleOpenCreateUnidadMedida}>
-                Crear Unidad de Medida
-            </Button> */}
         </>
     );
 }
