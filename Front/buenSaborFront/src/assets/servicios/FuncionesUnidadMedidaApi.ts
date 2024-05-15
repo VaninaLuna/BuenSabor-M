@@ -1,6 +1,6 @@
 import UnidadMedida from "../entidades/UnidadMedida";
 
-export async function getUnidades() {
+export async function getUnidadesMedidas() {
     const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/unidadMedida/all';
 
     try {
@@ -17,7 +17,7 @@ export async function getUnidades() {
     }
 }
 
-export async function getUnidadesPorID(id: number) {
+export async function getUnidadMedidaPorID(id: number) {
     const INSTRUMENTO_ENDPOINT = `http://localhost:8080/unidadMedida/${id}`;
 
     try {
