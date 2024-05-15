@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
 import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../servicios/FuncionesArticuloManufacturadoApi";
-import { Button, Accordion } from "react-bootstrap";
+import { Button, Accordion, Table } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 
 export function GrillaArticuloManufacturado() {
@@ -54,85 +54,56 @@ export function GrillaArticuloManufacturado() {
                 selectedId={selectedId}
             />
             <br/>
-            <div className="row">
-                <div className="col" style={{maxWidth:"60px"}}>
-                <b>ID</b>
-                </div>
-                <div className="col" style={{minWidth:"200px", maxWidth: "200px"}}>
-                <b>Denominacion</b>
-                </div>
-                <div className="col">
-                <b>Precio Venta</b>
-                </div>
-                <div className="col">
-                <b>Imagen</b>
-                </div>
-                <div className="col">
-                <b>Unidad de Medida</b>
-                </div>
-                <div className="col">
-                <b>Categoria</b>
-                </div>
-                <div className="col">
-                <b>Descripcion</b>
-                </div>
-                <div className="col">
-                <b>Tiempo Estimado Minutos</b>
-                </div>
-                <div className="col" style={{minWidth:"150px"}}>
-                <b>Preparacion</b>
-                </div>                
-                <div className="col" style={{minWidth:"200px"}}>
-                <b>Opciones</b>
-                </div>
-            </div>
-            <hr/>
-            {articulosmanufacturados.map((articulomanufacturado:ArticuloManufacturado, index) => 
-            <div className="row" key={index}>
-                <div className="col" style={{maxWidth:"60px"}}>
-                    {articulomanufacturado.id}
-                </div>
-                <div className="col" style={{minWidth:"200px", maxWidth: "200px"}}>                    
-                    <Accordion defaultActiveKey="1" flush>
-                        <Accordion.Item eventKey="0">
-                            <Accordion.Header>{articulomanufacturado.denominacion}</Accordion.Header>
-                            <Accordion.Body>
-                            {articulomanufacturado.articuloManufacturadoDetalles.map((detalle) => (
-                                <p>{detalle.articuloInsumo.denominacion} ({detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion})</p>
-                            ))}
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    </Accordion>
-                </div>
-                <div className="col">
-                    {articulomanufacturado.precioVenta}
-                </div>
-                <div className="col">
-                    <img src={articulomanufacturado.imagenes[0].url} 
-                        alt={articulomanufacturado.denominacion} width="50px"/>
-                </div>
-                <div className="col">
-                    {articulomanufacturado.unidadMedida.denominacion}
-                </div>
-                <div className="col">
-                    {articulomanufacturado.categoria.denominacion}
-                </div>
-                <div className="col">
-                    {articulomanufacturado.descripcion}
-                </div>
-                <div className="col">
-                    {articulomanufacturado.tiempoEstimadoMinutos}
-                </div>
-                <div className="col" style={{minWidth:"150px"}}>
-                    {articulomanufacturado.preparacion}
-                </div>   
-                <div className="col" style={{minWidth:"200px"}}>
-                    {/* <Button variant="outline-info" onClick={handleOpenEdit}>Insumos</Button> */}
-                    <Button variant="outline-warning" style={{ maxHeight:"40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
-                    <Button variant="outline-danger" style={{maxHeight:"40px"}} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
-                </div>               
-            </div> )}
-       
+            <Table striped bordered hover size="sm">
+                <thead>
+                    <tr>
+                        <th style={{maxWidth:"80px"}}>ID</th>
+                        <th>Imagen</th>
+                        <th style={{minWidth:"150px"}}>Denominacion</th>
+                        <th>Unidad de Medida</th>
+                        <th>Categoria</th>
+                        <th style={{minWidth:"150px"}}>Descripcion</th>
+                        <th>Precio Venta</th>
+                        <th>Tiempo Estimado Minutos</th>
+                        <th style={{minWidth:"150px"}}>Preparacion</th>
+                        <th style={{minWidth:"220px"}}>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {articulosmanufacturados.map((articulomanufacturado:ArticuloManufacturado, index) => 
+                        <tr key={index}>
+                            <td>{articulomanufacturado.id}</td>
+                            <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ? 
+                                <img src={articulomanufacturado.imagenes[0].url} 
+                                    alt={articulomanufacturado.denominacion} width="50px"/>
+                                : 'No image'
+                            }</td>
+                            <td>
+                                <Accordion defaultActiveKey="1" style={{background: 'transparent'}}>
+                                    <Accordion.Item eventKey="0" style={{background: 'transparent'}}>
+                                        <Accordion.Header style={{background: 'transparent'}}>{articulomanufacturado.denominacion}</Accordion.Header>
+                                        <Accordion.Body style={{background: 'transparent'}}>
+                                        {articulomanufacturado.articuloManufacturadoDetalles.map((detalle) => (
+                                            <p>{detalle.articuloInsumo.denominacion} ({detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion})</p>
+                                        ))}
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>    
+                            </td>
+                            <td>{articulomanufacturado.unidadMedida.denominacion}</td>
+                            <td>{articulomanufacturado.categoria.denominacion}</td>
+                            <td>{articulomanufacturado.descripcion}</td>
+                            <td>{articulomanufacturado.precioVenta}</td>
+                            <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
+                            <td>{articulomanufacturado.preparacion}</td>
+                            <td>
+                                <Button variant="outline-warning" style={{ maxHeight:"40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
+                                <Button variant="outline-danger" style={{maxHeight:"40px"}} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </Table>       
         </>
     )
 }
