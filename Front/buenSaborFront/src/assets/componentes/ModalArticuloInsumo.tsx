@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Categoria from '../entidades/Categoria';
-import { getCategorias, saveCategoria } from '../servicios/FuncionesCategoriaApi';
+import { getCategorias } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidadesMedidas, saveUnidadMedida } from '../servicios/FuncionesUnidadMedidaApi';
+import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
 import { getArticuloInsumoPorID, saveArticuloInsumo } from '../servicios/FuncionesArticuloInsumoApi';
 
@@ -20,8 +20,8 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
     const [imagenes, setImagenes] = useState<string[]>(['']);
-    const [visibleCategoria, setVisibleCategoria] = useState<boolean>(false);
-    const [visibleUnidad, setVisibleUnidad] = useState<boolean>(false);
+    // const [visibleCategoria, setVisibleCategoria] = useState<boolean>(false);
+    // const [visibleUnidad, setVisibleUnidad] = useState<boolean>(false);
     const [nuevaCategoria, setNuevaCategoria] = useState<string>("");
     const [nuevaUnidad, setNuevaUnidad] = useState<string>("");
     const [txtValidacion, setTxtValidacion] = useState<string>("");
@@ -57,7 +57,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         getUnidadesMedidas()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
-    }, [visibleUnidad, visibleCategoria])
+    }, [/*visibleUnidad, visibleCategoria*/]) 
 
     useEffect(() => {
         if (!selectedId) {
@@ -160,7 +160,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     };
 
     return (
-        <Modal show={showModal} onHide={handleCloseAndClear}>
+        <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Insumo</Modal.Title>
             </Modal.Header>
@@ -179,7 +179,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="precioCompra" value={insumo?.precioCompra} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                        <Col xs="auto">
+                        <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Precio de Venta</Form.Label>
                                 <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
@@ -194,7 +194,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="stockActual" value={insumo?.stockActual} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                        <Col xs="auto">
+                        <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Stock Maximo</Form.Label>
                                 <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
@@ -214,24 +214,37 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                     </Form.Group>
 
                     <Row>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Categoria</Form.Label>
-                            <Row>
-                                <Col>
-                                    <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
-                                        <option value={0}>Seleccionar Categoria</option>
-                                        {categorias.map((categoria: Categoria) =>
-                                            <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                                        )}
-                                    </Form.Select>
-                                </Col>
-                                <Col xs="auto">
-                                    <Button variant="secondary" onClick={() => { setVisibleCategoria(true) }}>+</Button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Categoria</Form.Label>
+                                        <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
+                                            <option value={0}>Seleccionar Categoria</option>
+                                            {categorias.map((categoria: Categoria) =>
+                                                <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
+                                            )}
+                                        </Form.Select>
+                                    {/* <Col xs="auto">
+                                        <Button variant="secondary" onClick={() => { setVisibleCategoria(true) }}>+</Button>
+                                    </Col> */}
+                            </Form.Group>                    
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Unidad de medida</Form.Label>
+                                        <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange} hidden={nuevaUnidad.length != 0}>
+                                            <option value={0}>Seleccionar Unidad de medida</option>
+                                            {unidades.map((unidad: UnidadMedida) =>
+                                                <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
+                                            )}
+                                        </Form.Select>
+                                    {/* <Col xs="auto">
+                                        <Button variant="secondary" onClick={() => { setVisibleUnidad(true) }}>+</Button>
+                                    </Col> */}
+                            </Form.Group>
+                        </Col>
                     </Row>
-                    {
+
+                    {/* {
                         visibleCategoria &&
                         <Row>
                             <Form.Group className="mb-3">
@@ -256,28 +269,11 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 </Col>
                             </Row>
                         </Row>
-                    }
+                    } */}
 
 
-                    <Row>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Unidad de medida</Form.Label>
-                            <Row>
-                                <Col>
-                                    <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange} hidden={nuevaUnidad.length != 0}>
-                                        <option value={0}>Seleccionar Unidad de medida</option>
-                                        {unidades.map((unidad: UnidadMedida) =>
-                                            <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
-                                        )}
-                                    </Form.Select>
-                                </Col>
-                                <Col xs="auto">
-                                    <Button variant="secondary" onClick={() => { setVisibleUnidad(true) }}>+</Button>
-                                </Col>
-                            </Row>
-                        </Form.Group>
-                    </Row>
-                    {
+
+                    {/* {
                         visibleUnidad &&
                         <Row>
                             <Form.Group className="mb-3">
@@ -302,7 +298,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 </Col>
                             </Row>
                         </Row>
-                    }
+                    } */}
 
                     {imagenes.map((imagen, index) => (
                         <Form.Group className="mb-3" key={index}>
