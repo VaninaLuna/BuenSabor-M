@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 
 export function Navegador() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" style={{ backgroundColor: '#f2f2f2' }}>
       <Container>
         <Navbar.Brand href="/">Buen Sabor</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
