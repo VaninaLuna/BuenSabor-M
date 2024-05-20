@@ -4,10 +4,11 @@ import Categoria from '../entidades/Categoria';
 import { getCategorias } from '../servicios/FuncionesCategoriaApi';
 import UnidadMedida from '../entidades/UnidadMedida';
 import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
 import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../servicios/FuncionesArticuloManufacturadoApi';
 import ArticuloManufacturado from '../entidades/ArticuloManufacturado';
-import { getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+// import { getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+import { ModalAgregarInsumo } from './ModalAgregarInsumo';
+import ArticuloInsumo from '../entidades/ArticuloInsumo';
 
 interface ModalProps {
     showModal: boolean;
@@ -21,9 +22,12 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
     const [categorias, setCategoria] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [manufacturado, setArticuloManufacturado] = useState<ArticuloManufacturado>(new ArticuloManufacturado());
-    const [insumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
+    // const [insumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
     const [imagenes, setImagenes] = useState<string[]>(['']);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
+    const [showModalInsumos, setShowModalInsumos] = useState(false);
+    const [insumosSeleccionados, seInsumosSeleccionados] = useState<ArticuloInsumo[]>([]);
+
 
     const handleCloseAndClear = () => {
         // Llama a handleClose
@@ -32,6 +36,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         // Limpia el estado
         setImagenes(['']);
         setTxtValidacion("");
+        setArticuloManufacturado(new ArticuloManufacturado());
     };
 
 
@@ -48,18 +53,18 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setImagenes([...imagenes, '']);
     }
 
-    const handleSelectInsumoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
-        const newInsumoId = e.target.value;
-        console.log(newInsumoId);
-        const newInsumo = insumos.find(insumo => insumo.id === Number(newInsumoId));
-        if(newInsumo){
-            setArticuloManufacturado(prevState => {
-                const newDetalles = [...prevState.articuloManufacturadoDetalles];
-                newDetalles[index].articuloInsumo = newInsumo;
-                return {...prevState, articuloManufacturadoDetalles: newDetalles};
-            });
-        }
-    }
+    // const handleSelectInsumoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
+    //     const newInsumoId = e.target.value;
+    //     console.log(newInsumoId);
+    //     const newInsumo = insumos.find(insumo => insumo.id === Number(newInsumoId));
+    //     if(newInsumo){
+    //         setArticuloManufacturado(prevState => {
+    //             const newDetalles = [...prevState.articuloManufacturadoDetalles];
+    //             newDetalles[index].articuloInsumo = newInsumo;
+    //             return {...prevState, articuloManufacturadoDetalles: newDetalles};
+    //         });
+    //     }
+    // }
 
     const handleCantidadInsumoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
         const newCantidad = e.target.value;
@@ -73,17 +78,17 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         }       
     };
 
-    const handleAddDetalle = () => {
-        setArticuloManufacturado(prevState => {
-            const newDetalle = {
-                id: 0, // Genera un ID único para el nuevo detalle
-                cantidad: 0,
-                articuloInsumo: insumos[0], // Asume que el primer insumo es el valor predeterminado
-                articuloManufacturado: prevState // Asegúrate de incluir la propiedad articuloManufacturado
-            };
-            return {...prevState, articuloManufacturadoDetalles: [...prevState.articuloManufacturadoDetalles, newDetalle]};
-        });
-    };
+    // const handleAddDetalle = () => {
+    //     setArticuloManufacturado(prevState => {
+    //         const newDetalle = {
+    //             id: 0, // Genera un ID único para el nuevo detalle
+    //             cantidad: 0,
+    //             articuloInsumo: insumos[0], // Asume que el primer insumo es el valor predeterminado
+    //             articuloManufacturado: prevState // Asegúrate de incluir la propiedad articuloManufacturado
+    //         };
+    //         return {...prevState, articuloManufacturadoDetalles: [...prevState.articuloManufacturadoDetalles, newDetalle]};
+    //     });
+    // };
 
     useEffect(() => {
         getCategorias()
@@ -94,9 +99,9 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
 
-        getArticulosInsumos()
-            .then(data => setArticulosInsumos(data))
-            .catch(e => console.error(e));
+        // getArticulosInsumos()
+        //     .then(data => setArticulosInsumos(data))
+        //     .catch(e => console.error(e));
     }, [])
 
     useEffect(() => {
@@ -196,8 +201,24 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         window.location.reload();
     };
 
+    const agregarInsumo = () => {
+        setShowModalInsumos(true);
+    };
+
+    const handleCloseInsumos = (items: ArticuloInsumo[]) => {
+        seInsumosSeleccionados(items);
+        setShowModalInsumos(false);
+    };
+
+
     return (
-        <Modal show={showModal} onHide={handleCloseAndClear}>
+        <Modal show={showModal} onHide={handleCloseAndClear} size="xl" >
+
+            <ModalAgregarInsumo
+                handleCloseInsumos={handleCloseInsumos}
+                showModalInsumos={showModalInsumos}
+            />
+
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Manufacturado</Modal.Title>
             </Modal.Header>
@@ -228,9 +249,10 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                     <Form.Group className="mb-3">
                         <Form.Label>Preparacion</Form.Label>
                         <Form.Control type="text" name="preparacion" value={manufacturado?.preparacion} onChange={handleInputChange} />
-                    </Form.Group>                   
+                    </Form.Group>   
 
-                    <Form.Group className="mb-3">
+                    <Row>
+                    <Form.Group as={Col} className="mb-3">
                         <Form.Label>Categoria</Form.Label>
                         <Form.Select aria-label="Default select example" name="categoria" value={manufacturado?.categoria.id} onChange={handleInputChange}>
                             <option value={0}>Seleccionar Categoria</option>
@@ -241,7 +263,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                         </Form.Select>
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
+                    <Form.Group as={Col} className="mb-3">
                         <Form.Label>Unidad de medida</Form.Label>
                         <Form.Select aria-label="Default select example" name="unidadMedida" value={manufacturado?.unidadMedida.id} onChange={handleInputChange}>
                             <option value={0}>Seleccionar Unidad de medida</option>
@@ -251,27 +273,36 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                             )}
                         </Form.Select>
                     </Form.Group>
+                    </Row>                
+
+                    
 
                     {manufacturado.articuloManufacturadoDetalles.map((detalle, index) => (
                          <Row key={index}>
-                         <Form.Group as={Col} className="mb-3">
-                             <Form.Label>Agregar insumo {index + 1}</Form.Label>
-                             <Form.Select aria-label="insumo" name="insumo" value={detalle.articuloInsumo.id} 
-                             onChange={e => handleSelectInsumoChange(e, index)}>
-                                 <option value={0}>Seleccionar un Insumo</option>
-                                 {insumos.map((insumo: ArticuloInsumo) =>
-                                     <option key={insumo.id} value={insumo.id}> {insumo.denominacion} </option>
-                                 )}
-                             </Form.Select>
-                         </Form.Group>
-     
-                         <Form.Group as={Col} className="mb-3">
-                             <Form.Label>Cantidad</Form.Label>
-                             <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
-                         </Form.Group>
-                     </Row>
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Insumo {index + 1}</Form.Label>
+                                <Form.Control type="insumo" name="insumo" value={detalle.articuloInsumo.denominacion} 
+                                onChange={e => handleCantidadInsumoChange(e, index)}  disabled/>
+                                {/* <Form.Select aria-label="insumo" name="insumo" value={detalle.articuloInsumo.id} 
+                                onChange={e => handleSelectInsumoChange(e, index)}>
+                                    <option value={0}>Seleccionar un Insumo</option>
+                                    {insumos.map((insumo: ArticuloInsumo) =>
+                                        <option key={insumo.id} value={insumo.id}> {insumo.denominacion} </option>
+                                    )}
+                                </Form.Select> */}
+                            </Form.Group>
+        
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Cantidad</Form.Label>
+                                <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
+                            </Form.Group>
+                            <Col xs="auto">
+                                <Button variant="danger" style={{marginTop: '32px'}}>X</Button>
+                            </Col>
+                        </Row>
                     ))}
-                    <Button variant="secondary" onClick={handleAddDetalle}>Agregar Insumo</Button>
+                    {/* <Button variant="secondary" onClick={handleAddDetalle}>Agregar Insumo</Button> */}
+                    <Button variant="secondary" onClick={agregarInsumo}>Agregar Insumo</Button>
 
                     {imagenes.map((imagen, index) => (
                         <Form.Group className="mb-3" key={index}>
