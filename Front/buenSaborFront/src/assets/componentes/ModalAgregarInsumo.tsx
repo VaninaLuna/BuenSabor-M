@@ -106,7 +106,7 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
             </Modal.Body>
 
             <Modal.Footer style={{backgroundColor: 'gainsboro'}}>
-                <Button variant="secondary" onClick={handleCloseAndClear}>Cerrar</Button>
+                <Button variant="primary" onClick={handleCloseAndClear}>Cerrar y Guardar</Button>
             </Modal.Footer>
         </Modal>
     );
