@@ -6,7 +6,6 @@ import UnidadMedida from '../entidades/UnidadMedida';
 import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
 import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../servicios/FuncionesArticuloManufacturadoApi';
 import ArticuloManufacturado from '../entidades/ArticuloManufacturado';
-// import { getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
 import { ModalAgregarInsumo } from './ModalAgregarInsumo';
 import ArticuloInsumo from '../entidades/ArticuloInsumo';
 
@@ -18,77 +17,58 @@ interface ModalProps {
 }
 
 export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
-
     const [categorias, setCategoria] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [manufacturado, setArticuloManufacturado] = useState<ArticuloManufacturado>(new ArticuloManufacturado());
-    // const [insumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
     const [imagenes, setImagenes] = useState<string[]>(['']);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
     const [showModalInsumos, setShowModalInsumos] = useState(false);
-    const [insumosSeleccionados, seInsumosSeleccionados] = useState<ArticuloInsumo[]>([]);
-
 
     const handleCloseAndClear = () => {
-        // Llama a handleClose
-        handleClose();
-
-        // Limpia el estado
         setImagenes(['']);
         setTxtValidacion("");
         setArticuloManufacturado(new ArticuloManufacturado());
+        handleClose();
     };
-
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
         const newImagenes = [...imagenes];
         newImagenes[index] = e.target.value;
         setImagenes(newImagenes);
-
-        // Limpiamos el mensaje de validación
         setTxtValidacion("");
-    }
-    
+    };
+
     const handleAddImage = () => {
         setImagenes([...imagenes, '']);
-    }
-
-    // const handleSelectInsumoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
-    //     const newInsumoId = e.target.value;
-    //     console.log(newInsumoId);
-    //     const newInsumo = insumos.find(insumo => insumo.id === Number(newInsumoId));
-    //     if(newInsumo){
-    //         setArticuloManufacturado(prevState => {
-    //             const newDetalles = [...prevState.articuloManufacturadoDetalles];
-    //             newDetalles[index].articuloInsumo = newInsumo;
-    //             return {...prevState, articuloManufacturadoDetalles: newDetalles};
-    //         });
-    //     }
-    // }
+    };
 
     const handleCantidadInsumoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, index: number) => {
         const newCantidad = e.target.value;
-
-        if(newCantidad){
-            setArticuloManufacturado(prevState => {
-                const newDetalles = [...prevState.articuloManufacturadoDetalles];
-                newDetalles[index].cantidad = Number(newCantidad);
-                return {...prevState, articuloManufacturadoDetalles: newDetalles};
-            });
-        }       
+        setArticuloManufacturado(prevState => {
+            const nuevosDetalles = [...prevState.articuloManufacturadoDetalles];
+            nuevosDetalles[index].cantidad = Number(newCantidad);
+            return {...prevState, articuloManufacturadoDetalles: nuevosDetalles};
+        });
     };
 
-    // const handleAddDetalle = () => {
-    //     setArticuloManufacturado(prevState => {
-    //         const newDetalle = {
-    //             id: 0, // Genera un ID único para el nuevo detalle
-    //             cantidad: 0,
-    //             articuloInsumo: insumos[0], // Asume que el primer insumo es el valor predeterminado
-    //             articuloManufacturado: prevState // Asegúrate de incluir la propiedad articuloManufacturado
-    //         };
-    //         return {...prevState, articuloManufacturadoDetalles: [...prevState.articuloManufacturadoDetalles, newDetalle]};
-    //     });
-    // };
+    const handleRemoveInsumo = (index: number) => {
+        setArticuloManufacturado(prevState => {
+            const nuevosDetalles = [...prevState.articuloManufacturadoDetalles];
+            nuevosDetalles.splice(index, 1); // Eliminar el insumo en el índice especificado
+            return {...prevState, articuloManufacturadoDetalles: nuevosDetalles};
+        });
+    };
+    
+    const handleRemoveImagen = (index: number) => {
+        if (index > 0) {
+            setImagenes(prevState => {
+                const nuevasImagenes = [...prevState];
+                nuevasImagenes.splice(index, 1); // Eliminar las imagenes en el índice especificado
+                return nuevasImagenes;
+            });
+        }
+        
+    };
 
     useEffect(() => {
         getCategorias()
@@ -98,37 +78,34 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         getUnidadesMedidas()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
-
-        // getArticulosInsumos()
-        //     .then(data => setArticulosInsumos(data))
-        //     .catch(e => console.error(e));
-    }, [])
+    }, []);
 
     useEffect(() => {
-        if (!selectedId) {
-            setArticuloManufacturado(new ArticuloManufacturado());
-        } else {
-            getArticuloManufacturadoPorID(selectedId)
-                .then(data => {
-                    setArticuloManufacturado(data)
-                    setImagenes(data.imagenes.map(img => img.url));
-                })
-                .catch(e => console.error(e));
+        if (showModal) {
+            if (selectedId) {
+                // Editar artículo existente
+                getArticuloManufacturadoPorID(selectedId)
+                    .then(data => {
+                        setArticuloManufacturado(data);
+                        setImagenes(data.imagenes.map(img => img.url));
+                    })
+                    .catch(e => console.error(e));
+            } else {
+                // Crear nuevo artículo
+                setArticuloManufacturado(new ArticuloManufacturado());
+                setImagenes(['']);
+            }
         }
-    }, [selectedId])
+    }, [showModal, selectedId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         let value: string | boolean;
-
         if (e.target.type === 'checkbox') {
             value = (e.target as HTMLInputElement).checked;
         } else {
             value = e.target.value;
         }
-
-        // Limpiamos el mensaje de validación
         setTxtValidacion("");
-
         if (e.target.name === 'categoria') {
             const selectedCategoria = categorias.find(categoria => categoria.id === Number(value));
             if (selectedCategoria) {
@@ -139,16 +116,13 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             if (selectedUnidadMedida) {
                 setArticuloManufacturado({ ...manufacturado, unidadMedida: selectedUnidadMedida });
             }
-        }
-        else {
+        } else {
             setArticuloManufacturado({ ...manufacturado, [e.target.name]: value });
         }
     };
 
-    // Manejador de envío del formulario
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
         if (manufacturado?.denominacion === undefined || manufacturado.denominacion === "") {
             setTxtValidacion("Debe ingresar una denominacion");
             return;
@@ -181,61 +155,54 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             setTxtValidacion("Debe ingresar una preparacion");
             return;
         }
-
-
-        // Creas nuevos objetos de imagen con las URLs proporcionadas
         const nuevasImagenes = imagenes.map((url) => ({ id: 0, url }));
-        console.log("NUEVAS IMAGENES" + JSON.stringify(nuevasImagenes))
-
-        // Creas una copia del estado del manufacturado
         const manufacturadoActualizado = { ...manufacturado };
-
-        // Actualizas la copia del manufacturado
         manufacturadoActualizado.imagenes = nuevasImagenes;
-
-        // Luego, asignas el array de nuevas imágenes al estado del manufacturado
         setArticuloManufacturado(manufacturadoActualizado);
-
-        console.log(JSON.stringify(manufacturadoActualizado));
         await saveArticuloManufacturado(manufacturadoActualizado);
         window.location.reload();
     };
 
-    const agregarInsumo = () => {
+    const agregarInsumoModal = () => {
         setShowModalInsumos(true);
     };
 
     const handleCloseInsumos = (items: ArticuloInsumo[]) => {
-        seInsumosSeleccionados(items);
+        const nuevosDetalles = items.map(item => ({
+            id: 0,
+            articuloInsumo: item,
+            cantidad: 0,
+            articuloManufacturado: manufacturado // Esto asegura que cada detalle tiene un campo 'articuloManufacturado'
+        }));
+    
+        setArticuloManufacturado(prevState => ({
+            ...prevState,
+            articuloManufacturadoDetalles: [...prevState.articuloManufacturadoDetalles, ...nuevosDetalles]
+        }));
+    
         setShowModalInsumos(false);
     };
 
-
     return (
-        <Modal show={showModal} onHide={handleCloseAndClear} size="xl" >
-
+        <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
             <ModalAgregarInsumo
                 handleCloseInsumos={handleCloseInsumos}
                 showModalInsumos={showModalInsumos}
             />
-
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Manufacturado</Modal.Title>
             </Modal.Header>
-
             <Modal.Body>
-                <Form onSubmit={handleSubmit}>
+                <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={manufacturado?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
-
                     <Row>
                         <Form.Group as={Col} className="mb-3">
                             <Form.Label>Precio de Venta</Form.Label>
                             <Form.Control type="number" name="precioVenta" value={manufacturado?.precioVenta} onChange={handleInputChange} />
                         </Form.Group>
-
                         <Form.Group as={Col} className="mb-3">
                             <Form.Label>Tiempo Estimado en Minutos</Form.Label>
                             <Form.Control type="number" name="tiempoEstimadoMinutos" value={manufacturado?.tiempoEstimadoMinutos} onChange={handleInputChange} />
@@ -245,90 +212,75 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                         <Form.Label>Descripcion</Form.Label>
                         <Form.Control type="text" name="descripcion" value={manufacturado?.descripcion} onChange={handleInputChange} />
                     </Form.Group>
-
                     <Form.Group className="mb-3">
                         <Form.Label>Preparacion</Form.Label>
                         <Form.Control type="text" name="preparacion" value={manufacturado?.preparacion} onChange={handleInputChange} />
                     </Form.Group>   
-
                     <Row>
-                    <Form.Group as={Col} className="mb-3">
-                        <Form.Label>Categoria</Form.Label>
-                        <Form.Select aria-label="Default select example" name="categoria" value={manufacturado?.categoria.id} onChange={handleInputChange}>
-                            <option value={0}>Seleccionar Categoria</option>
-
-                            {categorias.map((categoria: Categoria) =>
-                                <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                            )}
-                        </Form.Select>
-                    </Form.Group>
-
-                    <Form.Group as={Col} className="mb-3">
-                        <Form.Label>Unidad de medida</Form.Label>
-                        <Form.Select aria-label="Default select example" name="unidadMedida" value={manufacturado?.unidadMedida.id} onChange={handleInputChange}>
-                            <option value={0}>Seleccionar Unidad de medida</option>
-
-                            {unidades.map((unidad: UnidadMedida) =>
-                                <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
-                            )}
-                        </Form.Select>
-                    </Form.Group>
-                    </Row>                
-
-                    
-
+                        <Form.Group as={Col} className="mb-3">
+                            <Form.Label>Categoria</Form.Label>
+                            <Form.Select aria-label="Default select example" name="categoria" value={manufacturado?.categoria?.id || 0} onChange={handleInputChange}>
+                                <option value={0}>Seleccionar Categoria</option>
+                                {categorias.map((categoria: Categoria) =>
+                                    <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
+                                )}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group as={Col} className="mb-3">
+                            <Form.Label>Unidad de medida</Form.Label>
+                            <Form.Select aria-label="Default select example" name="unidadMedida" value={manufacturado?.unidadMedida?.id || 0} onChange={handleInputChange}>
+                                <option value={0}>Seleccionar Unidad de medida</option>
+                                {unidades.map((unidad: UnidadMedida) =>
+                                    <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
+                                )}
+                            </Form.Select>
+                        </Form.Group>
+                    </Row>
                     {manufacturado.articuloManufacturadoDetalles.map((detalle, index) => (
                          <Row key={index}>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Insumo {index + 1}</Form.Label>
                                 <Form.Control type="insumo" name="insumo" value={detalle.articuloInsumo.denominacion} 
                                 onChange={e => handleCantidadInsumoChange(e, index)}  disabled/>
-                                {/* <Form.Select aria-label="insumo" name="insumo" value={detalle.articuloInsumo.id} 
-                                onChange={e => handleSelectInsumoChange(e, index)}>
-                                    <option value={0}>Seleccionar un Insumo</option>
-                                    {insumos.map((insumo: ArticuloInsumo) =>
-                                        <option key={insumo.id} value={insumo.id}> {insumo.denominacion} </option>
-                                    )}
-                                </Form.Select> */}
                             </Form.Group>
-        
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Cantidad</Form.Label>
                                 <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
                             </Form.Group>
                             <Col xs="auto">
-                                <Button variant="danger" style={{marginTop: '32px'}}>X</Button>
+                                <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveInsumo(index)}>X</Button>
                             </Col>
                         </Row>
                     ))}
-                    {/* <Button variant="secondary" onClick={handleAddDetalle}>Agregar Insumo</Button> */}
-                    <Button variant="secondary" onClick={agregarInsumo}>Agregar Insumo</Button>
-
+                    <Button variant="secondary" style={{marginBottom: '10px'}}  onClick={agregarInsumoModal}>Agregar Insumo</Button>
                     {imagenes.map((imagen, index) => (
-                        <Form.Group className="mb-3" key={index}>
-                            <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name={`urlImagen${index}`}
-                                value={imagen}
-                                onChange={e => handleImageChange(e, index)}
-                            />
-                        </Form.Group>
+                        <Row key={index}>
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name={`urlImagen${index}`}
+                                    value={imagen}
+                                    onChange={e => handleImageChange(e, index)}
+                                />
+                            </Form.Group>
+                            <Col xs="auto">
+                                <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveImagen(index)}>X</Button>
+                            </Col>
+                        </Row>
                     ))}
                     <Button variant="secondary" onClick={handleAddImage}>Agregar otra imagen</Button>
-
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
-
-                    <Button variant="primary" type="submit">
+                    {/* <Button variant="primary" type="submit">
                         Guardar
-                    </Button>
+                    </Button> */}
                 </Form>
             </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseAndClear}>Cerrar</Button>
+            <Modal.Footer className="d-flex justify-content-between">
+                <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
+                <Button variant="success" onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>
     );
