@@ -47,7 +47,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setArticuloManufacturado(prevState => {
             const nuevosDetalles = [...prevState.articuloManufacturadoDetalles];
             nuevosDetalles[index].cantidad = Number(newCantidad);
-            return {...prevState, articuloManufacturadoDetalles: nuevosDetalles};
+            return { ...prevState, articuloManufacturadoDetalles: nuevosDetalles };
         });
     };
 
@@ -55,10 +55,10 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setArticuloManufacturado(prevState => {
             const nuevosDetalles = [...prevState.articuloManufacturadoDetalles];
             nuevosDetalles.splice(index, 1); // Eliminar el insumo en el índice especificado
-            return {...prevState, articuloManufacturadoDetalles: nuevosDetalles};
+            return { ...prevState, articuloManufacturadoDetalles: nuevosDetalles };
         });
     };
-    
+
     const handleRemoveImagen = (index: number) => {
         if (index > 0) {
             setImagenes(prevState => {
@@ -67,7 +67,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                 return nuevasImagenes;
             });
         }
-        
+
     };
 
     useEffect(() => {
@@ -82,14 +82,14 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
 
     useEffect(() => {
         if (showModal) {
-            if (selectedId) {                
+            if (selectedId) {
                 getArticuloManufacturadoPorID(selectedId) // Editar artículo existente
                     .then(data => {
                         setArticuloManufacturado(data);
                         setImagenes(data.imagenes.map(img => img.url));
                     })
                     .catch(e => console.error(e));
-            } else {                
+            } else {
                 setArticuloManufacturado(new ArticuloManufacturado()); // Crear nuevo artículo
                 setImagenes(['']);
             }
@@ -169,15 +169,14 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         const nuevosDetalles = items.map(item => ({
             id: 0,
             articuloInsumo: item,
-            cantidad: 0,
-            articuloManufacturado: manufacturado // Esto asegura que cada detalle tiene un campo 'articuloManufacturado'
+            cantidad: 0
         }));
-    
+
         setArticuloManufacturado(prevState => ({
             ...prevState,
             articuloManufacturadoDetalles: [...prevState.articuloManufacturadoDetalles, ...nuevosDetalles]
         }));
-    
+
         setShowModalInsumos(false);
     };
 
@@ -214,7 +213,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                     <Form.Group className="mb-3">
                         <Form.Label>Preparacion</Form.Label>
                         <Form.Control type="text" name="preparacion" value={manufacturado?.preparacion} onChange={handleInputChange} />
-                    </Form.Group>   
+                    </Form.Group>
                     <Row>
                         <Form.Group as={Col} className="mb-3">
                             <Form.Label>Categoria</Form.Label>
@@ -236,22 +235,22 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                         </Form.Group>
                     </Row>
                     {manufacturado.articuloManufacturadoDetalles.map((detalle, index) => (
-                         <Row key={index}>
+                        <Row key={index}>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Insumo {index + 1}</Form.Label>
-                                <Form.Control type="insumo" name="insumo" value={detalle.articuloInsumo.denominacion} 
-                                onChange={e => handleCantidadInsumoChange(e, index)}  disabled/>
+                                <Form.Control type="insumo" name="insumo" value={detalle.articuloInsumo.denominacion}
+                                    onChange={e => handleCantidadInsumoChange(e, index)} disabled />
                             </Form.Group>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Cantidad</Form.Label>
                                 <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
                             </Form.Group>
                             <Col xs="auto">
-                                <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveInsumo(index)}>X</Button>
+                                <Button variant="danger" style={{ marginTop: '32px' }} onClick={() => handleRemoveInsumo(index)}>X</Button>
                             </Col>
                         </Row>
                     ))}
-                    <Button variant="secondary" style={{marginBottom: '10px'}}  onClick={agregarInsumoModal}>Agregar Insumo</Button>
+                    <Button variant="secondary" style={{ marginBottom: '10px' }} onClick={agregarInsumoModal}>Agregar Insumo</Button>
                     {imagenes.map((imagen, index) => (
                         <Row key={index}>
                             <Form.Group as={Col} className="mb-3">
@@ -264,7 +263,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                                 />
                             </Form.Group>
                             <Col xs="auto">
-                                <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveImagen(index)}>X</Button>
+                                <Button variant="danger" style={{ marginTop: '32px' }} onClick={() => handleRemoveImagen(index)}>X</Button>
                             </Col>
                         </Row>
                     ))}
@@ -274,7 +273,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                     </div>
                 </Form>
             </Modal.Body>
-            
+
             <Modal.Footer className="d-flex justify-content-between">
                 <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
                 <Button variant="success" onClick={handleSubmit}>Guardar</Button>
