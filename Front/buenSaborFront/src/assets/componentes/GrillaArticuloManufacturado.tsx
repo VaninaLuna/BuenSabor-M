@@ -34,6 +34,8 @@ export function GrillaArticuloManufacturado() {
     const handleClose = () => {
         setShowModal(false);
         setEditing(false);
+        setSelectedId(null);
+        setSelectedArticulo(null);
     };
 
     const deleteArticuloManufacturado = async (idArticuloManufacturado: number) => {
