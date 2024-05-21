@@ -20,19 +20,14 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
     const [imagenes, setImagenes] = useState<string[]>(['']);
-    // const [visibleCategoria, setVisibleCategoria] = useState<boolean>(false);
-    // const [visibleUnidad, setVisibleUnidad] = useState<boolean>(false);
     const [nuevaCategoria, setNuevaCategoria] = useState<string>("");
     const [nuevaUnidad, setNuevaUnidad] = useState<string>("");
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
-        // Llama a handleClose
-        handleClose();
-
-        // Limpia el estado de imagenes
         setImagenes(['']);
         setTxtValidacion("");
+        handleClose();
     };
 
 
@@ -182,7 +177,6 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={insumo?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
-
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">
@@ -196,8 +190,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                    </Row>
-                    
+                    </Row>                    
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">
@@ -211,8 +204,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                    </Row>
-                    
+                    </Row>                    
                     <Form.Group className="mb-3">
                         <Form.Check // prettier-ignore
                             type="switch"
@@ -223,7 +215,6 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                             onChange={handleInputChange}
                         />
                     </Form.Group>
-
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">
@@ -234,9 +225,6 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                                 <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
                                             )}
                                         </Form.Select>
-                                    {/* <Col xs="auto">
-                                        <Button variant="secondary" onClick={() => { setVisibleCategoria(true) }}>+</Button>
-                                    </Col> */}
                             </Form.Group>                    
                         </Col>
                         <Col>
@@ -248,69 +236,9 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                                 <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
                                             )}
                                         </Form.Select>
-                                    {/* <Col xs="auto">
-                                        <Button variant="secondary" onClick={() => { setVisibleUnidad(true) }}>+</Button>
-                                    </Col> */}
                             </Form.Group>
                         </Col>
                     </Row>
-
-                    {/* {
-                        visibleCategoria &&
-                        <Row>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Crear nueva categoria</Form.Label>
-                                <Form.Control type="text" name="categoriaNueva" onChange={handleInputChange} />
-                            </Form.Group>
-
-                            <Row className="justify-content-md-center g-2" style={{ marginTop: 0, marginBottom: '20px' }}>
-                                <Col xs lg="2">
-                                    <Button variant="secondary" style={{ maxHeight:"40px" }} onClick={async () => {
-                                        await saveCategoria({ id: 0, denominacion: nuevaCategoria })
-                                        setVisibleCategoria(false)
-                                        setNuevaCategoria("");
-                                    }}>Guardar</Button>
-                                </Col>
-
-                                <Col xs lg="2">
-                                    <Button variant="secondary" style={{ maxHeight:"40px", marginLeft: '10px' }} onClick={() => {
-                                        setVisibleCategoria(false)
-                                        setNuevaCategoria("");
-                                    }}>NoGuardar</Button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    } */}
-
-
-
-                    {/* {
-                        visibleUnidad &&
-                        <Row>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Crear nueva Unidad</Form.Label>
-                                <Form.Control type="text" name="unidadNueva" onChange={handleInputChange} />
-                            </Form.Group>
-
-                            <Row className="justify-content-md-center g-2" style={{ marginTop: 0, marginBottom: '20px' }}>
-                                <Col xs lg="2">
-                                    <Button variant="secondary" style={{ maxHeight:"40px" }} onClick={async () => {
-                                        await saveUnidadMedida({ id: 0, denominacion: nuevaUnidad })
-                                        setVisibleUnidad(false)
-                                        setNuevaUnidad("");
-                                    }}>Guardar</Button>
-                                </Col>
-
-                                <Col xs lg="2">
-                                    <Button variant="secondary" style={{ maxHeight:"40px", marginLeft: '10px' }} onClick={() => {
-                                        setVisibleUnidad(false)
-                                        setNuevaUnidad("");
-                                    }}>NoGuardar</Button>
-                                </Col>
-                            </Row>
-                        </Row>
-                    } */}
-
                     {imagenes.map((imagen, index) => (
                     <Row key={index}>
                         <Form.Group as={Col} className="mb-3" >
@@ -325,8 +253,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         <Col xs="auto">
                             <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveImagen(index)}>X</Button>
                         </Col>
-                    </Row>
-                        
+                    </Row>                        
                     ))}
                     <Button variant="secondary" onClick={handleAddImage}>Agregar otra imagen</Button>
 
@@ -335,6 +262,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                     </div>
                 </Form>
             </Modal.Body>
+
             <Modal.Footer className="d-flex justify-content-between">
                 <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
                 <Button variant="success" onClick={handleSubmit}>Guardar</Button>
