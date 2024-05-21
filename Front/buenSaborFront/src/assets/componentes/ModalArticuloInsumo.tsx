@@ -49,6 +49,17 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         setImagenes([...imagenes, '']);
     }
 
+    const handleRemoveImagen = (index: number) => {
+        if (index > 0) {
+            setImagenes(prevState => {
+                const nuevasImagenes = [...prevState];
+                nuevasImagenes.splice(index, 1); // Eliminar las imagenes en el índice especificado
+                return nuevasImagenes;
+            });
+        }
+        
+    };
+
     useEffect(() => {
         getCategorias()
             .then(data => setCategoria(data))
@@ -166,7 +177,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
             </Modal.Header>
 
             <Modal.Body>
-                <Form onSubmit={handleSubmit}>
+                <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={insumo?.denominacion} onChange={handleInputChange} />
@@ -301,7 +312,8 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                     } */}
 
                     {imagenes.map((imagen, index) => (
-                        <Form.Group className="mb-3" key={index}>
+                    <Row key={index}>
+                        <Form.Group as={Col} className="mb-3" >
                             <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
                             <Form.Control
                                 type="text"
@@ -310,21 +322,22 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 onChange={e => handleImageChange(e, index)}
                             />
                         </Form.Group>
+                        <Col xs="auto">
+                            <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveImagen(index)}>X</Button>
+                        </Col>
+                    </Row>
+                        
                     ))}
                     <Button variant="secondary" onClick={handleAddImage}>Agregar otra imagen</Button>
 
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
-
-                    <Button variant="primary" type="submit">
-                        Guardar
-                    </Button>
                 </Form>
             </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseAndClear}>Cerrar</Button>
+            <Modal.Footer className="d-flex justify-content-between">
+                <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
+                <Button variant="success" onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>
     );
