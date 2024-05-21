@@ -82,17 +82,15 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
 
     useEffect(() => {
         if (showModal) {
-            if (selectedId) {
-                // Editar artículo existente
-                getArticuloManufacturadoPorID(selectedId)
+            if (selectedId) {                
+                getArticuloManufacturadoPorID(selectedId) // Editar artículo existente
                     .then(data => {
                         setArticuloManufacturado(data);
                         setImagenes(data.imagenes.map(img => img.url));
                     })
                     .catch(e => console.error(e));
-            } else {
-                // Crear nuevo artículo
-                setArticuloManufacturado(new ArticuloManufacturado());
+            } else {                
+                setArticuloManufacturado(new ArticuloManufacturado()); // Crear nuevo artículo
                 setImagenes(['']);
             }
         }
@@ -192,6 +190,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Artículo Manufacturado</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-3">
@@ -273,11 +272,9 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
-                    {/* <Button variant="primary" type="submit">
-                        Guardar
-                    </Button> */}
                 </Form>
             </Modal.Body>
+            
             <Modal.Footer className="d-flex justify-content-between">
                 <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
                 <Button variant="success" onClick={handleSubmit}>Guardar</Button>
