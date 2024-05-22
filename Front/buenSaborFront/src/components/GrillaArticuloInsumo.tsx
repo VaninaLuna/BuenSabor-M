@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+import ArticuloInsumo from '../models/ArticuloInsumo';
+import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../services/FuncionesArticuloInsumoApi';
 
 export function GrillaArticuloInsumo() {
     const [showModal, setShowModal] = useState(false);

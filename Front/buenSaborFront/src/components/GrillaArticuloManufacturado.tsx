@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
-import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../servicios/FuncionesArticuloManufacturadoApi";
+import ArticuloManufacturado from "../models/ArticuloManufacturado";
+import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../services/FuncionesArticuloManufacturadoApi";
 import { Button, Table, Form, Modal, Image } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 

@@ -1,4 +1,4 @@
-import ArticuloManufacturado from "../entidades/ArticuloManufacturado";
+import ArticuloManufacturado from "../models/ArticuloManufacturado";
 
 //GET
 export async function getArticulosManufacturados() {

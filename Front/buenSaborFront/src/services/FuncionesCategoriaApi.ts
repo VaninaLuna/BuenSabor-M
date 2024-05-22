@@ -1,4 +1,4 @@
-import Categoria from "../entidades/Categoria";
+import Categoria from "../models/Categoria";
 
 export async function getCategorias() {
     const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/categoria/all';

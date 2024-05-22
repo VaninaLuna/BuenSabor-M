@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import Categoria from '../entidades/Categoria';
-import { getCategorias } from '../servicios/FuncionesCategoriaApi';
-import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { getArticuloInsumoPorID, saveArticuloInsumo } from '../servicios/FuncionesArticuloInsumoApi';
+import Categoria from '../models/Categoria';
+import { getCategorias } from '../services/FuncionesCategoriaApi';
+import UnidadMedida from '../models/UnidadMedida';
+import { getUnidadesMedidas } from '../services/FuncionesUnidadMedidaApi';
+import ArticuloInsumo from '../models/ArticuloInsumo';
+import { getArticuloInsumoPorID, saveArticuloInsumo } from '../services/FuncionesArticuloInsumoApi';
 
 interface ModalProps {
     showModal: boolean;

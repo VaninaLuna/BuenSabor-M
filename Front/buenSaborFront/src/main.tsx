@@ -2,13 +2,13 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { GrillaArticuloManufacturado } from './assets/componentes/GrillaArticuloManufacturado.tsx'
-import { GrillaArticuloInsumo } from './assets/componentes/GrillaArticuloInsumo.tsx'
+import { GrillaArticuloManufacturado } from './components/GrillaArticuloManufacturado.tsx'
+import { GrillaArticuloInsumo } from './components/GrillaArticuloInsumo.tsx'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navegador } from './assets/componentes/Navegador.tsx'
+import { Navegador } from './components/Navegador.tsx'
 import React from 'react'
-import { GrillaCategoriaUnidadMedida } from './assets/componentes/GrillaCategoriaUnidadMedida.tsx'
+import { GrillaCategoriaUnidadMedida } from './components/GrillaCategoriaUnidadMedida.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

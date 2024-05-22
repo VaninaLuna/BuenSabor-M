@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidadMedidaPorID, saveUnidadMedida } from '../servicios/FuncionesUnidadMedidaApi';
+import Categoria from '../models/Categoria';
+import { getCategoriaPorID, saveCategoria } from '../services/FuncionesCategoriaApi';
 
 interface ModalProps {
     showModal: boolean;
@@ -10,9 +10,9 @@ interface ModalProps {
     selectedId?: number | null;
 }
 
-export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
 
-    const [uMedida, setUnidadMedida] = useState<UnidadMedida>(new UnidadMedida());
+    const [categoria, setCategoria] = useState<Categoria>(new Categoria());
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
@@ -22,10 +22,11 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
 
     useEffect(() => {
         if (!selectedId) {
-            setUnidadMedida(new UnidadMedida());
+            setCategoria(new Categoria());
         } else {
-            getUnidadMedidaPorID(selectedId).then(data => {
-                setUnidadMedida(data)
+            getCategoriaPorID(selectedId)
+            .then(data => {
+                setCategoria(data)
             })
             .catch(e => console.error(e));
         }
@@ -35,37 +36,37 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
         // Limpiamos el mensaje de validación
         setTxtValidacion("");
 
-        setUnidadMedida({ ...uMedida, [e.target.name]: e.target.value });
+        setCategoria({ ...categoria, [e.target.name]: e.target.value });
     };
 
     // Manejador de envío del formulario
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (uMedida?.denominacion === undefined || uMedida.denominacion === "") {
+        if (categoria?.denominacion === undefined || categoria.denominacion === "") {
             setTxtValidacion("Debe ingresar una denominacion");
             return;
         }
 
         // Luego, asignas el array de nuevas imágenes al estado del insumo
-        setUnidadMedida(uMedida);
+        setCategoria(categoria);
 
-        console.log(JSON.stringify(uMedida));
-        await saveUnidadMedida(uMedida);
+        console.log(JSON.stringify(categoria));
+        await saveCategoria(categoria);
         window.location.reload();
     };
 
     return (
         <Modal show={showModal} onHide={handleCloseAndClear}>
             <Modal.Header closeButton>
-                <Modal.Title>{editing ? 'Editar' : 'Añadir'} UnidadMedida</Modal.Title>
+                <Modal.Title>{editing ? 'Editar' : 'Añadir'} Categoria</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
-                        <Form.Control type="text" name="denominacion" value={uMedida?.denominacion} onChange={handleInputChange} />
+                        <Form.Control type="text" name="denominacion" value={categoria?.denominacion} onChange={handleInputChange} />
                     </Form.Group>                   
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>

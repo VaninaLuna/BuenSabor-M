@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import Categoria from '../entidades/Categoria';
-import UnidadMedida from '../entidades/UnidadMedida';
-import { deleteCategoriaPorID, getCategorias } from '../servicios/FuncionesCategoriaApi';
-import { deleteUnidadMedidaPorID, getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
+import Categoria from '../models/Categoria';
+import UnidadMedida from '../models/UnidadMedida';
+import { deleteCategoriaPorID, getCategorias } from '../services/FuncionesCategoriaApi';
+import { deleteUnidadMedidaPorID, getUnidadesMedidas } from '../services/FuncionesUnidadMedidaApi';
 import { ModalCategoria } from './ModalCategoria';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
