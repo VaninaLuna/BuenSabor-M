@@ -6,7 +6,7 @@ import { GrillaArticuloManufacturado } from './components/GrillaArticuloManufact
 import { GrillaArticuloInsumo } from './components/GrillaArticuloInsumo.tsx'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navegador } from './components/Navegador.tsx'
+import { Navegador } from './components/layout/Navegador.tsx'
 import React from 'react'
 import { GrillaCategoriaUnidadMedida } from './components/GrillaCategoriaUnidadMedida.tsx'
 
