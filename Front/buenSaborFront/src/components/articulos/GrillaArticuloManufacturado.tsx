@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import ArticuloManufacturado from "../models/ArticuloManufacturado";
-import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../services/FuncionesArticuloManufacturadoApi";
+import ArticuloManufacturado from "../../models/ArticuloManufacturado";
+import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
 import { Button, Table, Form, Modal, Image } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 
@@ -68,16 +68,6 @@ export function GrillaArticuloManufacturado() {
 
     return (
         <>
-            <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
-                Crear Articulo Manufacturado
-            </Button>
-            <Form.Control
-                type="text"
-                placeholder="Filtrar por ID o Denominación"
-                value={filter}
-                onChange={handleFilterChange}
-                style={{ marginBottom: '20px', width: '300px' }}
-            />
             <ModalArticuloManufacturado
                 handleClose={handleClose}
                 showModal={showModal}
@@ -85,6 +75,18 @@ export function GrillaArticuloManufacturado() {
                 selectedId={selectedId}
             />
             <br />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Form.Control
+                    type="text"
+                    placeholder="Filtrar por ID o Denominación"
+                    value={filter}
+                    onChange={handleFilterChange}
+                    style={{ margin: 50, width: '300px', height: '50px' }}
+                />
+                <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
+                    Crear Articulo Manufacturado
+                </Button>
+            </div>
             <Table striped bordered hover size="sm">
                 <thead>
                     <tr>
@@ -106,10 +108,10 @@ export function GrillaArticuloManufacturado() {
                             <td>{articulomanufacturado.id}</td>
                             <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
                                 <Image src={articulomanufacturado.imagenes[0].url}
-                                alt={articulomanufacturado.denominacion} style={{height:"50px", width:"50px", objectFit: 'cover'}} rounded />
+                                    alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
                                 : 'No image'
                             }</td>
-                           <td>{articulomanufacturado.denominacion}</td>
+                            <td>{articulomanufacturado.denominacion}</td>
                             <td>{articulomanufacturado.unidadMedida.denominacion}</td>
                             <td>{articulomanufacturado.categoria.denominacion}</td>
                             <td>{articulomanufacturado.descripcion}</td>
@@ -125,17 +127,17 @@ export function GrillaArticuloManufacturado() {
                     )}
                 </tbody>
             </Table>
-               <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
+            <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>{selectedArticulo?.denominacion}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {selectedArticulo && selectedArticulo.articuloManufacturadoDetalles.map((detalle, index) => (
-                    <p key={index}>
-                    <span style={{ fontWeight: 'bold' }}>Insumo:</span> {detalle.articuloInsumo.denominacion} <br />
-                    <span style={{ fontWeight: 'bold' }}>Cantidad:</span> {detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion}
-                    </p>
-                 ))}
+                        <p key={index}>
+                            <span style={{ fontWeight: 'bold' }}>Insumo:</span> {detalle.articuloInsumo.denominacion} <br />
+                            <span style={{ fontWeight: 'bold' }}>Cantidad:</span> {detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion}
+                        </p>
+                    ))}
                 </Modal.Body>
 
 
