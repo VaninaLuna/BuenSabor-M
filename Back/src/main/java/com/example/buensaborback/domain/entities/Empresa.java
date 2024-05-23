@@ -1,6 +1,8 @@
 package com.example.buensaborback.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -22,8 +24,8 @@ public class Empresa extends Base{
     private String razonSocial;
     private Integer cuil;
 
-    @OneToMany(mappedBy = "empresa", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Builder.Default
-    @JsonManagedReference
+    @JsonIgnoreProperties("empresa")
     private Set<Sucursal> sucursal = new HashSet<>();
 }
