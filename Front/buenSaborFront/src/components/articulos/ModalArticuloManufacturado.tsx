@@ -276,7 +276,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
 
             <Modal.Footer className="d-flex justify-content-between">
                 <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
-                <Button variant="success" onClick={handleSubmit}>Guardar</Button>
+                <Button style={{ backgroundColor: '#83CA6A' }} onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>
     );

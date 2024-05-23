@@ -71,7 +71,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
-                    <Button variant="primary" type="submit">
+                    <Button style={{ backgroundColor: '#83CA6A' }} type="submit">
                         Guardar
                     </Button>
                 </Form>

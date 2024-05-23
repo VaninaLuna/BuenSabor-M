@@ -72,7 +72,7 @@ export function GrillaSucursal() {
                     onChange={handleFilterChange}
                     style={{ margin: 50, width: '300px', height: '50px' }}
                 />
-                <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
+                <Button size="lg" style={{ margin: 50, backgroundColor: '#EE7F46' }} onClick={handleOpenCreate}>
                     Crear Sucursal
                 </Button>
             </div>

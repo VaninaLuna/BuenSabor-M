@@ -110,7 +110,7 @@ export const ModalEmpresa: React.FC<ModalProps> = ({ showModal, handleClose, edi
 
             <Modal.Footer className="d-flex justify-content-between">
                 <Button variant="secondary" onClick={handleCloseAndClear}>Cancelar</Button>
-                <Button variant="success" onClick={handleSubmit}>Guardar</Button>
+                <Button style={{ backgroundColor: '#83CA6A' }} onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>
     );
