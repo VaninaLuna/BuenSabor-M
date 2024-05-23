@@ -40,20 +40,30 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         } else {
             getSucursalPorId(selectedId)
                 .then(data => {
-                    setSucursal(data)
+                    setSucursal(data);
+                    setDomicilio(data.domicilio);
+                    setLocalidad(data.domicilio.localidad);
+                    setProvincia(data.domicilio.localidad.provincia);
+                    setPais(data.domicilio.localidad.provincia.pais);
                 })
                 .catch(e => console.error(e));
-
-            setDomicilio(sucursal.domicilio);
-            setLocalidad(sucursal.domicilio.localidad);
-            setProvincia(sucursal.domicilio.localidad.provincia);
-            setPais(sucursal.domicilio.localidad.provincia.pais);
         }
     }, [selectedId])
 
+
     useEffect(() => {
         getEmpresa()
-            .then(data => setEmpresas(data))
+            .then((data: Empresa[]) => {
+
+                const formatEmpresas = data.map(empresa => ({
+                    id: empresa.id,
+                    cuil: empresa.cuil,
+                    nombre: empresa.nombre,
+                    razonSocial: empresa.razonSocial
+                }));
+
+                setEmpresas(formatEmpresas);
+            })
             .catch(e => console.error(e))
     }, [])
 
@@ -114,7 +124,6 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        /* 
         if (sucursal?.nombre === undefined || sucursal.nombre === "") {
             setTxtValidacion("Debe ingresar un nombre");
             return;
@@ -131,7 +140,6 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
             setTxtValidacion("Debe ingresar una empresa");
             return;
         }
-        */
 
         const sucursalActualizado = { ...sucursal };
 
@@ -145,7 +153,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
 
         const localidadFromDB = await saveLocalidad(localidadActualizado)
 
-        console.log(JSON.stringify(localidadFromDB));
+        console.log(JSON.stringify(localidadActualizado));
 
         console.log("\n")
 
@@ -154,7 +162,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
 
         const domicilioFromDB = await saveDomicilio(domicilioActualizado);
 
-        console.log(JSON.stringify(domicilioFromDB))
+        console.log(JSON.stringify(domicilioActualizado))
 
         console.log("\n")
 
@@ -162,9 +170,8 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
 
         setSucursal(sucursalActualizado);
 
-        console.log(JSON.stringify(sucursalActualizado))
-        //await saveSucursal(sucursalActualizado);
-        //window.location.reload();
+        await saveSucursal(sucursalActualizado);
+        window.location.reload();
 
     };
 
