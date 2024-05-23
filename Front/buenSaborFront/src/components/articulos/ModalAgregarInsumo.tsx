@@ -15,6 +15,7 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
     const [insumosSeleccionados, seInsumosSeleccionados] = useState<ArticuloInsumo[]>([]);
 
 
+
     const getListadoArticulosInsumos = async () => {
         const datos: ArticuloInsumo[] = await getArticulosInsumos();
         setArticulosInsumos(datos);

@@ -1,4 +1,5 @@
 import Domicilio from "./Domicilio";
+import Empresa from "./Empresa";
 
 export default class Sucursal {
     id: number = 0;
@@ -7,4 +8,5 @@ export default class Sucursal {
     horarioCierre: string = "";
     casaMatriz: boolean = false;
     domicilio: Domicilio = new Domicilio()
+    empresa: Empresa = new Empresa();
 }
