@@ -11,7 +11,7 @@ function Sidebar() {
 
     return (
         <div className="d-flex " >
-            <CSidebar colorScheme="dark" className="bg-primary collapse border-end d-md-block d-block" id="sidebarCollapse" style={{ position: 'relative', height: '100%', backgroundColor: '#E0E0E0' }} unfoldable>
+            <CSidebar colorScheme="dark" className="bg-dark collapse border-end d-md-block d-block" id="sidebarCollapse" style={{ position: 'relative', height: '100%', backgroundColor: '#E0E0E0' }} unfoldable>
                 <CSidebarNav>
                     <CNavItem>
                         <NavLink to="/" className="nav-link">

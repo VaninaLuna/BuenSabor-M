@@ -71,10 +71,10 @@ export function GrillaCategoriaUnidadMedida() {
 
     return (
         <>
-            <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={() => handleOpenCreate(true)}>
+            <Button size="lg" style={{ margin: 50, backgroundColor: '#EE7F46' }} onClick={() => handleOpenCreate(true)}>
                 Crear Categoria
             </Button>
-            <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={() => handleOpenCreate(false)}>
+            <Button size="lg" style={{ margin: 50, backgroundColor: '#EE7F46' }} onClick={() => handleOpenCreate(false)}>
                 Crear Unidad de Medida
             </Button>
             <ModalCategoria
