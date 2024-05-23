@@ -166,7 +166,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
             </Modal.Body>
 
             <Modal.Footer className="d-flex justify-content-between">
-                <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
+                <Button variant="secondary" onClick={handleCloseAndClear}>Cancelar</Button>
                 <Button variant="success" onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>
