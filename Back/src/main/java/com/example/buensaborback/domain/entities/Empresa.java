@@ -22,10 +22,10 @@ public class Empresa extends Base{
 
     private String nombre;
     private String razonSocial;
-    private Integer cuil;
+    private String cuil;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Builder.Default
     @JsonIgnoreProperties("empresa")
-    private Set<Sucursal> sucursal = new HashSet<>();
+    private Set<Sucursal> sucursales = new HashSet<>();
 }
