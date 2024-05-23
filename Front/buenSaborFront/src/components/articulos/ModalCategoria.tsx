@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Categoria from '../entidades/Categoria';
-import { getCategoriaPorID, saveCategoria } from '../servicios/FuncionesCategoriaApi';
+import Categoria from '../../models/Categoria';
+import { getCategoriaPorID, saveCategoria } from '../../services/FuncionesCategoriaApi';
 
 interface ModalProps {
     showModal: boolean;
@@ -25,10 +25,10 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             setCategoria(new Categoria());
         } else {
             getCategoriaPorID(selectedId)
-            .then(data => {
-                setCategoria(data)
-            })
-            .catch(e => console.error(e));
+                .then(data => {
+                    setCategoria(data)
+                })
+                .catch(e => console.error(e));
         }
     }, [selectedId])
 
@@ -67,7 +67,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={categoria?.denominacion} onChange={handleInputChange} />
-                    </Form.Group>                   
+                    </Form.Group>
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>

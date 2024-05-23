@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import Categoria from '../entidades/Categoria';
-import { getCategorias } from '../servicios/FuncionesCategoriaApi';
-import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidadesMedidas } from '../servicios/FuncionesUnidadMedidaApi';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { getArticuloInsumoPorID, saveArticuloInsumo } from '../servicios/FuncionesArticuloInsumoApi';
+import Categoria from '../../models/Categoria';
+import { getCategorias } from '../../services/FuncionesCategoriaApi';
+import UnidadMedida from '../../models/UnidadMedida';
+import { getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
+import ArticuloInsumo from '../../models/ArticuloInsumo';
+import { getArticuloInsumoPorID, saveArticuloInsumo } from '../../services/FuncionesArticuloInsumoApi';
 
 interface ModalProps {
     showModal: boolean;
@@ -52,7 +52,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                 return nuevasImagenes;
             });
         }
-        
+
     };
 
     useEffect(() => {
@@ -63,7 +63,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         getUnidadesMedidas()
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
-    }, [/*visibleUnidad, visibleCategoria*/]) 
+    }, [/*visibleUnidad, visibleCategoria*/])
 
     useEffect(() => {
         if (!selectedId) {
@@ -190,7 +190,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="precioVenta" value={insumo?.precioVenta} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                    </Row>                    
+                    </Row>
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">
@@ -204,7 +204,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Control type="number" name="stockMaximo" value={insumo?.stockMaximo} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
-                    </Row>                    
+                    </Row>
                     <Form.Group className="mb-3">
                         <Form.Check // prettier-ignore
                             type="switch"
@@ -219,41 +219,41 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Categoria</Form.Label>
-                                        <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
-                                            <option value={0}>Seleccionar Categoria</option>
-                                            {categorias.map((categoria: Categoria) =>
-                                                <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                                            )}
-                                        </Form.Select>
-                            </Form.Group>                    
+                                <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
+                                    <option value={0}>Seleccionar Categoria</option>
+                                    {categorias.map((categoria: Categoria) =>
+                                        <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
+                                    )}
+                                </Form.Select>
+                            </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Unidad de medida</Form.Label>
-                                        <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange} hidden={nuevaUnidad.length != 0}>
-                                            <option value={0}>Seleccionar Unidad de medida</option>
-                                            {unidades.map((unidad: UnidadMedida) =>
-                                                <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
-                                            )}
-                                        </Form.Select>
+                                <Form.Select aria-label="Default select example" name="unidadMedida" value={insumo?.unidadMedida.id} onChange={handleInputChange} hidden={nuevaUnidad.length != 0}>
+                                    <option value={0}>Seleccionar Unidad de medida</option>
+                                    {unidades.map((unidad: UnidadMedida) =>
+                                        <option key={unidad.id} value={unidad.id}> {unidad.denominacion} </option>
+                                    )}
+                                </Form.Select>
                             </Form.Group>
                         </Col>
                     </Row>
                     {imagenes.map((imagen, index) => (
-                    <Row key={index}>
-                        <Form.Group as={Col} className="mb-3" >
-                            <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name={`urlImagen${index}`}
-                                value={imagen}
-                                onChange={e => handleImageChange(e, index)}
-                            />
-                        </Form.Group>
-                        <Col xs="auto">
-                            <Button variant="danger" style={{marginTop: '32px'}} onClick={() => handleRemoveImagen(index)}>X</Button>
-                        </Col>
-                    </Row>                        
+                        <Row key={index}>
+                            <Form.Group as={Col} className="mb-3" >
+                                <Form.Label>Agregar URL de la Imagen {index + 1}</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name={`urlImagen${index}`}
+                                    value={imagen}
+                                    onChange={e => handleImageChange(e, index)}
+                                />
+                            </Form.Group>
+                            <Col xs="auto">
+                                <Button variant="danger" style={{ marginTop: '32px' }} onClick={() => handleRemoveImagen(index)}>X</Button>
+                            </Col>
+                        </Row>
                     ))}
                     <Button variant="secondary" onClick={handleAddImage}>Agregar otra imagen</Button>
 

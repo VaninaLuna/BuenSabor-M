@@ -1,4 +1,4 @@
-import ArticuloManufacturadoDetalle from "../entidades/ArticuloManufacturadoDetalle";
+import ArticuloManufacturadoDetalle from "../models/ArticuloManufacturadoDetalle";
 
 export async function getArticuloManufacturadoDetallePorID(id: number) {
     const INSTRUMENTO_ENDPOINT = `http://localhost:9000/instrumento/${id}`;

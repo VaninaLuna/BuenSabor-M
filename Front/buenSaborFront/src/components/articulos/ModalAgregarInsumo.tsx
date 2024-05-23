@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table, FormControl, Modal, Button, Image, FormCheck } from 'react-bootstrap';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+import ArticuloInsumo from '../../models/ArticuloInsumo';
+import { getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
 
 interface ModalProps {
     showModalInsumos: boolean;
@@ -29,7 +29,7 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
         setFiltro(event.target.value);
     };
 
-    const filteredArticulosInsumos = articulosInsumos.filter(articulo => 
+    const filteredArticulosInsumos = articulosInsumos.filter(articulo =>
         articulo.id.toString().includes(filtro) ||
         articulo.denominacion.toLowerCase().includes(filtro.toLowerCase())
     );
@@ -49,15 +49,15 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
 
 
     return (
-        <Modal show={showModalInsumos} onHide={handleCloseAndClear} 
-        size="lg" style={{background: 'rgba(0, 0, 0, 0.5)'}}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered>
-            <Modal.Header style={{backgroundColor: 'gainsboro'}} closeButton>
+        <Modal show={showModalInsumos} onHide={handleCloseAndClear}
+            size="lg" style={{ background: 'rgba(0, 0, 0, 0.5)' }}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered>
+            <Modal.Header style={{ backgroundColor: 'gainsboro' }} closeButton>
                 <Modal.Title>Agregar Insumos</Modal.Title>
             </Modal.Header>
 
-            <Modal.Body style={{backgroundColor: 'gainsboro'}}>
+            <Modal.Body style={{ backgroundColor: 'gainsboro' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <FormControl
                         placeholder="Filtrar por ID o Denominacion"
@@ -83,14 +83,14 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
                     <tbody>
                         {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
                             <tr key={index}>
-                                <td style={{textAlign: 'center', verticalAlign: 'middle'}}>
+                                <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                                     <FormCheck type="checkbox" name="agregar"
-                                    onChange={(e) => handleSelectChange(articuloInsumo, e.target.checked)} />
+                                        onChange={(e) => handleSelectChange(articuloInsumo, e.target.checked)} />
                                 </td>
                                 <td>{articuloInsumo.id}</td>
-                                <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ? 
-                                    <Image src={articuloInsumo.imagenes[0].url} 
-                                        alt={articuloInsumo.denominacion} style={{height:"50px", width:"50px", objectFit: 'cover'}} rounded />
+                                <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
+                                    <Image src={articuloInsumo.imagenes[0].url}
+                                        alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
                                     : 'No image'
                                 }</td>
                                 <td>{articuloInsumo.denominacion}</td>
@@ -105,7 +105,7 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
                 </Table>
             </Modal.Body>
 
-            <Modal.Footer style={{backgroundColor: 'gainsboro'}}>
+            <Modal.Footer style={{ backgroundColor: 'gainsboro' }}>
                 <Button variant="primary" onClick={handleCloseAndClear}>Cerrar y Guardar</Button>
             </Modal.Footer>
         </Modal>

@@ -1,7 +1,9 @@
-import UnidadMedida from "../entidades/UnidadMedida";
+import ArticuloInsumo from "../models/ArticuloInsumo";
 
-export async function getUnidadesMedidas() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/unidadMedida/all';
+
+//GET
+export async function getArticulosInsumos() {
+    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloInsumo/all';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -11,14 +13,14 @@ export async function getUnidadesMedidas() {
         }
 
         const json = await response.json();
-        return json as UnidadMedida[];
+        return json as ArticuloInsumo[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }
 
-export async function getUnidadMedidaPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:8080/unidadMedida/${id}`;
+export async function getArticuloInsumoPorID(id: number) {
+    const INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -28,18 +30,19 @@ export async function getUnidadMedidaPorID(id: number) {
         }
 
         const json = await response.json();
-        return json as UnidadMedida;
+        return json as ArticuloInsumo;
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }
 
-export async function saveUnidadMedida(unidadMedida?: UnidadMedida) {
-    let endpoint = 'http://localhost:8080/unidadMedida';
+//POST - PUT
+export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
+    let endpoint = 'http://localhost:8080/articuloInsumo';
     let method: string = "POST";
 
-    if (unidadMedida && unidadMedida.id !== 0) {
-        endpoint = `http://localhost:8080/unidadMedida/${unidadMedida.id}`;
+    if (articuloInsumo && articuloInsumo.id !== 0) {
+        endpoint = `http://localhost:8080/articuloInsumo/${articuloInsumo.id}`;
         method = "PUT";
     }
 
@@ -48,13 +51,13 @@ export async function saveUnidadMedida(unidadMedida?: UnidadMedida) {
         "headers": {
             "Content-Type": 'application/json'
         },
-        "body": JSON.stringify(unidadMedida)
+        "body": JSON.stringify(articuloInsumo)
     });
 }
 
 //DELETE
-export async function deleteUnidadMedidaPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/unidadMedida/${id}`
+export async function deleteArticuloInsumoPorID(id: number) {
+    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
@@ -62,12 +65,12 @@ export async function deleteUnidadMedidaPorID(id: number) {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al eliminar la unidadMedida: ${response.status} ${response.statusText}`);
+            throw new Error(`Error al eliminar el articuloInsumo: ${response.status} ${response.statusText}`);
         }
 
         const isDeleted = await response.json();
         return isDeleted as boolean;
     } catch (e) {
-        throw new Error('Error al hacer fetch de unidadMedida')
+        throw new Error('Error al hacer fetch de articuloInsumo')
     }
 }

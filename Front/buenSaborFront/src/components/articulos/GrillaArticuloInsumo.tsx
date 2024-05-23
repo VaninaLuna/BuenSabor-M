@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
-import ArticuloInsumo from '../entidades/ArticuloInsumo';
-import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../servicios/FuncionesArticuloInsumoApi';
+import ArticuloInsumo from '../../models/ArticuloInsumo';
+import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
+
 
 export function GrillaArticuloInsumo() {
     const [showModal, setShowModal] = useState(false);
@@ -47,16 +48,13 @@ export function GrillaArticuloInsumo() {
         setFiltro(event.target.value);
     };
 
-    const filteredArticulosInsumos = articulosInsumos.filter(articulo => 
+    const filteredArticulosInsumos = articulosInsumos.filter(articulo =>
         articulo.id.toString().includes(filtro) ||
         articulo.denominacion.toLowerCase().includes(filtro.toLowerCase())
     );
 
     return (
         <>
-            <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
-                Crear Articulo Insumo
-            </Button>
             <ModalArticuloInsumo
                 handleClose={handleClose}
                 showModal={showModal}
@@ -64,13 +62,16 @@ export function GrillaArticuloInsumo() {
                 selectedId={selectedId}
             />
             <br />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <FormControl
                     placeholder="Filtrar por ID o Denominacion"
                     value={filtro}
                     onChange={handleFilterChange}
-                    style={{ marginBottom: '20px', width: '300px' }}
+                    style={{ margin: 50, width: '300px', height: '50px' }}
                 />
+                <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
+                    Crear Articulo Insumo
+                </Button>
             </div>
             <Table striped bordered hover size="sm">
                 <thead>
@@ -94,7 +95,7 @@ export function GrillaArticuloInsumo() {
                             <td>{articuloInsumo.id}</td>
                             <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
                                 <Image src={articuloInsumo.imagenes[0].url}
-                                alt={articuloInsumo.denominacion} style={{height:"50px", width:"50px", objectFit: 'cover'}} rounded />
+                                    alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
                                 : 'No image'
                             }</td>
                             <td>{articuloInsumo.denominacion}</td>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import UnidadMedida from '../entidades/UnidadMedida';
-import { getUnidadMedidaPorID, saveUnidadMedida } from '../servicios/FuncionesUnidadMedidaApi';
+import UnidadMedida from '../../models/UnidadMedida';
+import { getUnidadMedidaPorID, saveUnidadMedida } from '../../services/FuncionesUnidadMedidaApi';
 
 interface ModalProps {
     showModal: boolean;
@@ -27,7 +27,7 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
             getUnidadMedidaPorID(selectedId).then(data => {
                 setUnidadMedida(data)
             })
-            .catch(e => console.error(e));
+                .catch(e => console.error(e));
         }
     }, [selectedId])
 
@@ -66,7 +66,7 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={uMedida?.denominacion} onChange={handleInputChange} />
-                    </Form.Group>                   
+                    </Form.Group>
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>
