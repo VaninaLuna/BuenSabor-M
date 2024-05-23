@@ -1,8 +1,106 @@
+import { useEffect, useState } from 'react';
+import { Button, Table, FormControl } from 'react-bootstrap';
+
+
+import Empresa from '../../models/Empresa';
+import { deleteEmpresaPorID, getEmpresa } from '../../services/FuncionesEmpresa';
+import { ModalEmpresa } from './ModalEmpresa';
+
+
 export function GrillaEmpresa() {
+    const [showModal, setShowModal] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const [empresa, setEmpresa] = useState<Empresa[]>([]);
+    const [filtro, setFiltro] = useState('');
+
+    const getListadoEmpresas = async () => {
+        const datos: Empresa[] = await getEmpresa();
+        setEmpresa(datos);
+    };
+
+    const handleOpenCreate = () => {
+        setShowModal(true);
+        setEditing(false);
+        setSelectedId(null);
+    };
+
+    const handleOpenEdit = () => {
+        setShowModal(true);
+        setEditing(true);
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+        setEditing(false);
+        setSelectedId(null);
+    };
+
+    const deleteEmpresa = async (idEmpresa: number) => {
+        await deleteEmpresaPorID(idEmpresa);
+        window.location.reload();
+    };
+
+    useEffect(() => {
+        getListadoEmpresas();
+    }, []);
+
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredEmpresas = empresa.filter(empresaF =>
+        empresaF.id.toString().includes(filtro) ||
+        empresaF.nombre.toLowerCase().includes(filtro.toLowerCase())
+    );
 
     return (
         <>
-            <h1>Empresas</h1>
+            <ModalEmpresa
+                handleClose={handleClose}
+                showModal={showModal}
+                editing={editing}
+                selectedId={selectedId}
+            />
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <FormControl
+                    placeholder="Filtrar por ID o Nombre"
+                    value={filtro}
+                    onChange={handleFilterChange}
+                    style={{ margin: 50, width: '300px', height: '50px' }}
+                />
+                <Button variant="secondary" size="lg" style={{ margin: 50 }} onClick={handleOpenCreate}>
+                    Crear Empresa
+                </Button>
+            </div>
+            <Table striped bordered hover size="sm">
+                <thead>
+                    <tr>
+                        <th style={{ maxWidth: "80px" }}>ID</th>
+                        <th style={{ minWidth: "150px" }}>nombre</th>
+                        <th>Razon Social</th>
+                        <th>Cuil</th>
+                        <th style={{ minWidth: "220px" }}>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredEmpresas.map((empresa: Empresa, index) =>
+                        <tr key={index}>
+                            <td>{empresa.id}</td>
+                            <td>{empresa.nombre}</td>
+                            <td>{empresa.razonSocial}</td>
+                            <td>{empresa.cuil}</td>
+                            <td>
+                                <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenEdit(); }}>Modificar</Button>
+                                <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteEmpresa(empresa.id)}>Eliminar</Button>
+                                {/* <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(empresa)}>Detalle</Button> */}
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </Table>
         </>
     );
 }

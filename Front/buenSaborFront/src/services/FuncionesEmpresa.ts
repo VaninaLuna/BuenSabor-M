@@ -28,7 +28,7 @@ export async function getEmpresaPorID(id: number) {
         }
 
         const json = await response.json();
-        return json as Empresa[];
+        return json as Empresa;
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
