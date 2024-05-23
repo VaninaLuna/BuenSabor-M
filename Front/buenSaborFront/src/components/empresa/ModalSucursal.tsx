@@ -1,9 +1,15 @@
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Accordion, Button, Col, Form, Modal, Row } from "react-bootstrap";
 import Sucursal from "../../models/Sucursal";
 import { useEffect, useState } from "react";
 import { getSucursalPorId, saveSucursal } from "../../services/SucursalApi";
 import Empresa from "../../models/Empresa";
 import { getEmpresa } from "../../services/FuncionesEmpresa";
+import Pais from "../../models/Pais";
+import Provincia from "../../models/Provincia";
+import Localidad from "../../models/Localidad";
+import Domicilio from "../../models/Domicilio";
+import { saveLocalidad } from "../../services/LocalidadServiceApi";
+import { saveDomicilio } from "../../services/DomicilioApi";
 
 interface ModalProps {
     showModal: boolean;
@@ -17,6 +23,11 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
     const [empresas, setEmpresas] = useState<Empresa[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
+
+    const [pais, setPais] = useState<Pais>(new Pais())
+    const [provincia, setProvincia] = useState<Provincia>(new Provincia())
+    const [localidad, setLocalidad] = useState<Localidad>(new Localidad())
+    const [domicilio, setDomicilio] = useState<Domicilio>(new Domicilio())
 
     const handleCloseAndClear = () => {
         setTxtValidacion("");
@@ -32,6 +43,11 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                     setSucursal(data)
                 })
                 .catch(e => console.error(e));
+
+            setDomicilio(sucursal.domicilio);
+            setLocalidad(sucursal.domicilio.localidad);
+            setProvincia(sucursal.domicilio.localidad.provincia);
+            setPais(sucursal.domicilio.localidad.provincia.pais);
         }
     }, [selectedId])
 
@@ -60,6 +76,35 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
             if (selectedEmpresa) {
                 setSucursal({ ...sucursal, empresa: selectedEmpresa });
             }
+
+
+        } else if (e.target.name === 'calle') {
+
+            const calleValue = value.toString();
+            setDomicilio({ ...domicilio, [e.target.name]: calleValue })
+        } else if (e.target.name === 'numero') {
+
+            const numValue = Number(value);
+            setDomicilio({ ...domicilio, [e.target.name]: numValue })
+        } else if (e.target.name === 'cp') {
+
+            const cpValue = Number(value);
+            setDomicilio({ ...domicilio, [e.target.name]: cpValue })
+        } else if (e.target.name === 'localidad') {
+
+            const locValue = value.toString();
+            setLocalidad({ ...localidad, nombre: locValue })
+
+        } else if (e.target.name === 'provincia') {
+
+            const provValue = value.toString();
+            setProvincia({ ...provincia, nombre: provValue });
+
+        } else if (e.target.name === 'pais') {
+
+            const paisValue = value.toString();
+            setPais({ ...pais, nombre: paisValue })
+
         } else {
             setSucursal({ ...sucursal, [e.target.name]: value });
         }
@@ -69,6 +114,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        /* 
         if (sucursal?.nombre === undefined || sucursal.nombre === "") {
             setTxtValidacion("Debe ingresar un nombre");
             return;
@@ -85,15 +131,41 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
             setTxtValidacion("Debe ingresar una empresa");
             return;
         }
+        */
 
         const sucursalActualizado = { ...sucursal };
 
-        // Luego, asignas el array de nuevas imágenes al estado del insumo
+        const paisActualizado = { ...pais };
+        const provinciaActualizado = { ...provincia };
+        const localidadActualizado = { ...localidad };
+
+        provinciaActualizado.pais = paisActualizado;
+
+        localidadActualizado.provincia = provinciaActualizado;
+
+        const localidadFromDB = await saveLocalidad(localidadActualizado)
+
+        console.log(JSON.stringify(localidadFromDB));
+
+        console.log("\n")
+
+        const domicilioActualizado = { ...domicilio };
+        domicilioActualizado.localidad = localidadFromDB;
+
+        const domicilioFromDB = await saveDomicilio(domicilioActualizado);
+
+        console.log(JSON.stringify(domicilioFromDB))
+
+        console.log("\n")
+
+        sucursalActualizado.domicilio = domicilioFromDB;
+
         setSucursal(sucursalActualizado);
 
-        console.log(JSON.stringify(sucursalActualizado));
-        await saveSucursal(sucursalActualizado);
-        window.location.reload();
+        console.log(JSON.stringify(sucursalActualizado))
+        //await saveSucursal(sucursalActualizado);
+        //window.location.reload();
+
     };
 
     return (
@@ -133,6 +205,38 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                             onChange={handleInputChange}
                         />
                     </Form.Group>
+
+                    <Accordion defaultActiveKey="0">
+                        <Accordion.Item eventKey="1">
+                            <Accordion.Header>Domicilio</Accordion.Header>
+                            <Accordion.Body>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Calle</Form.Label>
+                                    <Form.Control type="text" name="calle" value={domicilio?.calle} onChange={handleInputChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Numero</Form.Label>
+                                    <Form.Control type="number" name="numero" value={domicilio?.numero} onChange={handleInputChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>CP</Form.Label>
+                                    <Form.Control type="number" name="cp" value={domicilio?.cp} onChange={handleInputChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Localidad</Form.Label>
+                                    <Form.Control type="text" name="localidad" value={localidad?.nombre} onChange={handleInputChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Provincia</Form.Label>
+                                    <Form.Control type="text" name="provincia" value={provincia?.nombre} onChange={handleInputChange} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Pais</Form.Label>
+                                    <Form.Control type="text" name="pais" value={pais?.nombre} onChange={handleInputChange} />
+                                </Form.Group>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
 
                     <Row>
                         <Col>

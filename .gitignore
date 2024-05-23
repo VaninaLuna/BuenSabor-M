@@ -93,3 +93,4 @@ out/
 # Ignore all local history of files
 .history
 .ionide
+Back/src/main/resources/application.properties
