@@ -1,6 +1,7 @@
 package com.example.buensaborback.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +27,7 @@ public class Sucursal extends Base{
 
     @ManyToOne()
     @JoinColumn(name = "empresa_id")
-    @JsonBackReference
+    @JsonIgnoreProperties("sucursales")
     private Empresa empresa;
 
 }
