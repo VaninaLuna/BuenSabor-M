@@ -192,13 +192,13 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Horario de Apertura</Form.Label>
-                                <Form.Control type="text" name="horarioApertura" value={sucursal?.horarioApertura} onChange={handleInputChange} />
+                                <Form.Control type="time" name="horarioApertura" value={sucursal?.horarioApertura} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Horario de cierre</Form.Label>
-                                <Form.Control type="text" name="horarioCierre" value={sucursal?.horarioCierre} onChange={handleInputChange} />
+                                <Form.Control type="time" name="horarioCierre" value={sucursal?.horarioCierre} onChange={handleInputChange} />
                             </Form.Group>
                         </Col>
                     </Row>
