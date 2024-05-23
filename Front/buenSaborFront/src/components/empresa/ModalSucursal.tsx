@@ -217,37 +217,52 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                         <Accordion.Item eventKey="1">
                             <Accordion.Header>Domicilio</Accordion.Header>
                             <Accordion.Body>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Calle</Form.Label>
-                                    <Form.Control type="text" name="calle" value={domicilio?.calle} onChange={handleInputChange} />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Numero</Form.Label>
-                                    <Form.Control type="number" name="numero" value={domicilio?.numero} onChange={handleInputChange} />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>CP</Form.Label>
-                                    <Form.Control type="number" name="cp" value={domicilio?.cp} onChange={handleInputChange} />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Localidad</Form.Label>
-                                    <Form.Control type="text" name="localidad" value={localidad?.nombre} onChange={handleInputChange} />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Provincia</Form.Label>
-                                    <Form.Control type="text" name="provincia" value={provincia?.nombre} onChange={handleInputChange} />
-                                </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Pais</Form.Label>
-                                    <Form.Control type="text" name="pais" value={pais?.nombre} onChange={handleInputChange} />
-                                </Form.Group>
+                                <Row>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Calle</Form.Label>
+                                            <Form.Control type="text" style={{ width: "44rem" }} name="calle" value={domicilio?.calle} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Numero</Form.Label>
+                                            <Form.Control type="number" style={{ width: "9.5rem" }} name="numero" value={domicilio?.numero} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>CP</Form.Label>
+                                            <Form.Control type="number" style={{ width: "9.5rem" }} name="cp" value={domicilio?.cp} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Localidad</Form.Label>
+                                            <Form.Control type="text" name="localidad" value={localidad?.nombre} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Provincia</Form.Label>
+                                            <Form.Control type="text" name="provincia" value={provincia?.nombre} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Pais</Form.Label>
+                                            <Form.Control type="text" name="pais" value={pais?.nombre} onChange={handleInputChange} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
-
                     <Row>
                         <Col>
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3 mt-3">
                                 <Form.Label>Empresa</Form.Label>
                                 <Form.Select aria-label="Default select example" name="empresa" value={sucursal?.empresa.id} onChange={handleInputChange}>
                                     <option value={0}>Seleccionar Empresa</option>

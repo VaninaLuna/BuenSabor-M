@@ -264,7 +264,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
             </Modal.Body>
 
             <Modal.Footer className="d-flex justify-content-between">
-                <Button variant="danger" onClick={handleCloseAndClear}>Cancelar</Button>
+                <Button variant="secondary" onClick={handleCloseAndClear}>Cancelar</Button>
                 <Button style={{ backgroundColor: '#83CA6A' }} onClick={handleSubmit}>Guardar</Button>
             </Modal.Footer>
         </Modal>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement, ArcElement } from 'chart.js';
 
@@ -56,18 +55,18 @@ export function Home() {
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px' }}>Bienvenido</h1>
                 <div style={{ display: 'flex', justifyContent: 'space-around', width: '80%', margin: '20px 0' }}>
-                    <div style={{ width: '10cm', height: '5cm' }}>
+                    <div style={{ width: '15cm', height: '5cm' }}>
                         <h2>Ventas Mensuales</h2>
                         <Bar data={barData} options={{ maintainAspectRatio: false }} />
                     </div>
-                    <div style={{ width: '10cm', height: '5cm' }}>
+                    <div style={{ width: '15cm', height: '5cm' }}>
                         <h2>Ingresos Mensuales</h2>
                         <Line data={lineData} options={{ maintainAspectRatio: false }} />
                     </div>
                 </div>
                 <br></br>
                 <br></br>
-                <div style={{ width: '10cm', height: '5cm', marginBottom: '20px' }}>
+                <div style={{ width: '15cm', height: '10cm', marginBottom: '20px' }}>
                     <h2>Distribución de Colores</h2>
                     <Pie data={pieData} options={{ maintainAspectRatio: false }} />
                 </div>
