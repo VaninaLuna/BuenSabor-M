@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getSucursalPorId, saveSucursal } from "../../services/SucursalApi";
 import Empresa from "../../models/Empresa";
 import { getEmpresa } from "../../services/FuncionesEmpresa";
-import { ModalAgregarDomicilio } from "./ModalAgregarDomicilio";
 
 interface ModalProps {
     showModal: boolean;
@@ -18,13 +17,11 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
     const [empresas, setEmpresas] = useState<Empresa[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
-    const [showModalDomicilio, setShowModalDomicilio] = useState(false);
 
     const handleCloseAndClear = () => {
         setTxtValidacion("");
         handleClose();
     };
-
 
     useEffect(() => {
         if (!selectedId) {
@@ -99,17 +96,8 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         window.location.reload();
     };
 
-    const handleCloseDomicilio = () => {
-        setShowModalDomicilio(false);
-    };
-
     return (
         <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
-
-            <ModalAgregarDomicilio
-                handleCloseDomicilio={handleCloseDomicilio}
-                showModalDomicilio={showModalDomicilio}
-            />
 
             <Modal.Header closeButton>
                 <Modal.Title>{editing ? 'Editar' : 'Añadir'} Sucursal</Modal.Title>
@@ -145,6 +133,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                             onChange={handleInputChange}
                         />
                     </Form.Group>
+
                     <Row>
                         <Col>
                             <Form.Group className="mb-3">

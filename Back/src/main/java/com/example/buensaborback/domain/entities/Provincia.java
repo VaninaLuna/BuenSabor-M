@@ -21,11 +21,6 @@ public class Provincia extends Base {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pais_id")
-    @JsonBackReference
     private Pais pais;
 
-    @OneToMany(mappedBy = "provincia", fetch = FetchType.EAGER)
-    @Builder.Default
-    @JsonManagedReference
-    private Set<Localidad> localidades = new HashSet<>();
 }

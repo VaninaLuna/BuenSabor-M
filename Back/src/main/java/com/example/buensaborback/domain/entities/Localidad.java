@@ -18,6 +18,5 @@ public class Localidad extends Base {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "provincia_id")
-    @JsonBackReference
     private Provincia provincia;
 }

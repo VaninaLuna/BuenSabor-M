@@ -18,10 +18,4 @@ import java.util.Set;
 @Builder
 public class Pais extends Base {
     private String nombre;
-
-    @OneToMany(mappedBy = "pais", fetch = FetchType.EAGER)
-    @Builder.Default
-    @JsonManagedReference
-    private Set<Provincia> provincias = new HashSet<>();
-
 }
