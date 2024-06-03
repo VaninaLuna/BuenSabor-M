@@ -3,10 +3,26 @@ import ArticuloInsumo from "../models/ArticuloInsumo";
 
 //GET
 export async function getArticulosInsumos() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloInsumo/all';
+    const ENDPOINT = 'http://localhost:8080/articuloInsumo/all';
 
     try {
-        const response = await fetch(INSTRUMENTOS_ENDPOINT);
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as ArticuloInsumo[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+export async function getArticulosInsumosByEsParaElaborar(esParaElaborar: boolean) {
+    const ENDPOINT = `http://localhost:8080/articuloInsumo//esParaElaborar/${esParaElaborar}`;
+
+    try {
+        const response = await fetch(ENDPOINT);
 
         if (!response.ok) {
             throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
@@ -20,10 +36,10 @@ export async function getArticulosInsumos() {
 }
 
 export async function getArticuloInsumoPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`;
+    const ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`;
 
     try {
-        const response = await fetch(INSTRUMENTO_ENDPOINT);
+        const response = await fetch(ENDPOINT);
 
         if (!response.ok) {
             throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
@@ -57,10 +73,10 @@ export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
 
 //DELETE
 export async function deleteArticuloInsumoPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`
+    const DELETE_ENDPOINT = `http://localhost:8080/articuloInsumo/${id}`
 
     try {
-        const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
+        const response = await fetch(DELETE_ENDPOINT, {
             method: 'DELETE',
         });
 
