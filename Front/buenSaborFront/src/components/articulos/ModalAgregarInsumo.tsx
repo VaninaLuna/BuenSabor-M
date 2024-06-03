@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table, FormControl, Modal, Button, Image, FormCheck } from 'react-bootstrap';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
-import { getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
+import { getArticulosInsumosByEsParaElaborar } from '../../services/FuncionesArticuloInsumoApi';
 
 interface ModalProps {
     showModalInsumos: boolean;
@@ -17,7 +17,7 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
 
 
     const getListadoArticulosInsumos = async () => {
-        const datos: ArticuloInsumo[] = await getArticulosInsumos();
+        const datos: ArticuloInsumo[] = await getArticulosInsumosByEsParaElaborar(true);
         setArticulosInsumos(datos);
     };
 

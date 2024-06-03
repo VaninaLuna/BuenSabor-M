@@ -19,7 +19,7 @@ export async function getArticulosInsumos() {
     }
 }
 export async function getArticulosInsumosByEsParaElaborar(esParaElaborar: boolean) {
-    const ENDPOINT = `http://localhost:8080/articuloInsumo//esParaElaborar/${esParaElaborar}`;
+    const ENDPOINT = `http://localhost:8080/articuloInsumo/esParaElaborar/${esParaElaborar}`;
 
     try {
         const response = await fetch(ENDPOINT);
