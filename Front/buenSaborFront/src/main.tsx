@@ -14,6 +14,7 @@ import NavBar from './components/layout/Navbar.tsx';
 import { Home } from './components/layout/Home.tsx';
 import { GrillaEmpresa } from './components/empresa/GrillaEmpresa.tsx';
 import { GrillaSucursal } from './components/empresa/GrillaSucursal.tsx';
+import { Articulos } from './components/articulos/articulos.tsx';
 
 
 
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
             {/* ARTICULOS */}
             <Route path="/insumos" element={<GrillaArticuloInsumo />} />
+            <Route path="/articulos" element={<Articulos />} />
             <Route path="/manufacturados" element={<GrillaArticuloManufacturado />} />
             <Route path="/categorias" element={<GrillaCategoriaUnidadMedida />} />
             <Route path="/unidadMedida" element={<GrillaCategoriaUnidadMedida />} />

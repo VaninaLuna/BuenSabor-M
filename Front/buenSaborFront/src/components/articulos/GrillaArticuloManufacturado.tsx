@@ -87,46 +87,50 @@ export function GrillaArticuloManufacturado() {
                     Crear Articulo Manufacturado
                 </Button>
             </div>
-            <Table striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <th style={{ maxWidth: "80px" }}>ID</th>
-                        <th>Imagen</th>
-                        <th style={{ minWidth: "150px" }}>Denominacion</th>
-                        <th>Unidad de Medida</th>
-                        <th>Categoria</th>
-                        <th style={{ minWidth: "150px" }}>Descripcion</th>
-                        <th>Precio Venta</th>
-                        <th>Tiempo Estimado Minutos</th>
-                        <th style={{ minWidth: "150px" }}>Preparacion</th>
-                        <th style={{ minWidth: "300px" }}>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
-                        <tr key={index}>
-                            <td>{articulomanufacturado.id}</td>
-                            <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
-                                <Image src={articulomanufacturado.imagenes[0].url}
-                                    alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
-                                : 'No image'
-                            }</td>
-                            <td>{articulomanufacturado.denominacion}</td>
-                            <td>{articulomanufacturado.unidadMedida.denominacion}</td>
-                            <td>{articulomanufacturado.categoria.denominacion}</td>
-                            <td>{articulomanufacturado.descripcion}</td>
-                            <td>{articulomanufacturado.precioVenta}</td>
-                            <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
-                            <td>{articulomanufacturado.preparacion}</td>
-                            <td>
-                                <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
-                                <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
-                                <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
-                            </td>
+
+            {
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th style={{ maxWidth: "80px" }}>ID</th>
+                            <th>Imagen</th>
+                            <th style={{ minWidth: "150px" }}>Denominacion</th>
+                            <th>Unidad de Medida</th>
+                            <th>Categoria</th>
+                            <th style={{ minWidth: "150px" }}>Descripcion</th>
+                            <th>Precio Venta</th>
+                            <th>Tiempo Estimado Minutos</th>
+                            <th style={{ minWidth: "150px" }}>Preparacion</th>
+                            <th style={{ minWidth: "300px" }}>Opciones</th>
                         </tr>
-                    )}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
+                            <tr key={index}>
+                                <td>{articulomanufacturado.id}</td>
+                                <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
+                                    <Image src={articulomanufacturado.imagenes[0].url}
+                                        alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
+                                    : 'No image'
+                                }</td>
+                                <td>{articulomanufacturado.denominacion}</td>
+                                <td>{articulomanufacturado.unidadMedida.denominacion}</td>
+                                <td>{articulomanufacturado.categoria.denominacion}</td>
+                                <td>{articulomanufacturado.descripcion}</td>
+                                <td>{articulomanufacturado.precioVenta}</td>
+                                <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
+                                <td>{articulomanufacturado.preparacion}</td>
+                                <td>
+                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
+                                    <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            }
+
             <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>{selectedArticulo?.denominacion}</Modal.Title>

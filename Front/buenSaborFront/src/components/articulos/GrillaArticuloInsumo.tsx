@@ -73,47 +73,51 @@ export function GrillaArticuloInsumo() {
                     Crear Articulo Insumo
                 </Button>
             </div>
-            <Table striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <th style={{ maxWidth: "80px" }}>ID</th>
-                        <th>Imagen</th>
-                        <th style={{ minWidth: "150px" }}>Denominacion</th>
-                        <th>Unidad de Medida</th>
-                        <th>Categoria</th>
-                        <th>Precio de Compra</th>
-                        <th>Precio Venta</th>
-                        <th>Stock Actual</th>
-                        <th>Stock Maximo</th>
-                        <th>Para Elaborar</th>
-                        <th style={{ minWidth: "220px" }}>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
-                        <tr key={index}>
-                            <td>{articuloInsumo.id}</td>
-                            <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
-                                <Image src={articuloInsumo.imagenes[0].url}
-                                    alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
-                                : 'No image'
-                            }</td>
-                            <td>{articuloInsumo.denominacion}</td>
-                            <td>{articuloInsumo.unidadMedida.denominacion}</td>
-                            <td>{articuloInsumo.categoria.denominacion}</td>
-                            <td>{articuloInsumo.precioCompra}</td>
-                            <td>{articuloInsumo.precioVenta}</td>
-                            <td>{articuloInsumo.stockActual}</td>
-                            <td>{articuloInsumo.stockMaximo}</td>
-                            <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
-                            <td>
-                                <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
-                                <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
-                            </td>
+
+            {
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th style={{ maxWidth: "80px" }}>ID</th>
+                            <th>Imagen</th>
+                            <th style={{ minWidth: "150px" }}>Denominacion</th>
+                            <th>Unidad de Medida</th>
+                            <th>Categoria</th>
+                            <th>Precio de Compra</th>
+                            <th>Precio Venta</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Maximo</th>
+                            <th>Para Elaborar</th>
+                            <th style={{ minWidth: "220px" }}>Opciones</th>
                         </tr>
-                    )}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
+                            <tr key={index}>
+                                <td>{articuloInsumo.id}</td>
+                                <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
+                                    <Image src={articuloInsumo.imagenes[0].url}
+                                        alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
+                                    : 'No image'
+                                }</td>
+                                <td>{articuloInsumo.denominacion}</td>
+                                <td>{articuloInsumo.unidadMedida.denominacion}</td>
+                                <td>{articuloInsumo.categoria.denominacion}</td>
+                                <td>{articuloInsumo.precioCompra}</td>
+                                <td>{articuloInsumo.precioVenta}</td>
+                                <td>{articuloInsumo.stockActual}</td>
+                                <td>{articuloInsumo.stockMaximo}</td>
+                                <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
+                                <td>
+                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
+                                    <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            }
+
         </>
     );
 }
