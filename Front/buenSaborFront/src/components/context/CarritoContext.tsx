@@ -28,6 +28,7 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         calcularTotalCarrito();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart]);
 
     const addCarrito = (articulo: ArticuloDTO) => {
