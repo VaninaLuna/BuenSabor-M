@@ -4,13 +4,22 @@ import { getArticulosInsumosByEsParaElaborar } from "../../services/FuncionesArt
 import { getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 import ArticuloDTO from "../../models/ArticuloDTO";
-import { Card, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import { CarritoContextProvider } from "../context/CarritoContext";
+import { Carrito } from "./Carrito";
+import { ArticuloTarjeta } from "./ArticuloTarjeta";
 
 export function Articulos() {
 
     const [filteredArticulos, setFilteredArticulos] = useState<ArticuloDTO[]>([]);
     const [allArticulos, setAllArticulos] = useState<ArticuloDTO[]>([]);
     const [filter, setFilter] = useState("");
+    const [verCarrito, setVerCarrito] = useState(false);
+
+
+    const handleVerCarrito = () => {
+        setVerCarrito(true);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,6 +30,7 @@ export function Articulos() {
 
             insumos.map((insumo: ArticuloInsumo) => {
                 const newArticulo = {
+                    id: insumo.id,
                     denominacion: insumo.denominacion,
                     precioVenta: insumo.precioVenta,
                     imagenes: insumo.imagenes
@@ -30,6 +40,7 @@ export function Articulos() {
 
             manufacturados.map((manufacturado: ArticuloManufacturado) => {
                 const newArticulo = {
+                    id: manufacturado.id,
                     denominacion: manufacturado.denominacion,
                     precioVenta: manufacturado.precioVenta,
                     imagenes: manufacturado.imagenes
@@ -56,56 +67,35 @@ export function Articulos() {
 
     return (
         <>
+            <CarritoContextProvider>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Form.Control
-                    type="text"
-                    placeholder="Filtrar por ID o Denominación"
-                    value={filter}
-                    onChange={handleFilterChange}
-                    style={{ margin: 50, width: '300px', height: '50px' }}
-                />
-            </div>
-            <div className="main container">
-                <div className="row justify-content-center">
-                    {
-                        filteredArticulos.map((articulo: ArticuloDTO, index) => {
-                            return (
-                                <Card key={index} className="m-4 mx-auto text-center" style={{ width: '18rem' }}>
-                                    <Card.Img variant="top" src={articulo.imagenes[0].url} alt={articulo.denominacion} />
-                                    <Card.Body>
-                                        <Card.Title>{articulo.denominacion}</Card.Title>
-                                        <Card.Text>{`$${articulo.precioVenta}`}</Card.Text>
-                                        <hr />
-                                        <p>
-                                            {/*  
-                                                {
-                                                    !isInstrumentoInCarrito
-                                                        ? <a style={{ marginLeft: '20px', marginRight: '16px' }}> </a>
-                                                        : <a className='iconoMasMenos' onClick={() => removeItemCarrito(instrumento)}> - </a>
-                                                }
-
-                                                <Button className='colorFondoBlanco' onClick={toggleCarrito}>
-
-                                                    {
-                                                        isInstrumentoInCarrito
-                                                            ? <Image src={`./img/deleteCart.png`} title='Quitar' />
-                                                            : <Image src={`./img/addCart.png`} title='Comprar' />
-                                                    }
-                                                </Button>
-
-                                                <a className='iconoMasMenos' onClick={() => addCarrito(instrumento)}>
-                                                    +
-                                                </a>
-                                            */}
-                                        </p>
-                                    </Card.Body>
-                                </Card>
-                            )
-                        })
-                    }
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Form.Control
+                        type="text"
+                        placeholder="Filtrar por Nombre"
+                        value={filter}
+                        onChange={handleFilterChange}
+                        style={{ margin: 50, width: '300px', height: '50px' }}
+                    />
+                    <div style={{ margin: 30 }}>
+                        <button type="button" className="btn btn-success mt-4" style={{ width: '150px', backgroundColor: '#e06f72', border: '#e06f72', fontWeight: 'initial', color: 'whitesmoke' }} onClick={handleVerCarrito}>Ver Carrito</button>
+                    </div>
                 </div>
-            </div>
+                <div className="main container">
+                    <div className="row justify-content-center">
+                        {
+                            filteredArticulos.map((articulo: ArticuloDTO) => {
+                                return (
+                                    <ArticuloTarjeta key={articulo.id} articulo={articulo} />
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+
+                <Carrito visible={verCarrito}
+                    setVisible={setVerCarrito} />
+            </CarritoContextProvider >
         </>
     )
 }
