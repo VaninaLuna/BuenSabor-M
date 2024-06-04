@@ -78,7 +78,7 @@ export function GrillaArticuloInsumo() {
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th style={{ maxWidth: "80px" }}>ID</th>
+                            {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
                             <th>Imagen</th>
                             <th style={{ minWidth: "150px" }}>Denominacion</th>
                             <th>Unidad de Medida</th>
@@ -94,7 +94,7 @@ export function GrillaArticuloInsumo() {
                     <tbody>
                         {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
                             <tr key={index}>
-                                <td>{articuloInsumo.id}</td>
+                                {/* <td>{articuloInsumo.id}</td> */}
                                 <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
                                     <Image src={articuloInsumo.imagenes[0].url}
                                         alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />

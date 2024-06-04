@@ -92,7 +92,7 @@ export function GrillaArticuloManufacturado() {
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th style={{ maxWidth: "80px" }}>ID</th>
+                            {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
                             <th>Imagen</th>
                             <th style={{ minWidth: "150px" }}>Denominacion</th>
                             <th>Unidad de Medida</th>
@@ -107,7 +107,7 @@ export function GrillaArticuloManufacturado() {
                     <tbody>
                         {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
                             <tr key={index}>
-                                <td>{articulomanufacturado.id}</td>
+                                {/* <td>{articulomanufacturado.id}</td> */}
                                 <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
                                     <Image src={articulomanufacturado.imagenes[0].url}
                                         alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
