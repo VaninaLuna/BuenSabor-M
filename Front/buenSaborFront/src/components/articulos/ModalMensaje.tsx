@@ -1,12 +1,14 @@
 import { Button, Modal } from "react-bootstrap";
+import Pedido from "../../models/Pedido";
 
 interface ModalProps {
     showModal: boolean;
     handleClose: () => void;
-    message: string;
+    pedido: Pedido | null;
+    message: string | null;
 }
 
-export const ModalMensaje: React.FC<ModalProps> = ({ showModal, handleClose, message }) => {
+export const ModalMensaje: React.FC<ModalProps> = ({ showModal, handleClose, pedido, message }) => {
     return (
         <>
             <Modal show={showModal} onHide={handleClose}>
@@ -15,7 +17,15 @@ export const ModalMensaje: React.FC<ModalProps> = ({ showModal, handleClose, mes
                 </Modal.Header>
 
                 <Modal.Body>
-                    <p>{message}</p>
+                    {pedido ? (
+                        <>
+                            <p>El pedido <b>n°{pedido.id}</b> se creo correctamente</p>
+                            <p>Hora estimada de entrega: <b>{pedido.horaEstimadaFinalizacion}</b></p>
+                            <p>El total del pedido es de <b>${pedido.total}</b></p>
+                        </>
+                    )
+                        : <p>{message}</p>
+                    }
                 </Modal.Body>
 
                 <Modal.Footer>

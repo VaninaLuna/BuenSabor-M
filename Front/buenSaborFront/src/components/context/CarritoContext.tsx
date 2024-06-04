@@ -37,7 +37,7 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
             if (productInCart) {
                 const updatedCart = prevCart.map(detalle =>
                     detalle.articulo.id === articulo.id
-                        ? { ...detalle, cantidad: detalle.cantidad + 1 }
+                        ? { ...detalle, cantidad: detalle.cantidad + 1, subTotal: detalle.articulo.precioVenta * (detalle.cantidad + 1) }
                         : detalle
                 );
                 return updatedCart;
@@ -45,6 +45,7 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
                 const newDetalle = new PedidoDetalle();
                 newDetalle.cantidad = 1;
                 newDetalle.articulo = articulo;
+                newDetalle.subTotal = newDetalle.articulo.precioVenta * newDetalle.cantidad;
                 return [...prevCart, newDetalle];
             }
         });
@@ -83,8 +84,8 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
 
     const calcularTotalCarrito = () => {
         let total: number = 0;
-        cart.forEach(product =>
-            total += product.cantidad * product.articulo.precioVenta
+        cart.forEach(detalle =>
+            total += detalle.cantidad * detalle.articulo.precioVenta
         );
         setTotalPedido(total);
     }

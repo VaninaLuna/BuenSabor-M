@@ -33,7 +33,8 @@ export function Articulos() {
                     id: insumo.id,
                     denominacion: insumo.denominacion,
                     precioVenta: insumo.precioVenta,
-                    imagenes: insumo.imagenes
+                    imagenes: insumo.imagenes,
+                    type: "articuloInsumo"
                 }
                 newArticulos.push(newArticulo);
             })
@@ -43,7 +44,8 @@ export function Articulos() {
                     id: manufacturado.id,
                     denominacion: manufacturado.denominacion,
                     precioVenta: manufacturado.precioVenta,
-                    imagenes: manufacturado.imagenes
+                    imagenes: manufacturado.imagenes,
+                    type: "articuloManufacturado"
                 }
                 newArticulos.push(newArticulo);
             })

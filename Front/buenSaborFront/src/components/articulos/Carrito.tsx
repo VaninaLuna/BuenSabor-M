@@ -35,7 +35,7 @@ function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle
 export function Carrito({ visible, setVisible }: { visible: boolean, setVisible: (visible: boolean) => void }) {
     const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido } = useCarrito();
     const [showModal, setShowModal] = useState(false);
-    // const [savedPedido, setSavedPedido] = useState<Pedido | null>(null);
+    const [savedPedido, setSavedPedido] = useState<Pedido | null>(null);
     const [message, setMessage] = useState<string>('');
     // const [pagoRealizado, setPagoRealizado] = useState(false);
     // const [pedidoGuardado, setPedidoGuardado] = useState(false);
@@ -45,19 +45,40 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
     const guardarPedido = async () => {
         if (cart.length === 0) {
-            setMessage("Al menos debe agregar un instrumento al carrito");
+            setMessage("Al menos debe agregar un articulo al carrito");
             setShowModal(true);
             return;
         }
 
+        const fechaPedido = new Date();
         const pedido = new Pedido();
         pedido.total = totalPedido ?? 0;
         pedido.pedidoDetalles = cart;
 
+
+        const dia = fechaPedido.getDate().toString().padStart(2, '0');
+        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
+        const año = fechaPedido.getFullYear();
+
+        const fechaFormateada = `${dia}/${mes}/${año}`;
+        pedido.fechaPedido = fechaFormateada;
+
+        console.log(fechaFormateada);
+
+
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + 30)
+        const horas = fechaPedido.getHours().toString().padStart(2, '0');
+        const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
+        const horaFormateada = `${horas}:${minutos}:${segundos}`;
+
+        console.log(horaFormateada)
+
+        pedido.horaEstimadaFinalizacion = horaFormateada;
+
         try {
             const pedidoFromDB: Pedido = await savePedido(pedido);
-            // setSavedPedido(pedidoFromDB);
-            setMessage(`El pedido con id ${pedidoFromDB.id} se guardó correctamente`);
+            setSavedPedido(pedidoFromDB);
             setShowModal(true);
             // setPedidoGuardado(true);
         } catch (error) {
@@ -118,6 +139,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
                             <ModalMensaje
                                 showModal={showModal}
+                                pedido={savedPedido}
                                 message={message}
                                 handleClose={handleCloseModal}
                             />

@@ -3,6 +3,8 @@ package com.example.buensaborback.domain.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +21,11 @@ import java.util.Set;
 @ToString
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ArticuloInsumo.class, name = "articuloInsumo"),
+        @JsonSubTypes.Type(value = ArticuloManufacturado.class, name = "articuloManufacturado")
+})
 public abstract class Articulo extends Base{
 
 //    @Id

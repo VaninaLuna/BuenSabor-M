@@ -22,13 +22,14 @@ import java.util.List;
 @Getter
 @Setter
 public class Pedido extends Base{
-private LocalTime horaEstimadaFinalizacion;
-private double total;
-private double totalCosto;
-@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyy")
-private LocalDate fechaPedido;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime horaEstimadaFinalizacion;
+    private double total;
+    private double totalCosto;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate fechaPedido;
 
-@OneToMany(mappedBy = "pedido",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-@JsonManagedReference
-private List<PedidoDetalle> pedidoDetalles = new ArrayList<>();
+    @OneToMany(mappedBy = "pedido",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PedidoDetalle> pedidoDetalles = new ArrayList<>();
 }
