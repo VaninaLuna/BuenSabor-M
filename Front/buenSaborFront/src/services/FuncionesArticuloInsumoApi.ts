@@ -54,6 +54,7 @@ export async function getArticuloInsumoPorID(id: number) {
 
 //POST - PUT
 export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
+    const dataInsumo = {...articuloInsumo, type: "articuloInsumo"}
     let endpoint = 'http://localhost:8080/articuloInsumo';
     let method: string = "POST";
 
@@ -67,7 +68,7 @@ export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
         "headers": {
             "Content-Type": 'application/json'
         },
-        "body": JSON.stringify(articuloInsumo)
+        "body": JSON.stringify(dataInsumo)
     });
 }
 

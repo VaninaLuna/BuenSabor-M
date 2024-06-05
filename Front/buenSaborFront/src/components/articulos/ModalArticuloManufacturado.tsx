@@ -157,6 +157,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         const manufacturadoActualizado = { ...manufacturado };
         manufacturadoActualizado.imagenes = nuevasImagenes;
         setArticuloManufacturado(manufacturadoActualizado);
+        console.log(manufacturadoActualizado);
         await saveArticuloManufacturado(manufacturadoActualizado);
         window.location.reload();
     };

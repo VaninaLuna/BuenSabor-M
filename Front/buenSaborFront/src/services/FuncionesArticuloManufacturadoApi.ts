@@ -41,6 +41,7 @@ export async function getArticuloManufacturadoPorID(id: number) {
 
 //POST - PUT
 export async function saveArticuloManufacturado(articuloManufacturado?: ArticuloManufacturado) {
+    const dataManufacturado = {...articuloManufacturado, type: "articuloManufacturado"}
     let endpoint = 'http://localhost:8080/articuloManufacturado';
     let method: string = "POST";
 
@@ -54,7 +55,7 @@ export async function saveArticuloManufacturado(articuloManufacturado?: Articulo
         "headers": {
             "Content-Type": 'application/json'
         },
-        "body": JSON.stringify(articuloManufacturado)
+        "body": JSON.stringify(dataManufacturado)
     });
 }
 

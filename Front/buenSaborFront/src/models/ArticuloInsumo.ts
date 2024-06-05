@@ -13,4 +13,5 @@ export default class ArticuloInsumo{
     imagenes:Imagen[] = [];
     unidadMedida:UnidadMedida = new UnidadMedida();
     categoria:Categoria = new Categoria();
+    type: string = "articuloInsumo";
 }

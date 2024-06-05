@@ -37,10 +37,13 @@ export const ModalAgregarInsumo: React.FC<ModalProps> = ({ showModalInsumos, han
 
     const handleSelectChange = (articulo: ArticuloInsumo, isChecked: boolean) => {
         if (isChecked) {
+            articulo.type = "articuloInsumo"
             seInsumosSeleccionados([...insumosSeleccionados, articulo]);
         } else {
             seInsumosSeleccionados(insumosSeleccionados.filter(item => item.id !== articulo.id));
         }
+
+        console.log(insumosSeleccionados);
     };
 
     const handleCloseAndClear = () => {

@@ -14,4 +14,5 @@ export default class ArticuloManufacturado{
     unidadMedida:UnidadMedida = new UnidadMedida();
     categoria:Categoria = new Categoria();
     articuloManufacturadoDetalles:ArticuloManufacturadoDetalle[] = [];
+    type: string = "articuloManufacturado";
 }
