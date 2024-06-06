@@ -144,7 +144,7 @@ function Sidebar() {
                         </>
                     ) : <CNavItem>
                         <NavLink to="/articulos" className="nav-link" >
-                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                            <CIcon customClassName="nav-icon" icon={cilFastfood} />
                             Articulos
                         </NavLink>
                     </CNavItem>

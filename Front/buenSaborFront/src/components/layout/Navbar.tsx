@@ -46,10 +46,10 @@ function NavBar() {
                     {(!usuarioLogueado || !usuarioLogueado.rol) ? (
                         <>
                             <li className="nav-item">
-                                <a className="nav-link" style={{ fontWeight: 'bold', color: 'white' }} href="/login">Login</a>
+                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/login">Login</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" style={{ fontWeight: 'bold', color: 'white' }} href="/register">Register</a>
+                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/register">Register</a>
                             </li>
                         </>
                     ) : (
