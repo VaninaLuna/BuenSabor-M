@@ -3,6 +3,8 @@ import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
 import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
+import Usuario from '../../models/Usuario';
+import { RolName } from '../../models/RolName';
 
 
 export function GrillaArticuloInsumo() {
@@ -12,6 +14,10 @@ export function GrillaArticuloInsumo() {
 
     const [articulosInsumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
     const [filtro, setFiltro] = useState('');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
+    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
 
     const getListadoArticulosInsumos = async () => {
         const datos: ArticuloInsumo[] = await getArticulosInsumos();
@@ -55,69 +61,85 @@ export function GrillaArticuloInsumo() {
 
     return (
         <>
-            <ModalArticuloInsumo
-                handleClose={handleClose}
-                showModal={showModal}
-                editing={editing}
-                selectedId={selectedId}
-            />
-            <br />
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <FormControl
-                    placeholder="Filtrar por ID o Denominacion"
-                    value={filtro}
-                    onChange={handleFilterChange}
-                    style={{ margin: 50, width: '300px', height: '50px' }}
+            <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+                <h1 style={{ marginTop: '20px' }}>Articulos Insumos</h1>
+                <ModalArticuloInsumo
+                    handleClose={handleClose}
+                    showModal={showModal}
+                    editing={editing}
+                    selectedId={selectedId}
                 />
-                <Button size="lg" style={{ margin: 50, backgroundColor: '#EE7F46' }} onClick={handleOpenCreate}>
-                    Crear Articulo Insumo
-                </Button>
-            </div>
+                <br />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por ID o Denominacion"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
 
-            {
-                <Table striped bordered hover size="sm">
-                    <thead>
-                        <tr>
-                            {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
-                            <th>Imagen</th>
-                            <th style={{ minWidth: "150px" }}>Denominacion</th>
-                            <th>Unidad de Medida</th>
-                            <th>Categoria</th>
-                            <th>Precio de Compra</th>
-                            <th>Precio Venta</th>
-                            <th>Stock Actual</th>
-                            <th>Stock Maximo</th>
-                            <th>Para Elaborar</th>
-                            <th style={{ minWidth: "220px" }}>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
-                            <tr key={index}>
-                                {/* <td>{articuloInsumo.id}</td> */}
-                                <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
-                                    <Image src={articuloInsumo.imagenes[0].url}
-                                        alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
-                                    : 'No image'
-                                }</td>
-                                <td>{articuloInsumo.denominacion}</td>
-                                <td>{articuloInsumo.unidadMedida.denominacion}</td>
-                                <td>{articuloInsumo.categoria.denominacion}</td>
-                                <td>{articuloInsumo.precioCompra}</td>
-                                <td>{articuloInsumo.precioVenta}</td>
-                                <td>{articuloInsumo.stockActual}</td>
-                                <td>{articuloInsumo.stockMaximo}</td>
-                                <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
-                                <td>
-                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
-                                    <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
-                                </td>
+                    {
+                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                        <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={handleOpenCreate}>
+                            Crear Articulo Insumo
+                        </Button>
+                    }
+
+                </div>
+
+                {
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                                {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
+                                <th>Imagen</th>
+                                <th style={{ minWidth: "150px" }}>Denominacion</th>
+                                <th>Unidad de Medida</th>
+                                <th>Categoria</th>
+                                <th>Precio de Compra</th>
+                                <th>Precio Venta</th>
+                                <th>Stock Actual</th>
+                                <th>Stock Maximo</th>
+                                <th>Para Elaborar</th>
+                                {
+                                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                    <th style={{ minWidth: "220px" }}>Opciones</th>
+                                }
                             </tr>
-                        )}
-                    </tbody>
-                </Table>
-            }
+                        </thead>
+                        <tbody>
+                            {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
+                                <tr key={index}>
+                                    {/* <td>{articuloInsumo.id}</td> */}
+                                    <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
+                                        <Image src={articuloInsumo.imagenes[0].url}
+                                            alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
+                                        : 'No image'
+                                    }</td>
+                                    <td>{articuloInsumo.denominacion}</td>
+                                    <td>{articuloInsumo.unidadMedida.denominacion}</td>
+                                    <td>{articuloInsumo.categoria.denominacion}</td>
+                                    <td>{articuloInsumo.precioCompra}</td>
+                                    <td>{articuloInsumo.precioVenta}</td>
+                                    <td>{articuloInsumo.stockActual}</td>
+                                    <td>{articuloInsumo.stockMaximo}</td>
+                                    <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
 
+                                    {
+                                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                        <td>
+                                            <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
+                                            <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
+                                        </td>
+
+                                    }
+
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                }
+            </div>
         </>
     );
 }

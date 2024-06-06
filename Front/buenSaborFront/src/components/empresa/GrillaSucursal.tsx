@@ -55,57 +55,60 @@ export function GrillaSucursal() {
 
     return (
         <>
-            <ModalSucursal
-                handleClose={handleClose}
-                showModal={showModal}
-                editing={editing}
-                selectedId={selectedId}
-            />
-
-            <br />
-
-
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <FormControl
-                    placeholder="Filtrar por ID o Denominacion"
-                    value={filtro}
-                    onChange={handleFilterChange}
-                    style={{ margin: 50, width: '300px', height: '50px' }}
+            <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+                <h1 style={{ marginTop: '20px' }}>Sucursales</h1>
+                <ModalSucursal
+                    handleClose={handleClose}
+                    showModal={showModal}
+                    editing={editing}
+                    selectedId={selectedId}
                 />
-                <Button size="lg" style={{ margin: 50, backgroundColor: '#EE7F46' }} onClick={handleOpenCreate}>
-                    Crear Sucursal
-                </Button>
-            </div>
 
-            <Table striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <th style={{ maxWidth: "80px" }}>ID</th>
-                        <th>nombre</th>
-                        <th style={{ minWidth: "150px" }}>Horario Apertura</th>
-                        <th>Horario Cierre</th>
-                        <th>Casa Matriz</th>
-                        <th>Localidad</th>
-                        <th style={{ minWidth: "220px" }}>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredSucursales.map((sucursal: Sucursal, index) =>
-                        <tr key={index}>
-                            <td>{sucursal.id}</td>
-                            <td>{sucursal.nombre}</td>
-                            <td>{sucursal.horarioApertura}</td>
-                            <td>{sucursal.horarioCierre}</td>
-                            <td>{sucursal.casaMatriz ? "Si" : "No"}</td>
-                            <td>{sucursal.domicilio.localidad.nombre}</td>
-                            <td>
-                                <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(sucursal.id); handleOpenEdit(); }}>Modificar</Button>
-                                <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteSucursal(sucursal.id)}>Eliminar</Button>
-                            </td>
+                <br />
+
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por ID o Denominacion"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                    <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={handleOpenCreate}>
+                        Crear Sucursal
+                    </Button>
+                </div>
+
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th style={{ maxWidth: "80px" }}>ID</th>
+                            <th>nombre</th>
+                            <th style={{ minWidth: "150px" }}>Horario Apertura</th>
+                            <th>Horario Cierre</th>
+                            <th>Casa Matriz</th>
+                            <th>Localidad</th>
+                            <th style={{ minWidth: "220px" }}>Opciones</th>
                         </tr>
-                    )}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {filteredSucursales.map((sucursal: Sucursal, index) =>
+                            <tr key={index}>
+                                <td>{sucursal.id}</td>
+                                <td>{sucursal.nombre}</td>
+                                <td>{sucursal.horarioApertura}</td>
+                                <td>{sucursal.horarioCierre}</td>
+                                <td>{sucursal.casaMatriz ? "Si" : "No"}</td>
+                                <td>{sucursal.domicilio.localidad.nombre}</td>
+                                <td>
+                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(sucursal.id); handleOpenEdit(); }}>Modificar</Button>
+                                    <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteSucursal(sucursal.id)}>Eliminar</Button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            </div>
         </>
     );
 }
