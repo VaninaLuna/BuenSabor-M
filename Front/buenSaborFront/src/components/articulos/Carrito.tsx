@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/Carrito.css";
 import { CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
@@ -9,6 +9,9 @@ import { useCarrito } from "../../hooks/UseCarrito";
 import Pedido from "../../models/Pedido";
 import { savePedido } from "../../services/PedidoApi";
 import { ModalMensaje } from "./ModalMensaje";
+import { CheckoutMP } from "./CheckOut";
+import { RolName } from "../../models/RolName";
+import Usuario from "../../models/Usuario";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -37,11 +40,12 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     const [showModal, setShowModal] = useState(false);
     const [savedPedido, setSavedPedido] = useState<Pedido | null>(null);
     const [message, setMessage] = useState<string>('');
-    // const [pagoRealizado, setPagoRealizado] = useState(false);
-    // const [pedidoGuardado, setPedidoGuardado] = useState(false);
+    const [pagoRealizado] = useState(false);
+    const [pedidoGuardado, setPedidoGuardado] = useState(false);
 
-    // const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    // const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
+    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
 
     const guardarPedido = async () => {
         if (cart.length === 0) {
@@ -80,7 +84,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             const pedidoFromDB: Pedido = await savePedido(pedido);
             setSavedPedido(pedidoFromDB);
             setShowModal(true);
-            // setPedidoGuardado(true);
+            setPedidoGuardado(true);
         } catch (error) {
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
             setShowModal(true);
@@ -89,15 +93,14 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
     const handleCloseModal = () => {
         setShowModal(false);
-        limpiarCarritoDespuesPago()
     };
 
-    // useEffect(() => {
-    //     if (pagoRealizado) {
-    //         limpiarCarritoDespuesPago();
-    //         setPedidoGuardado(false);
-    //     }
-    // }, [pagoRealizado, limpiarCarritoDespuesPago]);
+    useEffect(() => {
+        if (pagoRealizado) {
+            limpiarCarritoDespuesPago();
+            setPedidoGuardado(false);
+        }
+    }, [pagoRealizado, limpiarCarritoDespuesPago]);
 
     return (
         <>
@@ -114,7 +117,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             <ul>
                                 {
                                     cart.map(detalle =>
-                                        <CartItem key={detalle.id} item={detalle} addCarrito={addCarrito} removeItemCarrito={removeItemCarrito} />
+                                        <CartItem key={detalle.articulo.id} item={detalle} addCarrito={addCarrito} removeItemCarrito={removeItemCarrito} />
                                     )
                                 }
                             </ul>
@@ -135,7 +138,13 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             <br />
                             <br />
 
-                            <button onClick={guardarPedido}> Generar Pedido </button>
+                            {pedidoGuardado && savedPedido ? (
+                                <CheckoutMP pedido={savedPedido} />
+                            ) : (
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName !== RolName.VISOR) && (
+                                    <button onClick={guardarPedido}> Generar Pedido </button>
+                                )
+                            )}
 
                             <ModalMensaje
                                 showModal={showModal}

@@ -13,6 +13,7 @@
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-react": "^2.2.1",
     "@coreui/react": "^5.0.0",
+    "@mercadopago/sdk-react": "^0.0.19",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "react": "^18.2.0",
