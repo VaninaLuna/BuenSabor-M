@@ -100,6 +100,12 @@ function Sidebar() {
                                         Promociones
                                     </NavLink>
                                 </CNavItem>
+                                <CNavItem>
+                                    <NavLink to="/pedidos" className="nav-link">
+                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                        Pedidos
+                                    </NavLink>
+                                </CNavItem>
                             </CNavGroup>
 
                             {usuarioLogueado.rol.rolName == RolName.ADMIN &&

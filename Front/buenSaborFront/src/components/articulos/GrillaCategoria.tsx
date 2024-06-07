@@ -69,7 +69,6 @@ export function GrillaCategoria() {
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Denominacion</th>
                             {
                                 (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
@@ -81,7 +80,6 @@ export function GrillaCategoria() {
                     <tbody>
                         {categorias.map((categoria: Categoria, index) =>
                             <tr key={index}>
-                                <td>{categoria.id}</td>
                                 <td>{categoria.denominacion}</td>
                                 {
                                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&

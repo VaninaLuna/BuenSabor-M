@@ -22,6 +22,7 @@ import { RolName } from './models/RolName.ts';
 import { RutaPrivada } from './components/controlAcceso/RutaPrivada.tsx';
 import { GrillaCategoria } from './components/articulos/GrillaCategoria.tsx';
 import { GrillaUnidadMedida } from './components/articulos/GrillaUnidadMedida.tsx';
+import { GrillaPedido } from './components/articulos/GrillaPedido.tsx';
 
 
 
@@ -69,6 +70,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
               <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
                 <Route path="/unidadMedida" element={<GrillaUnidadMedida />} />
+              </Route>
+
+              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
+                <Route path="/pedidos" element={<GrillaPedido />} />
               </Route>
             </Routes>
           </div>

@@ -68,7 +68,6 @@ export function GrillaUnidadMedida() {
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Denominacion</th>
                             <th>Opciones</th>
                         </tr>
@@ -76,7 +75,6 @@ export function GrillaUnidadMedida() {
                     <tbody>
                         {uMedidas.map((uMedida: UnidadMedida, index) =>
                             <tr key={index}>
-                                <td>{uMedida.id}</td>
                                 <td>{uMedida.denominacion}</td>
                                 {
                                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
