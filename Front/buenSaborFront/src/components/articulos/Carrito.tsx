@@ -36,7 +36,7 @@ function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle
 }
 
 export function Carrito({ visible, setVisible }: { visible: boolean, setVisible: (visible: boolean) => void }) {
-    const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido } = useCarrito();
+    const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido, totalCosto } = useCarrito();
     const [showModal, setShowModal] = useState(false);
     const [savedPedido, setSavedPedido] = useState<Pedido | null>(null);
     const [message, setMessage] = useState<string>('');
@@ -57,6 +57,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         const fechaPedido = new Date();
         const pedido = new Pedido();
         pedido.total = totalPedido ?? 0;
+        pedido.totalCosto = totalCosto ?? 0;
         pedido.pedidoDetalles = cart;
 
 

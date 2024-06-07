@@ -1,6 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import ArticuloDTO from "../../models/ArticuloDTO";
 import PedidoDetalle from "../../models/PedidoDetalle";
+import { getArticuloInsumoPorID } from "../../services/FuncionesArticuloInsumoApi";
+import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
 
 interface CartContextType {
     cart: PedidoDetalle[];
@@ -10,6 +12,7 @@ interface CartContextType {
     limpiarCarrito: () => void;
     limpiarCarritoDespuesPago: () => void;
     totalPedido?: number;
+    totalCosto?: number;
 }
 
 export const CartContext = createContext<CartContextType>({
@@ -19,15 +22,18 @@ export const CartContext = createContext<CartContextType>({
     removeItemCarrito: () => { },
     limpiarCarrito: () => { },
     limpiarCarritoDespuesPago: () => { },
-    totalPedido: 0
+    totalPedido: 0,
+    totalCosto: 0
 })
 
 export function CarritoContextProvider({ children }: { children: ReactNode }) {
     const [cart, setCart] = useState<PedidoDetalle[]>([]);
     const [totalPedido, setTotalPedido] = useState<number>(0);
+    const [totalCosto, setTotalCosto] = useState<number>(0);
 
     useEffect(() => {
         calcularTotalCarrito();
+        calcularTotalCosto();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart]);
 
@@ -91,8 +97,27 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
         setTotalPedido(total);
     }
 
+    const calcularTotalCosto = async () => {
+        let totalCosto: number = 0;
+        for (const detalle of cart) {
+            if (detalle.articulo.type === 'articuloInsumo') {
+                const articuloInsumo = await getArticuloInsumoPorID(detalle.articulo.id);
+
+                totalCosto += articuloInsumo.precioCompra * detalle.cantidad;
+            } else if (detalle.articulo.type === 'articuloManufacturado') {
+                const articuloManufacturado = await getArticuloManufacturadoPorID(detalle.articulo.id);
+
+                articuloManufacturado.articuloManufacturadoDetalles.forEach(detalleManufacturado => {
+                    totalCosto += detalleManufacturado.articuloInsumo.precioCompra * detalleManufacturado.cantidad;
+                });
+            }
+        }
+        setTotalCosto(totalCosto);
+    }
+
+
     return (
-        <CartContext.Provider value={{ cart, addCarrito, limpiarCarrito, limpiarCarritoDespuesPago, removeCarrito, removeItemCarrito, totalPedido }}>
+        <CartContext.Provider value={{ cart, addCarrito, limpiarCarrito, limpiarCarritoDespuesPago, removeCarrito, removeItemCarrito, totalPedido, totalCosto }}>
             {children}
         </CartContext.Provider>
     );
