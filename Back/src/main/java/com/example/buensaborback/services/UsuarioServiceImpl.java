@@ -1,7 +1,7 @@
 package com.example.buensaborback.services;
 
 import com.example.buensaborback.domain.entities.Rol;
-import com.example.buensaborback.domain.entities.Usuario;
+import com.example.buensaborback.domain.entities.UsuarioCliente;
 import com.example.buensaborback.repositories.RolRepository;
 import com.example.buensaborback.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -20,7 +20,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     private final RolRepository rolRepository;
 
     @Override
-    public List<Usuario> findAll() throws Exception {
+    public List<UsuarioCliente> findAll() throws Exception {
         try{
             return usuarioRepository.findAll();
         }catch (Exception e){
@@ -29,36 +29,36 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public Usuario findById(Long id) throws Exception {
+    public UsuarioCliente findById(Long id) throws Exception {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe un usuario con ese Id"));
     }
 
     @Override
-    public Usuario findByNombreUsuario(String nombreUsuario) throws Exception {
+    public UsuarioCliente findByNombreUsuario(String nombreUsuario) throws Exception {
         return usuarioRepository.findByNombreUsuario(nombreUsuario);
     }
 
     @Override
-    public Usuario save(Usuario usuario) throws Exception {
+    public UsuarioCliente save(UsuarioCliente usuarioCliente) throws Exception {
         try {
-            Rol rol = rolRepository.findByRolName(usuario.getRol().getRolName())
+            Rol rol = rolRepository.findByRolName(usuarioCliente.getRol().getRolName())
                     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-            usuario.setRol(rol);
-            return usuarioRepository.save(usuario);
+            usuarioCliente.setRol(rol);
+            return usuarioRepository.save(usuarioCliente);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     @Override
-    public Usuario update(Long id, Usuario usuario) throws Exception {
+    public UsuarioCliente update(Long id, UsuarioCliente usuarioCliente) throws Exception {
         try {
             if (!usuarioRepository.existsById(id)) {
                 throw new NoSuchElementException("No existe un usuario con ese Id");
             }
-            usuario.setId(id);
-            return usuarioRepository.save(usuario);
+            usuarioCliente.setId(id);
+            return usuarioRepository.save(usuarioCliente);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

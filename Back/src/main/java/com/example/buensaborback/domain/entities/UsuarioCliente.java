@@ -1,8 +1,6 @@
 package com.example.buensaborback.domain.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +13,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Usuario extends Base{
+public class UsuarioCliente extends Base{
     private String nombreUsuario;
     private String password;
     @ManyToOne
     @JoinColumn(name = "idRol")
     private Rol rol;
 
-    public Usuario(String nombreUsuario, String password) {
+    public UsuarioCliente(String nombreUsuario, String password) {
         this.nombreUsuario = nombreUsuario;
         this.password = encryptPassword(password);
     }
@@ -31,4 +29,7 @@ public class Usuario extends Base{
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
     }
+
+    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Cliente cliente;
 }

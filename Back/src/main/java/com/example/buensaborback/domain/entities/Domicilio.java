@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,4 +23,11 @@ public class Domicilio extends Base{
     @ManyToOne
     @JoinColumn(name = "localidad_id")
     private Localidad localidad;
+
+    @ManyToMany(mappedBy = "domicilios", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @Builder.Default
+    @JsonBackReference(value = "domicilio_clientes")
+    private Set<Cliente> clientes = new HashSet<>();
+
 }
