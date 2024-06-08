@@ -17,7 +17,7 @@ const Logout: React.FC = () => {
             console.error('Error al cerrar sesión', error);
         }
 
-        navigate('/home');
+        navigate('/');
     };
 
     return <button className="btn btn-secondary" onClick={handleLogout}>Cerrar sesión</button>;
