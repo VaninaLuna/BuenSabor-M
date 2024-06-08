@@ -30,7 +30,7 @@ function NavBar() {
         //   </div>
         // </nav>
 
-        <CNavbar expand="lg" style={{ backgroundColor: 'rgb(224, 224, 224)' }}>
+        <CNavbar expand="lg" style={{ backgroundColor: 'rgb(224, 224, 224)', height: '80px' }}>
             <CContainer fluid style={{ margin: 30 }}>
                 <CNavbarBrand className="navbar-center" href="/">
                     <CImage rounded src={title} width={250} height={80} />
