@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Pedido from "../../models/Pedido";
 import { savePreferenceMP } from "../../services/MercadoPagoApi";
+import Factura from "../../models/Factura";
+import { saveFactura } from "../../services/FacturaApi";
 
 type CheckoutMPParams = {
     pedido: Pedido;
@@ -18,7 +20,20 @@ export function CheckoutMP({ pedido }: CheckoutMPParams) {
 
         if (preference) setPreferenceId(preference.id)
 
-        console.log(preference.id)
+        crearFactura(preference.id);
+    }
+
+    const crearFactura = async (preferenceId: string) => {
+
+        const factura = new Factura();
+
+        factura.fechaFacturacion = pedido.fechaPedido;
+        factura.mpPreferenceId = preferenceId;
+        factura.totalVenta = pedido.total;
+        factura.totalCosto = pedido.totalCosto;
+        factura.pedido = pedido;
+
+        await saveFactura(factura);
     }
 
     useEffect(() => {
