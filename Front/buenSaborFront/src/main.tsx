@@ -33,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Sidebar />
         <div className="h-100 w-100 flex-grow-1 ">
           <NavBar />
-          {/* <Navegador /> */}
           <div className='content' style={{ marginLeft: 60, marginRight: 60 }}>
             <Routes>
               <Route path='/login' element={<Login />} />
