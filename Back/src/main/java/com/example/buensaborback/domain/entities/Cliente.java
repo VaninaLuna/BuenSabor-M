@@ -27,14 +27,14 @@ public class Cliente extends Base{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate fechaNacimiento;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "Cliente_domicilio",
             joinColumns = @JoinColumn(name = "Cliente_id"),
             inverseJoinColumns = @JoinColumn(name = "domicilio_id"))
     @Builder.Default
     private Set<Domicilio> domicilios = new HashSet<>();
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @Builder.Default
     @JsonIgnoreProperties("cliente")
     private Set<Pedido> pedidos = new HashSet<>();

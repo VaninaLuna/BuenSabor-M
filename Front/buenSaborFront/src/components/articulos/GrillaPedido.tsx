@@ -34,7 +34,7 @@ export function GrillaPedido() {
         setSelectedPedido(null);
     };
 
-    const deleteArticuloManufacturado = async (idPedido: number) => {
+    const deletePedido = async (idPedido: number) => {
         await deletePedidoPorId(idPedido);
         window.location.reload();
     }
@@ -80,7 +80,7 @@ export function GrillaPedido() {
                                     {
                                         (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                         <>
-                                            <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deleteArticuloManufacturado(pedido.id)}>Eliminar</Button>
+                                            <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deletePedido(pedido.id)}>Eliminar</Button>
                                         </>
                                     }
                                     <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(pedido)}>Detalle</Button>

@@ -23,6 +23,7 @@ import { RutaPrivada } from './components/controlAcceso/RutaPrivada.tsx';
 import { GrillaCategoria } from './components/articulos/GrillaCategoria.tsx';
 import { GrillaUnidadMedida } from './components/articulos/GrillaUnidadMedida.tsx';
 import { GrillaPedido } from './components/articulos/GrillaPedido.tsx';
+import { GrillaFactura } from './components/facturacion/GrillaFactura.tsx';
 
 
 
@@ -74,6 +75,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
               <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
                 <Route path="/pedidos" element={<GrillaPedido />} />
+              </Route>
+
+              {/* FACTURACION */}
+              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
+                <Route path="/facturacion" element={<GrillaFactura />} />
               </Route>
             </Routes>
           </div>
