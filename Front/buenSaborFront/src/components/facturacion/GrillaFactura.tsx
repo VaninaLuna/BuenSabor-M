@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Modal, Row, Table } from "react-bootstrap";
-import Usuario from "../../models/Usuario";
+import { UsuarioCliente } from "../../models/Usuario";
 import Factura from "../../models/Factura";
 import { getFacturas } from "../../services/FacturaApi";
 import Cliente from "../../models/Cliente";
@@ -16,7 +16,7 @@ export function GrillaFactura() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
 
     const getListaFacturas = async () => {
@@ -51,7 +51,7 @@ export function GrillaFactura() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Pedidos</h1>
+                <h1 style={{ marginTop: '20px' }}>Facturacion</h1>
 
 
 
@@ -96,7 +96,7 @@ export function GrillaFactura() {
                                             <Col><span style={{ fontWeight: 'bold' }}>Nombre: </span> {cliente.nombre}</Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Apellido: </span> {cliente.apellido}</Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Email: </span> {cliente.email}</Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Fecha de nacimiento: </span> {cliente.fechaNacimiento}</Col>
+                                            {/* <Col><span style={{ fontWeight: 'bold' }}>Fecha de nacimiento: </span> {cliente.fechaNacimiento}</Col> */}
                                             <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {cliente.telefono}</Col>
                                         </Col>
                                     </Row>
