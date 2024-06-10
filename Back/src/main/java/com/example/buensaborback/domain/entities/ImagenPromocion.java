@@ -12,7 +12,7 @@ import lombok.*;
 @Entity
 @ToString
 @Builder
-public class ImagenUsuario extends Base{
+public class ImagenPromocion extends Base{
     @Lob
     @Column(name = "imagen", columnDefinition = "LONGBLOB")
     private byte[] imagen;
