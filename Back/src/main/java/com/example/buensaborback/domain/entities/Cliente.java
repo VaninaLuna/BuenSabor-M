@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @ToString
-@SuperBuilder
+@Builder
 public class Cliente extends Base{
     private String nombre;
     private String apellido;
@@ -40,12 +40,11 @@ public class Cliente extends Base{
     private Set<Pedido> pedidos = new HashSet<>();
 
     @OneToOne
-    @ToString.Exclude
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference(value = "cliente_usuario")
+    @JsonBackReference
     private UsuarioCliente usuario;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "imagen_id")
-    private ImagenUsuario imagenUsuario;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "imagen_id")
+//    private ImagenUsuario imagenUsuario;
 }
