@@ -1,8 +1,8 @@
-import Cliente from "../models/Cliente";
+import Rol from "../models/Rol";
 
-
-export async function getClientePorUsuarioClienteId(id: number) {
-    const ENDPOINT = `http://localhost:8080/cliente/usuario_cliente_id/${id}`;
+//GET
+export async function getRoles() {
+    const ENDPOINT = 'http://localhost:8080/rol/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -12,7 +12,7 @@ export async function getClientePorUsuarioClienteId(id: number) {
         }
 
         const json = await response.json();
-        return json as Cliente;
+        return json as Rol[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }

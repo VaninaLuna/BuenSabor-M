@@ -153,6 +153,12 @@ function Sidebar() {
                                                     Empleados
                                                 </NavLink>
                                             </CNavItem>
+                                            <CNavItem>
+                                                <NavLink to="/modificarRoles" className="nav-link">
+                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                                    Modificar Roles
+                                                </NavLink>
+                                            </CNavItem>
                                         </CNavGroup>
 
                                     </>

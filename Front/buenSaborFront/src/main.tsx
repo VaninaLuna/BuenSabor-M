@@ -24,6 +24,9 @@ import { GrillaFactura } from './components/facturacion/GrillaFactura.tsx';
 import { Auth0Provider } from '@auth0/auth0-react';
 import Profile from './components/auth/ProfileAuth0.tsx';
 import { AuthProvider } from './components/context/AuthContext.tsx';
+import { GrillaCliente } from './components/usuarios/GrillaCliente.tsx';
+import { GrillaEmpleado } from './components/usuarios/GrillaEmpleado.tsx';
+import { GrillaSuperUsuario } from './components/usuarios/GrillaSuperUsuario.tsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -81,6 +84,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 {/* FACTURACION */}
                 <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
                   <Route path="/facturacion" element={<GrillaFactura />} />
+                </Route>
+
+                {/* USUARIOS */}
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/clientes" element={<GrillaCliente />} />
+                </Route>
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/empleados" element={<GrillaEmpleado />} />
+                </Route>
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/modificarRoles" element={<GrillaSuperUsuario />} />
                 </Route>
               </Routes>
             </div>
