@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UsuarioService extends BaseService<UsuarioCliente, Long> {
     UsuarioCliente findByNombreUsuario(String nombreUsuario);
+    List<UsuarioCliente> getEmpleados() throws Exception;
+    List<UsuarioCliente> getClientes() throws Exception;
 }

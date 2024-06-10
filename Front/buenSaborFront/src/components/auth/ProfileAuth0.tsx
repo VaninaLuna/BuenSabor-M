@@ -37,14 +37,14 @@ const Profile = () => {
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" value={user.email} readOnly />
+                        <Form.Control type="email" value={user.name} readOnly />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Nombre</Form.Label>
-                        <Form.Control type="text" value={usuario?.cliente.nombre || ""} onChange={handleInputChange} />
+                        <Form.Control type="text" value={user.nickname} readOnly />
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Nombre</Form.Label>
+                        <Form.Label>Apellido</Form.Label>
                         <Form.Control type="text" value={usuario?.cliente.apellido || ""} onChange={handleInputChange} />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -55,7 +55,7 @@ const Profile = () => {
                         <Form.Label>Teléfono</Form.Label>
                         <Form.Control type="tel" name="telefono" value={usuario?.cliente.telefono || ""} onChange={handleInputChange} />
                     </Form.Group>
-                    <button type="button" onClick={handleSave}>Guardar</button>
+                    <button type="button" onClick={handleSave}>Guardar Cambios</button>
                 </Form>
 
             </>

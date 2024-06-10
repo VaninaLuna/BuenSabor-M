@@ -16,11 +16,13 @@ import { register } from "../../services/FuncionesAuth";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
 import Cliente from "../../models/Cliente";
 import Rol from "../../models/Rol";
+import { Link } from 'react-router-dom';
 
 function NavBar() {
     const [visible, setVisible] = useState(false);
     const { user, isAuthenticated, logout } = useAuth0();
     const { auth, setAuth }: AuthContextType = useContext(AuthContext);
+
 
     const handleLogin = async () => {
         if (isAuthenticated && user) {
@@ -90,7 +92,9 @@ function NavBar() {
                                 <p>Usuario: {user.nickname}</p>
                             </li>
                             <li className="nav-item" style={{ paddingRight: "10px" }}>
-                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/profile">Perfil</a>
+                                <Link to="/profile" className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }}>
+                                    Perfil
+                                </Link>
                             </li>
                             <li className="nav-item">
                                 <LogoutAuth0Button />

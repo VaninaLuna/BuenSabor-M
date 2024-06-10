@@ -35,6 +35,40 @@ export async function getUsuarioClientePorId(id: number) {
     }
 }
 
+export async function getEmpleados() {
+    const ENDPOINT = `http://localhost:8080/usuario_cliente/empleados`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as UsuarioCliente[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de sucursal')
+    }
+}
+
+export async function getClientes() {
+    const ENDPOINT = `http://localhost:8080/usuario_cliente/clientes`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as UsuarioCliente[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de sucursal')
+    }
+}
+
 //POST - PUT
 export async function saveUsuarioCliente(usuarioCliente?: UsuarioCliente) {
     let endpoint = 'http://localhost:8080/usuario_cliente';

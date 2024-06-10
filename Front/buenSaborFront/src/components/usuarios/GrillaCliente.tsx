@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
-import { getUsuariosCliente } from "../../services/UsuarioClienteAPI";
+import { getClientes } from "../../services/UsuarioClienteAPI";
 
 export function GrillaCliente() {
 
     const [clientes, setClientes] = useState<UsuarioCliente[]>([]);
 
     const getListaDeClientes = async () => {
-        const datos: UsuarioCliente[] = await getUsuariosCliente();
-
-        // Filtrar los datos para incluir solo los usuarios que son clientes
-        const clientes = datos.filter(usuario => usuario.rol.rolName === 'CLIENTE');
-
-        console.log(JSON.stringify(clientes))
-
-        setClientes(clientes);
+        const datos: UsuarioCliente[] = await getClientes();
+        setClientes(datos);
     };
 
     useEffect(() => {

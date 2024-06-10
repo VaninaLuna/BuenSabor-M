@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { UsuarioCliente } from "../../models/Usuario";
-import { getUsuariosCliente } from "../../services/UsuarioClienteAPI";
+import { getEmpleados } from "../../services/UsuarioClienteAPI";
 import { Table } from "react-bootstrap";
-import { RolName } from "../../models/RolName";
 
 export function GrillaEmpleado() {
     const [empleados, setEmpleados] = useState<UsuarioCliente[]>([]);
 
     const getListaDeEmpleados = async () => {
-        const datos: UsuarioCliente[] = await getUsuariosCliente();
-
-        // Filtrar los datos para incluir solo los usuarios que son empleados
-        const empleados = datos.filter(usuario => {
-            return [RolName.CAJERO, RolName.DELIVERY, RolName.COCINERO].includes(usuario.rol.rolName);
-        });
-
-        console.log(JSON.stringify(empleados))
-
-        setEmpleados(empleados);
+        const datos: UsuarioCliente[] = await getEmpleados();
+        setEmpleados(datos);
     };
 
     useEffect(() => {
