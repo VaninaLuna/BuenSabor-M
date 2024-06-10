@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { FormControl, Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
 import { getUsuariosCliente, saveUsuarioCliente } from "../../services/UsuarioClienteAPI";
 import { RolName } from "../../models/RolName";
@@ -10,8 +10,9 @@ export function GrillaSuperUsuario() {
 
     const [usuarios, setUsuarios] = useState<UsuarioCliente[]>([]);
     const [roles, setRoles] = useState<Rol[]>([]);
+    const [filtro, setFiltro] = useState('');
 
-    const getListaDeEmpleados = async () => {
+    const getListaDeUsuarios = async () => {
         const datos: UsuarioCliente[] = await getUsuariosCliente();
         setUsuarios(datos);
     };
@@ -32,19 +33,37 @@ export function GrillaSuperUsuario() {
         await saveUsuarioCliente(usuario);
 
         // Actualizar la lista de usuarios
-        getListaDeEmpleados();
+        getListaDeUsuarios();
     };
 
     useEffect(() => {
         getRoles().then(setRoles);
-        getListaDeEmpleados();
+        getListaDeUsuarios();
     }, []);
+
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredUsuarios = usuarios.filter(empleado =>
+        empleado.cliente.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+        empleado.cliente.apellido?.toLowerCase().includes(filtro.toLowerCase())
+    );
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px' }}>Modificar Roles de los Usuarios</h1>
 
+                <br />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por Nombre o Apellido"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                </div>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
@@ -54,7 +73,7 @@ export function GrillaSuperUsuario() {
                         </tr>
                     </thead>
                     <tbody>
-                        {usuarios.map((usuario: UsuarioCliente) =>
+                        {filteredUsuarios.map((usuario: UsuarioCliente) =>
                             <tr key={usuario.id}>
                                 <td>{usuario.cliente?.nombre}</td>
                                 <td>{usuario.cliente?.apellido}</td>
