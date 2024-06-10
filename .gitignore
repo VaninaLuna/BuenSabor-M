@@ -95,3 +95,4 @@ out/
 .ionide
 Back/src/main/resources/application.properties
 Back/src/main/resources/application.properties
+.vscode/settings.json
