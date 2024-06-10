@@ -7,14 +7,14 @@ import '@coreui/coreui/dist/css/coreui.min.css';
 import title from "../../assets/images/title.png";
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import Usuario from '../../models/Usuario';
+import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
 
 function Sidebar() {
 
     const { auth } = useContext(AuthContext); // Obtiene el estado de autenticación del contexto
-    const usuarioLogueado: Usuario | null = auth.usuario
+    const usuarioLogueado: UsuarioCliente | null = auth.usuario
 
     return (
         <div className="d-flex " >
@@ -28,7 +28,7 @@ function Sidebar() {
                     </CNavItem>
 
                     {(usuarioLogueado && usuarioLogueado.rol
-                        && usuarioLogueado.rol.rolName !== RolName.VISOR) ? (
+                        && usuarioLogueado.rol.rolName !== RolName.CLIENTE) ? (
                         <>
                             {usuarioLogueado.rol.rolName == RolName.ADMIN && (
                                 <CNavGroup
@@ -100,17 +100,39 @@ function Sidebar() {
                                         Promociones
                                     </NavLink>
                                 </CNavItem>
-                                <CNavItem>
-                                    <NavLink to="/pedidos" className="nav-link">
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Pedidos
-                                    </NavLink>
-                                </CNavItem>
+
                             </CNavGroup>
 
                             {usuarioLogueado.rol.rolName == RolName.ADMIN &&
                                 (
                                     <>
+                                        <CNavGroup
+                                            toggler={
+                                                <>
+                                                    <CIcon customClassName="nav-icon" icon={cilCreditCard} />
+                                                    Facturacion
+                                                </>
+                                            }
+                                        >
+                                            <CNavItem>
+                                                <NavLink to="/facturacion" className="nav-link">
+                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                                    Facturacion
+                                                </NavLink>
+                                            </CNavItem>
+                                            <CNavItem>
+                                                <NavLink to="/pedidos" className="nav-link">
+                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                                    Pedidos
+                                                </NavLink>
+                                            </CNavItem>
+                                        </CNavGroup>
+                                        <CNavItem>
+                                            <NavLink to="/estadisticas" className="nav-link">
+                                                <CIcon customClassName="nav-icon" icon={cilBarChart} />
+                                                Estadisticas
+                                            </NavLink>
+                                        </CNavItem>
                                         <CNavGroup
                                             toggler={
                                                 <>
@@ -132,18 +154,7 @@ function Sidebar() {
                                                 </NavLink>
                                             </CNavItem>
                                         </CNavGroup>
-                                        <CNavItem>
-                                            <NavLink to="/facturacion" className="nav-link">
-                                                <CIcon customClassName="nav-icon" icon={cilCreditCard} />
-                                                Facturacion
-                                            </NavLink>
-                                        </CNavItem>
-                                        <CNavItem>
-                                            <NavLink to="/estadisticas" className="nav-link">
-                                                <CIcon customClassName="nav-icon" icon={cilBarChart} />
-                                                Estadisticas
-                                            </NavLink>
-                                        </CNavItem>
+
                                     </>
                                 )}
 

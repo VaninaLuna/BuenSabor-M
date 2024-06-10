@@ -14,77 +14,80 @@ import { Home } from './components/layout/Home.tsx';
 import { GrillaEmpresa } from './components/empresa/GrillaEmpresa.tsx';
 import { GrillaSucursal } from './components/empresa/GrillaSucursal.tsx';
 import { Articulos } from './components/articulos/articulos.tsx';
-import { AuthProvider } from './components/context/AuthContext.tsx';
-import Login from './components/auth/Login.tsx';
-import Register from './components/auth/Register.tsx';
 import RolUsuario from './components/controlAcceso/RolUsuario.tsx';
 import { RolName } from './models/RolName.ts';
-import { RutaPrivada } from './components/controlAcceso/RutaPrivada.tsx';
+// import { RutaPrivada } from './components/controlAcceso/RutaPrivada.tsx';
 import { GrillaCategoria } from './components/articulos/GrillaCategoria.tsx';
 import { GrillaUnidadMedida } from './components/articulos/GrillaUnidadMedida.tsx';
 import { GrillaPedido } from './components/articulos/GrillaPedido.tsx';
 import { GrillaFactura } from './components/facturacion/GrillaFactura.tsx';
-
+import { Auth0Provider } from '@auth0/auth0-react';
+import Profile from './components/auth/ProfileAuth0.tsx';
+import { AuthProvider } from './components/context/AuthContext.tsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Sidebar />
-        <div className="h-100 w-100 flex-grow-1 ">
-          <NavBar />
-          <div className='content' style={{ marginLeft: 60, marginRight: 60 }}>
-            <Routes>
-              <Route path='/login' element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              <Route index element={<Home />} />
-              <Route path='/home' element={<Home />} />
-              {/* EMPRESA */}
-              <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
-                <Route path="/empresas" element={<GrillaEmpresa />} />
-              </Route>
+    <Auth0Provider
+      domain="dev-nravpn621dek13sw.us.auth0.com"
+      clientId="7XfwxWEDvewkHOlXX4AdMUJ29t2m4QFB"
+      authorizationParams={{
+        redirect_uri: window.location.origin
+      }}
+    >
+      <AuthProvider>
+        <BrowserRouter>
+          <Sidebar />
+          <div className="h-100 w-100 flex-grow-1 ">
+            <NavBar />
+            <div className='content' style={{ marginLeft: 60, marginRight: 60 }}>
+              <Routes>
+                {/* <Route path='/login' element={<Login />} />
+                <Route path='/register' element={<Register />} /> */}
+                <Route path='/profile' element={<Profile />} />
+                <Route index element={<Home />} />
+                <Route path='/home' element={<Home />} />
+                <Route path="/articulos" element={<Articulos />} />
+                {/* EMPRESA */}
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/empresas" element={<GrillaEmpresa />} />
+                </Route>
 
-              <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
-                <Route path="/sucursales" element={<GrillaSucursal />} />
-              </Route>
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/sucursales" element={<GrillaSucursal />} />
+                </Route>
 
-              {/* ARTICULOS */}
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/insumos" element={<GrillaArticuloInsumo />} />
-              </Route>
+                {/* ARTICULOS */}
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO]} />}>
+                  <Route path="/insumos" element={<GrillaArticuloInsumo />} />
+                </Route>
 
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO]} />}>
+                  <Route path="/manufacturados" element={<GrillaArticuloManufacturado />} />
+                </Route>
 
-              <Route path="/articulos" element={
-                <RutaPrivada>
-                  <Articulos />
-                </RutaPrivada>} />
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
+                  <Route path="/categorias" element={<GrillaCategoria />} />
+                </Route>
 
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
+                  <Route path="/unidadMedida" element={<GrillaUnidadMedida />} />
+                </Route>
 
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/manufacturados" element={<GrillaArticuloManufacturado />} />
-              </Route>
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO]} />}>
+                  <Route path="/pedidos" element={<GrillaPedido />} />
+                </Route>
 
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/categorias" element={<GrillaCategoria />} />
-              </Route>
-
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/unidadMedida" element={<GrillaUnidadMedida />} />
-              </Route>
-
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/pedidos" element={<GrillaPedido />} />
-              </Route>
-
-              {/* FACTURACION */}
-              <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.OPERADOR]} />}>
-                <Route path="/facturacion" element={<GrillaFactura />} />
-              </Route>
-            </Routes>
+                {/* FACTURACION */}
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
+                  <Route path="/facturacion" element={<GrillaFactura />} />
+                </Route>
+              </Routes>
+            </div>
           </div>
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </Auth0Provider>
+
   </React.StrictMode>,
 )

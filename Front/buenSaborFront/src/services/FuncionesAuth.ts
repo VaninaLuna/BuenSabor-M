@@ -1,4 +1,4 @@
-import Usuario, { UsuarioLogin } from "../models/Usuario";
+import Usuario, { UsuarioLogin, UsuarioCliente } from "../models/Usuario";
 
 // ---------- LOGIN ----------------------
 export async function login(usuarioLogin?: UsuarioLogin) {
@@ -18,7 +18,8 @@ export async function login(usuarioLogin?: UsuarioLogin) {
 }
 
 // ---------- REGISTER ------------------------
-export async function register(usuario: Usuario) {
+export async function register(usuario: UsuarioCliente) {
+    // const u = {...usuario.usuario, cliente: usuario.cliente}
     const endpoint = 'http://localhost:8080/auth/register';
 
     try {
@@ -30,9 +31,11 @@ export async function register(usuario: Usuario) {
             "body": JSON.stringify(usuario)
         });
     
-        //const json = response.json();
         console.log(response);
-        return response;
+        const json = await response.json();
+
+        return json as UsuarioCliente;
+
     } catch (error) {
         throw new Error('Error al guardar el usuario')
     }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UsuarioLogin } from "../../models/Usuario";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
 import { login } from "../../services/FuncionesAuth";
+import { LoginAuth0Button } from "./LoginAuth0Button";
 
 export default function Login() {
 
@@ -72,6 +73,14 @@ export default function Login() {
                         <button type="submit" className="btn btn-success" style={{ fontWeight: 'initial', color: 'whitesmoke' }}>Iniciar Sesión</button>
                     </div>
                 </form>
+
+
+                <div>
+                    <h3>
+                        Iniciar sesion con AuthO
+                    </h3>
+                    <LoginAuth0Button />
+                </div>
             </div>
         </>
 

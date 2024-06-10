@@ -6,30 +6,67 @@ import {
     CNavbarBrand,
     CNavbarToggler,
 } from "@coreui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import title from "../../assets/images/logo.png";
-import { AuthContext } from "../context/AuthContext";
-import Usuario from "../../models/Usuario";
-import Logout from "../auth/Logout";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutAuth0Button from "../auth/LogoutAuth0Button";
+import { LoginAuth0Button } from "../auth/LoginAuth0Button";
+import { UsuarioLogin, UsuarioCliente } from "../../models/Usuario";
+import { register } from "../../services/FuncionesAuth";
+import { AuthContext, AuthContextType } from "../context/AuthContext";
+import Cliente from "../../models/Cliente";
+import Rol from "../../models/Rol";
 
 function NavBar() {
     const [visible, setVisible] = useState(false);
+    const { user, isAuthenticated, logout } = useAuth0();
+    const { auth, setAuth }: AuthContextType = useContext(AuthContext);
 
-    const { auth } = useContext(AuthContext); // Obtiene el estado de autenticación del contexto
-    const usuarioLogueado: Usuario | null = auth.usuario;
+    const handleLogin = async () => {
+        if (isAuthenticated && user) {
+            const usuarioLogin = new UsuarioLogin();
+            usuarioLogin.nombreUsuario = user.nickname;
+
+            console.log(user);
+
+            const cliente = new Cliente();
+            cliente.nombre = user.given_name;
+            cliente.apellido = user.family_name;
+            cliente.email = user.email;
+
+            const usuario: UsuarioCliente = {
+                nombreUsuario: user.nickname,
+                rol: new Rol(),
+                cliente: cliente,
+            };
+
+            console.log(usuario);
+            const usuarioRegistrado = await register(usuario);
+            if (usuarioRegistrado && usuarioRegistrado.id) {
+                setAuth({ usuario: usuarioRegistrado });
+            } else {
+                localStorage.removeItem('usuario');
+                logout({ logoutParams: { returnTo: window.location.origin } });
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated && !auth.usuario) {
+            handleLogin();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAuthenticated, user]);
+
+    useEffect(() => {
+        if (auth.usuario) {
+            localStorage.setItem('usuario', JSON.stringify(auth.usuario));
+        } else {
+            localStorage.removeItem('usuario');
+        }
+    }, [auth.usuario]);
+
     return (
-        // <nav className="navbar" style={{backgroundColor: }}> 
-        //   <div className="container-fluid">
-        //     <button className="btn btn-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-expanded="false" aria-controls="sidebarCollapse">
-        //         <span className="navbar-toggler-icon"></span>
-        //     </button>
-
-        //     <div className="mx-auto">
-        //     <span className="navbar-brand">Buen Sabor</span>
-        //     </div>
-        //   </div>
-        // </nav>
-
         <CNavbar expand="lg" style={{ backgroundColor: 'rgb(224, 224, 224)', height: '80px' }}>
             <CContainer fluid style={{ margin: 30 }}>
                 <CNavbarBrand className="navbar-center" href="/">
@@ -43,22 +80,20 @@ function NavBar() {
                 <CCollapse className="navbar-collapse" visible={visible}>
                 </CCollapse>
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {(!usuarioLogueado || !usuarioLogueado.rol) ? (
-                        <>
-                            <li className="nav-item">
-                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/login">Login</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/register">Register</a>
-                            </li>
-                        </>
+                    {(!user || !isAuthenticated) ? (
+                        <li className="nav-item">
+                            <LoginAuth0Button />
+                        </li>
                     ) : (
                         <>
-                            <li style={{ paddingRight: "10px", paddingTop: "5px" }}>
-                                <p>Usuario: {usuarioLogueado.nombreUsuario} - {usuarioLogueado.rol.rolName}</p>
+                            <li style={{ paddingRight: "10px", paddingTop: "8px" }}>
+                                <p>Usuario: {user.nickname}</p>
+                            </li>
+                            <li className="nav-item" style={{ paddingRight: "10px" }}>
+                                <a className="nav-link btn btn-secondary" style={{ fontWeight: 'bold' }} href="/profile">Perfil</a>
                             </li>
                             <li className="nav-item">
-                                <Logout />
+                                <LogoutAuth0Button />
                             </li>
                         </>
                     )}

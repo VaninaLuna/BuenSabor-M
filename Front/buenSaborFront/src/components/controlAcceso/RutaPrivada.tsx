@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from "react";
-import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { LoginAuth0Button } from "../auth/LoginAuth0Button";
 
 export const RutaPrivada = ({ children }: { children: ReactNode }) => {
 
@@ -11,6 +11,7 @@ export const RutaPrivada = ({ children }: { children: ReactNode }) => {
             {children}
         </>
     ) : (
-        <Navigate to='/login' /> // Redirige al usuario a la página de inicio de sesión si no está autenticado
+        <LoginAuth0Button />
+        // <Navigate to='/login' /> // Redirige al usuario a la página de inicio de sesión si no está autenticado
     );
 };
