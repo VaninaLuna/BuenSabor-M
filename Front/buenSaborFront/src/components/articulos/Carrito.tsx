@@ -11,7 +11,7 @@ import { savePedido } from "../../services/PedidoApi";
 import { ModalMensaje } from "./ModalMensaje";
 import { CheckoutMP } from "./CheckOut";
 import { RolName } from "../../models/RolName";
-import Usuario from "../../models/Usuario";
+import { UsuarioCliente } from "../../models/Usuario";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -45,7 +45,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const guardarPedido = async () => {
         if (cart.length === 0) {
@@ -142,7 +142,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             {pedidoGuardado && savedPedido ? (
                                 <CheckoutMP pedido={savedPedido} />
                             ) : (
-                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName !== RolName.VISOR) && (
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName !== RolName.CLIENTE) && (
                                     <button onClick={guardarPedido}> Generar Pedido </button>
                                 )
                             )}

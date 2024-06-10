@@ -3,7 +3,7 @@ import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
 import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
-import Usuario from '../../models/Usuario';
+import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
 
@@ -17,7 +17,7 @@ export function GrillaArticuloInsumo() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoArticulosInsumos = async () => {
         const datos: ArticuloInsumo[] = await getArticulosInsumos();

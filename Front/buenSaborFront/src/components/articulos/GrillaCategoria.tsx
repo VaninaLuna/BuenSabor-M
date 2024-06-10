@@ -4,7 +4,7 @@ import Categoria from '../../models/Categoria';
 import { deleteCategoriaPorID, getCategorias } from '../../services/FuncionesCategoriaApi';
 import { ModalCategoria } from './ModalCategoria';
 import { Button } from 'react-bootstrap';
-import Usuario from '../../models/Usuario';
+import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
 export function GrillaCategoria() {
@@ -18,7 +18,7 @@ export function GrillaCategoria() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoCategorias = async () => {
         const datos: Categoria[] = await getCategorias();

@@ -3,7 +3,7 @@ import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
 import { Button, Table, Form, Modal, Image } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
-import Usuario from "../../models/Usuario";
+import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
 export function GrillaArticuloManufacturado() {
@@ -19,7 +19,7 @@ export function GrillaArticuloManufacturado() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoArticulosManufacturados = async () => {
         const datos: ArticuloManufacturado[] = await getArticulosManufacturados();

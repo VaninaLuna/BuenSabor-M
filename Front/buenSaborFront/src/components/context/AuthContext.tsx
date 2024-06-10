@@ -1,8 +1,8 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from "react";
-import Usuario from "../../models/Usuario";
+import { UsuarioCliente } from "../../models/Usuario";
 
 export type AuthState = {
-    usuario: Usuario | null;
+    usuario: UsuarioCliente | null;
 };
 
 export type AuthContextType = {
@@ -12,7 +12,7 @@ export type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
     auth: { usuario: null },
-    setAuth: () => { },
+    setAuth: () => { }
 });
 
 interface AuthProviderProps {

@@ -4,7 +4,7 @@ import UnidadMedida from '../../models/UnidadMedida';
 import { deleteUnidadMedidaPorID, getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
-import Usuario from '../../models/Usuario';
+import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
 export function GrillaUnidadMedida() {
@@ -15,7 +15,7 @@ export function GrillaUnidadMedida() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoUMedidas = async () => {
         const datos: UnidadMedida[] = await getUnidadesMedidas();

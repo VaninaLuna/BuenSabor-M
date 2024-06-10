@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
 import { deletePedidoPorId, getPedidos } from "../../services/PedidoApi";
-import Usuario from "../../models/Usuario";
+import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
 export function GrillaPedido() {
@@ -16,7 +16,7 @@ export function GrillaPedido() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: Usuario = JSON.parse(jsonUsuario) as Usuario;
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListaPedidos = async () => {
         const datos: Pedido[] = await getPedidos();
