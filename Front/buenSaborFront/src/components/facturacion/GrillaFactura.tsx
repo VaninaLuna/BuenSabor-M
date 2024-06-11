@@ -12,15 +12,18 @@ export function GrillaFactura() {
     //Modal detalles
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedFactura, setSelectedFactura] = useState<Factura | null>(null);
-    const [cliente, setCliente] = useState<Cliente>(new Cliente())
+    //const [cliente, setCliente] = useState<Cliente>(new Cliente())
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
+    //const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
+    //const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
 
     const getListaFacturas = async () => {
         const datos: Factura[] = await getFacturas();
+
+
+
         setFacturas(datos);
     };
 
@@ -35,16 +38,18 @@ export function GrillaFactura() {
         setSelectedFactura(null);
     };
 
+    /*
     const obtenerDatosCliente = async () => {
         if (usuarioLogueado) {
             const cliente = await getClientePorUsuarioClienteId(usuarioLogueado.id as number);
             setCliente(cliente);
         }
     }
+        */
 
     useEffect(() => {
         getListaFacturas();
-        obtenerDatosCliente();
+        //obtenerDatosCliente();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -93,11 +98,11 @@ export function GrillaFactura() {
                                     <Row>
                                         <Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Informacion del Cliente</span> <br /></Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Nombre: </span> {cliente.nombre}</Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Apellido: </span> {cliente.apellido}</Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Email: </span> {cliente.email}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Nombre: </span> {selectedFactura.pedido.cliente.nombre}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Apellido: </span> {selectedFactura.pedido.cliente.apellido}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Email: </span> {selectedFactura.pedido.cliente.email}</Col>
                                             {/* <Col><span style={{ fontWeight: 'bold' }}>Fecha de nacimiento: </span> {cliente.fechaNacimiento}</Col> */}
-                                            <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {cliente.telefono}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {selectedFactura.pedido.cliente.telefono}</Col>
                                         </Col>
                                     </Row>
                                     <br />

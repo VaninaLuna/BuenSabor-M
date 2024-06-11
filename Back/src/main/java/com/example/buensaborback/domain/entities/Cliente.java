@@ -3,6 +3,7 @@ package com.example.buensaborback.domain.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,12 +28,9 @@ public class Cliente extends Base{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate fechaNacimiento;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "Cliente_domicilio",
-            joinColumns = @JoinColumn(name = "Cliente_id"),
-            inverseJoinColumns = @JoinColumn(name = "domicilio_id"))
-    @Builder.Default
-    private Set<Domicilio> domicilios = new HashSet<>();
+    @OneToOne(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Domicilio domicilio;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @Builder.Default

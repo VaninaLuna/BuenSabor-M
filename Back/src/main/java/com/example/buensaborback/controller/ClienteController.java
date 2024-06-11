@@ -2,6 +2,7 @@ package com.example.buensaborback.controller;
 
 import com.example.buensaborback.domain.entities.Cliente;
 import com.example.buensaborback.domain.entities.Rol;
+import com.example.buensaborback.domain.entities.UsuarioCliente;
 import com.example.buensaborback.services.ClienteService;
 import com.example.buensaborback.services.ClienteServiceImpl;
 import com.example.buensaborback.services.RolService;
@@ -29,5 +30,4 @@ public class ClienteController extends BaseControllerImpl<Cliente, ClienteServic
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
-
 }

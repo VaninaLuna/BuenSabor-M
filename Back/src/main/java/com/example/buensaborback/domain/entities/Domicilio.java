@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Builder
-public class Domicilio extends Base{
+public class Domicilio extends Base {
 
     private String calle;
     private Integer numero;
@@ -24,10 +24,10 @@ public class Domicilio extends Base{
     @JoinColumn(name = "localidad_id")
     private Localidad localidad;
 
-    @ManyToMany(mappedBy = "domicilios", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToOne()
+    @JoinColumn(name = "cliente_id")
     @Builder.Default
-    @JsonBackReference(value = "domicilio_clientes")
-    private Set<Cliente> clientes = new HashSet<>();
+    @JsonBackReference()
+    private Cliente cliente = new Cliente();
 
 }

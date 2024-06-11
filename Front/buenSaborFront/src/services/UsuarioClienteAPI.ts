@@ -88,6 +88,18 @@ export async function saveUsuarioCliente(usuarioCliente?: UsuarioCliente) {
     });
 }
 
+export async function updateData(usuarioCliente?: UsuarioCliente) {
+    const endpoint = 'http://localhost:8080/usuario_cliente';
+
+    await fetch(endpoint, {
+        "method": "PUT",
+        "headers": {
+            "Content-Type": 'application/json'
+        },
+        "body": JSON.stringify(usuarioCliente)
+    });
+}
+
 //DELETE
 export async function deleteUsuarioClientePorId(id: number) {
     const ENDPOINT = `http://localhost:8080/usuario_cliente/${id}`

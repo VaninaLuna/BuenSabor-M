@@ -40,7 +40,11 @@ public class AuthController extends BaseControllerImpl<UsuarioCliente, UsuarioSe
 
                 Cliente cliente = usuarioGuardado.getCliente();
                 cliente.setUsuario(usuarioGuardado);
-                cliente.setNombre(usuarioGuardado.getNombreUsuario());
+
+                if(usuarioCliente.getCliente().getNombre() == null || usuarioCliente.getCliente().getNombre().isEmpty()){
+                    cliente.setNombre(usuarioGuardado.getNombreUsuario());
+                }
+
                 Cliente clienteGuardado = clienteService.save(cliente);
 
                 usuarioGuardado.setCliente(clienteGuardado);

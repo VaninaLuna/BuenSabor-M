@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { UsuarioCliente } from "../../models/Usuario";
 import { getEmpleados } from "../../services/UsuarioClienteAPI";
-import { Table } from "react-bootstrap";
+import { FormControl, Table } from "react-bootstrap";
 
 export function GrillaEmpleado() {
     const [empleados, setEmpleados] = useState<UsuarioCliente[]>([]);
+    const [filtro, setFiltro] = useState('');
 
     const getListaDeEmpleados = async () => {
         const datos: UsuarioCliente[] = await getEmpleados();
@@ -15,11 +16,29 @@ export function GrillaEmpleado() {
         getListaDeEmpleados();
     }, []);
 
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredEmpleados = empleados.filter(empleado =>
+        empleado.cliente.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+        empleado.cliente.apellido?.toLowerCase().includes(filtro.toLowerCase())
+    );
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px' }}>Empleados</h1>
 
+                <br />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por Nombre o Apellido"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                </div>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
@@ -31,7 +50,7 @@ export function GrillaEmpleado() {
                         </tr>
                     </thead>
                     <tbody>
-                        {empleados.map((usuario: UsuarioCliente) =>
+                        {filteredEmpleados.map((usuario: UsuarioCliente) =>
                             <tr key={usuario.id}>
                                 <td>{usuario.cliente?.nombre}</td>
                                 <td>{usuario.cliente?.apellido}</td>

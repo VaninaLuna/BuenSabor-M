@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { FormControl, Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
 import { getClientes } from "../../services/UsuarioClienteAPI";
 
 export function GrillaCliente() {
 
     const [clientes, setClientes] = useState<UsuarioCliente[]>([]);
+    const [filtro, setFiltro] = useState('');
 
     const getListaDeClientes = async () => {
         const datos: UsuarioCliente[] = await getClientes();
@@ -16,10 +17,29 @@ export function GrillaCliente() {
         getListaDeClientes();
     }, []);
 
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredClientes = clientes.filter(cliente =>
+        cliente.cliente.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+        cliente.cliente.apellido?.toLowerCase().includes(filtro.toLowerCase())
+    );
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px' }}>Clientes</h1>
+
+                <br />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por Nombre o Apellido"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                </div>
 
                 <Table striped bordered hover size="sm">
                     <thead>
@@ -32,7 +52,7 @@ export function GrillaCliente() {
                         </tr>
                     </thead>
                     <tbody>
-                        {clientes.map((usuario: UsuarioCliente) =>
+                        {filteredClientes.map((usuario: UsuarioCliente) =>
                             <tr key={usuario.id}>
                                 <td>{usuario.cliente?.nombre}</td>
                                 <td>{usuario.cliente?.apellido}</td>
