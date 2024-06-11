@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/Carrito.css";
-import { CCloseButton, CForm, CFormCheck, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
+import { CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCart } from "@coreui/icons";
 import PedidoDetalle from "../../models/PedidoDetalle";
@@ -12,6 +12,7 @@ import { ModalMensaje } from "./ModalMensaje";
 import { CheckoutMP } from "./CheckOut";
 import { UsuarioCliente } from "../../models/Usuario";
 import Cliente from "../../models/Cliente";
+import { Form } from "react-bootstrap";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -38,11 +39,11 @@ function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle
 export function Carrito({ visible, setVisible }: { visible: boolean, setVisible: (visible: boolean) => void }) {
     const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido, totalCosto } = useCarrito();
     const [showModal, setShowModal] = useState(false);
-    const [savedPedido, setSavedPedido] = useState<PedidoCliente | null>(null);
     const [message, setMessage] = useState<string>('');
+    const [pedidoGuardado, setPedidoGuardado] = useState<PedidoCliente>(new PedidoCliente());
     const [pagoRealizado] = useState(false);
-    const [pedidoGuardado, setPedidoGuardado] = useState(false);
-    const [tipoEnvio, setTipoEnvio] = useState('takeAway'); // Default is 'takeAway'
+    const [tipoEnvio, setTipoEnvio] = useState('');
+    const [formaPago, setFormaPago] = useState('');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -50,60 +51,57 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
     const handleTipoEnvioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTipoEnvio(e.target.id);
+        setFormaPago('');
+
+        if (e.target.id === 'delivery') {
+            handleFormaPagoChange({ target: { id: 'mp' } } as React.ChangeEvent<HTMLInputElement>);
+        }
     };
 
-    const guardarPedido = async () => {
+    const handleFormaPagoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormaPago(e.target.id);
+    };
+
+    const guardarPedidoEfectivo = async () => {
         if (cart.length === 0) {
             setMessage("Al menos debe agregar un articulo al carrito");
-            setShowModal(true);
+            //setShowModal(true);
             return;
         }
 
-        if (tipoEnvio === 'delivery') { // Verifica si el usuario tiene un domicilio configurado
+        if (tipoEnvio === 'delivery' && !usuarioLogueado.cliente.domicilio) {
             setMessage("Debe configurar su domicilio antes de generar un pedido con envío");
-            setShowModal(true);
+            //setShowModal(true);
             return;
         }
 
         const fechaPedido = new Date();
-        const pedido = new PedidoCliente();
+        const pedido: PedidoCliente = new PedidoCliente();
         pedido.total = totalPedido ?? 0;
         pedido.totalCosto = totalCosto ?? 0;
         pedido.pedidoDetalles = cart;
 
-
         const dia = fechaPedido.getDate().toString().padStart(2, '0');
         const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
         const año = fechaPedido.getFullYear();
+        pedido.fechaPedido = `${dia}/${mes}/${año}`;
 
-        const fechaFormateada = `${dia}/${mes}/${año}`;
-        pedido.fechaPedido = fechaFormateada;
-
-        console.log(fechaFormateada);
-
-
-        fechaPedido.setMinutes(fechaPedido.getMinutes() + 30)
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + 30);
         const horas = fechaPedido.getHours().toString().padStart(2, '0');
         const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
         const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
-        const horaFormateada = `${horas}:${minutos}:${segundos}`;
-
-        console.log(horaFormateada)
-
-        pedido.horaEstimadaFinalizacion = horaFormateada;
+        pedido.horaEstimadaFinalizacion = `${horas}:${minutos}:${segundos}`;
 
         const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
-
         pedido.cliente = clienteActualizado;
 
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);
-            setSavedPedido(pedidoFromDB);
-            setShowModal(true);
-            setPedidoGuardado(true);
+            setPedidoGuardado(pedidoFromDB);
+            ////setShowModal(true);
         } catch (error) {
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
-            setShowModal(true);
+            //setShowModal(true);
         }
     };
 
@@ -114,7 +112,6 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     useEffect(() => {
         if (pagoRealizado) {
             limpiarCarritoDespuesPago();
-            setPedidoGuardado(false);
         }
     }, [pagoRealizado, limpiarCarritoDespuesPago]);
 
@@ -154,25 +151,47 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             <br />
                             <br />
 
-                            {pedidoGuardado && savedPedido ? (
-                                <CheckoutMP pedido={savedPedido} />
-                            ) : (
-                                (usuarioLogueado && usuarioLogueado.rol) && (
+                            {
+                                usuarioLogueado && usuarioLogueado.rol && (
                                     <>
-                                        <CForm className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
-                                            <CFormCheck type="radio" name="flexRadioDefault" id="delivery" label="Envio a domicilio" onChange={handleTipoEnvioChange} />
-                                            <CFormCheck type="radio" name="flexRadioDefault" id="takeAway" label="Retiro en tienda" onChange={handleTipoEnvioChange} />
-                                        </CForm>
+                                        <Form>
+                                            <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
+                                                <Form.Check type="radio" label="Envío a domicilio"
+                                                    id="delivery" checked={tipoEnvio === 'delivery'} onChange={handleTipoEnvioChange}
+                                                />
+                                                <Form.Check type="radio" label="Retiro en el local" id="pickup"
+                                                    checked={tipoEnvio === 'pickup'} onChange={handleTipoEnvioChange}
+                                                />
+                                            </Form.Group>
 
+                                            {tipoEnvio && (
+                                                <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
+                                                    <Form.Check type="radio" label="MercadoPago" id="mp" disabled={tipoEnvio === 'delivery'}
+                                                        checked={formaPago === 'mp'} onChange={handleFormaPagoChange}
+                                                    />
+                                                    <Form.Check type="radio" label="Efectivo" id="efectivo" disabled={tipoEnvio === 'delivery'}
+                                                        checked={formaPago === 'efectivo'} onChange={handleFormaPagoChange}
+                                                    />
+                                                </Form.Group>
+                                            )}
+                                        </Form>
+                                        <div className="cart-actions">
+                                            {formaPago === "mp" && (
+                                                <CheckoutMP cart={cart} totalPedido={totalPedido}
+                                                    totalCosto={totalCosto} usuarioLogueado={usuarioLogueado} />
+                                            )}
+                                            {formaPago === "efectivo" && (
+                                                <button onClick={guardarPedidoEfectivo}>Finalizar pedido</button>
+                                            )}
+                                        </div>
 
-                                        <button onClick={guardarPedido}> Generar Pedido </button>
                                     </>
                                 )
-                            )}
+                            }
 
                             <ModalMensaje
                                 showModal={showModal}
-                                pedido={savedPedido}
+                                pedido={pedidoGuardado}
                                 message={message}
                                 handleClose={handleCloseModal}
                             />
