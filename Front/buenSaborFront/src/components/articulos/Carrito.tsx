@@ -62,16 +62,16 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         setFormaPago(e.target.id);
     };
 
-    const guardarPedidoEfectivo = async () => {
+    const guardarPedido = async () => {
         if (cart.length === 0) {
             setMessage("Al menos debe agregar un articulo al carrito");
-            //setShowModal(true);
+            setShowModal(true);
             return;
         }
 
         if (tipoEnvio === 'delivery' && !usuarioLogueado.cliente.domicilio) {
             setMessage("Debe configurar su domicilio antes de generar un pedido con envío");
-            //setShowModal(true);
+            setShowModal(true);
             return;
         }
 
@@ -98,10 +98,10 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);
             setPedidoGuardado(pedidoFromDB);
-            ////setShowModal(true);
+            setShowModal(true);
         } catch (error) {
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
-            //setShowModal(true);
+            setShowModal(true);
         }
     };
 
@@ -151,8 +151,10 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             <br />
                             <br />
 
-                            {
-                                usuarioLogueado && usuarioLogueado.rol && (
+                            {pedidoGuardado && pedidoGuardado.id > 0 && formaPago === 'mp' ? (
+                                <CheckoutMP pedido={pedidoGuardado} />
+                            ) : (
+                                (usuarioLogueado && usuarioLogueado.rol) && (
                                     <>
                                         <Form>
                                             <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
@@ -175,19 +177,20 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                 </Form.Group>
                                             )}
                                         </Form>
-                                        <div className="cart-actions">
+
+                                        {/* <div className="cart-actions">
                                             {formaPago === "mp" && (
-                                                <CheckoutMP cart={cart} totalPedido={totalPedido}
-                                                    totalCosto={totalCosto} usuarioLogueado={usuarioLogueado} />
+                                                <CheckoutMP pedido={pedidoGuardado} />
                                             )}
                                             {formaPago === "efectivo" && (
-                                                <button onClick={guardarPedidoEfectivo}>Finalizar pedido</button>
+                                                <button onClick={guardarPedido}>Generar Pedido</button>
                                             )}
-                                        </div>
+                                        </div> */}
 
+                                        <button onClick={guardarPedido}> Generar Pedido </button>
                                     </>
                                 )
-                            }
+                            )}
 
                             <ModalMensaje
                                 showModal={showModal}
