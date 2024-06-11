@@ -1,6 +1,7 @@
 package com.example.buensaborback.services;
 
 import com.example.buensaborback.domain.entities.Pedido;
+import com.example.buensaborback.dto.PedidosPorArticuloDTO;
 import com.example.buensaborback.dto.PedidosPorMesAnioDTO;
 import com.example.buensaborback.repositories.PedidoRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,15 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido,Long> implements P
     public List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear() throws Exception {
         try{
             return pedidoRepository.findPedidosGroupedByMonthAndYear();
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo() throws Exception {
+        try{
+            return pedidoRepository.findPedidosGroupedByArticulo();
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }

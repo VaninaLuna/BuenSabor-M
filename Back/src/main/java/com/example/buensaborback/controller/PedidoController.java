@@ -3,6 +3,7 @@ package com.example.buensaborback.controller;
 import com.example.buensaborback.controller.mercadoPago.MercadoPagoController;
 import com.example.buensaborback.controller.mercadoPago.PreferenceMP;
 import com.example.buensaborback.domain.entities.Pedido;
+import com.example.buensaborback.dto.PedidosPorArticuloDTO;
 import com.example.buensaborback.dto.PedidosPorMesAnioDTO;
 import com.example.buensaborback.services.PedidoService;
 import com.example.buensaborback.services.PedidoServiceImpl;
@@ -41,6 +42,16 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
     public List<PedidosPorMesAnioDTO> getPedidosPorMesAnio() {
         try {
             return pedidoService.findPedidosGroupedByMonthAndYear();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @GetMapping("/porArticulo")
+    public List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo() {
+        try {
+            return pedidoService.findPedidosGroupedByArticulo();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,4 +1,5 @@
 import Pedido, { PedidoCliente } from "../models/Pedido";
+import PedidosPorArticuloDTO from "../models/PedidosPorArticuloDTO";
 import PedidosPorMesAnioDTO from "../models/PedidosPorMesAnioDTO";
 
 //GET
@@ -91,5 +92,23 @@ export async function getPedidosPorMesAnio() {
         return json as PedidosPorMesAnioDTO[];
     } catch (e) {
         throw new Error('Error al hacer fetch de pedidos por mes y año');
+    }
+}
+
+export async function getPedidosPorArticulo() {
+    const ENDPOINT = 'http://localhost:8080/pedido/porArticulo';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        console.log(json)
+        return json as PedidosPorArticuloDTO[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de pedidos por articulo');
     }
 }

@@ -2,6 +2,7 @@ package com.example.buensaborback.repositories;
 
 import com.example.buensaborback.domain.entities.Factura;
 import com.example.buensaborback.domain.entities.Pedido;
+import com.example.buensaborback.dto.PedidosPorArticuloDTO;
 import com.example.buensaborback.dto.PedidosPorMesAnioDTO;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,8 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
     @Query("SELECT new com.example.buensaborback.dto.PedidosPorMesAnioDTO(YEAR(p.fechaPedido), MONTH(p.fechaPedido), COUNT(p)) " +
             "FROM Pedido p GROUP BY YEAR(p.fechaPedido), MONTH(p.fechaPedido)")
     List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear();
+
+    @Query("SELECT new com.example.buensaborback.dto.PedidosPorArticuloDTO(pd.articulo.denominacion, COUNT(pd)) " +
+            "FROM PedidoDetalle pd GROUP BY pd.articulo.denominacion")
+    List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo();
 }

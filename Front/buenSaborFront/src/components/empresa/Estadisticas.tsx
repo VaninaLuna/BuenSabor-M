@@ -1,4 +1,5 @@
 import BarChart from '../reportes/BarChart';
+import PieChart from '../reportes/PieChart';
 
 // Registrar los componentes necesarios de Chart.js
 
@@ -13,10 +14,10 @@ export default function Estadisticas() {
                         <h2>Pedidos por Mes y Año</h2>
                         <BarChart />
                     </div>
-                    {/* <div style={{ width: '15cm', height: '5cm' }}>
-                        <h2>Cantidad de Pedidos Por Instrumento</h2>
+                    <div style={{ width: '15cm', height: '5cm' }}>
+                        <h2>Cantidad de Pedidos Por Articulos</h2>
                         <PieChart />
-                    </div> */}
+                    </div>
                 </div>
                 {/* <br></br>
                 <br></br>
