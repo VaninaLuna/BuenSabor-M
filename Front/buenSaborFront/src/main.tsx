@@ -27,6 +27,7 @@ import { AuthProvider } from './components/context/AuthContext.tsx';
 import { GrillaCliente } from './components/usuarios/GrillaCliente.tsx';
 import { GrillaEmpleado } from './components/usuarios/GrillaEmpleado.tsx';
 import { GrillaSuperUsuario } from './components/usuarios/GrillaSuperUsuario.tsx';
+import { Estadisticas } from './components/empresa/Estadisticas.tsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -58,6 +59,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
                 <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
                   <Route path="/sucursales" element={<GrillaSucursal />} />
+                </Route>
+
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/estadisticas" element={<Estadisticas />} />
                 </Route>
 
                 {/* ARTICULOS */}
