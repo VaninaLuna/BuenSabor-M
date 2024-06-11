@@ -20,6 +20,9 @@ export function GrillaPedido() {
 
     const getListaPedidos = async () => {
         const datos: Pedido[] = await getPedidos();
+
+        
+
         setPedidos(datos);
     };
 

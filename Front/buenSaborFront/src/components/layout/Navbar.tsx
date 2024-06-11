@@ -11,10 +11,10 @@ import title from "../../assets/images/logo.png";
 import { useAuth0 } from "@auth0/auth0-react";
 import LogoutAuth0Button from "../auth/LogoutAuth0Button";
 import { LoginAuth0Button } from "../auth/LoginAuth0Button";
-import { UsuarioLogin, UsuarioCliente } from "../../models/Usuario";
+import { UsuarioLogin, UsaurioRegistro } from "../../models/Usuario";
 import { register } from "../../services/FuncionesAuth";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
-import Cliente from "../../models/Cliente";
+import { ClienteRegistro } from "../../models/Cliente";
 import Rol from "../../models/Rol";
 import { Link } from 'react-router-dom';
 
@@ -31,12 +31,12 @@ function NavBar() {
 
             console.log(user);
 
-            const cliente = new Cliente();
+            const cliente = new ClienteRegistro();
             cliente.nombre = user.given_name;
             cliente.apellido = user.family_name;
             cliente.email = user.email;
 
-            const usuario: UsuarioCliente = {
+            const usuario: UsaurioRegistro = {
                 nombreUsuario: user.nickname,
                 rol: new Rol(),
                 cliente: cliente,

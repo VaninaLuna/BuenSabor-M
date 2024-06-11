@@ -6,12 +6,13 @@ import { cilCart } from "@coreui/icons";
 import PedidoDetalle from "../../models/PedidoDetalle";
 import ArticuloDTO from "../../models/ArticuloDTO";
 import { useCarrito } from "../../hooks/UseCarrito";
-import Pedido from "../../models/Pedido";
+import { PedidoCliente } from "../../models/Pedido";
 import { savePedido } from "../../services/PedidoApi";
 import { ModalMensaje } from "./ModalMensaje";
 import { CheckoutMP } from "./CheckOut";
 import { RolName } from "../../models/RolName";
 import { UsuarioCliente } from "../../models/Usuario";
+import Cliente from "../../models/Cliente";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -38,7 +39,7 @@ function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle
 export function Carrito({ visible, setVisible }: { visible: boolean, setVisible: (visible: boolean) => void }) {
     const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido, totalCosto } = useCarrito();
     const [showModal, setShowModal] = useState(false);
-    const [savedPedido, setSavedPedido] = useState<Pedido | null>(null);
+    const [savedPedido, setSavedPedido] = useState<PedidoCliente | null>(null);
     const [message, setMessage] = useState<string>('');
     const [pagoRealizado] = useState(false);
     const [pedidoGuardado, setPedidoGuardado] = useState(false);
@@ -55,7 +56,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         }
 
         const fechaPedido = new Date();
-        const pedido = new Pedido();
+        const pedido = new PedidoCliente();
         pedido.total = totalPedido ?? 0;
         pedido.totalCosto = totalCosto ?? 0;
         pedido.pedidoDetalles = cart;
@@ -81,8 +82,12 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
         pedido.horaEstimadaFinalizacion = horaFormateada;
 
+        const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
+
+        pedido.cliente = clienteActualizado;
+
         try {
-            const pedidoFromDB: Pedido = await savePedido(pedido);
+            const pedidoFromDB: PedidoCliente = await savePedido(pedido);
             setSavedPedido(pedidoFromDB);
             setShowModal(true);
             setPedidoGuardado(true);

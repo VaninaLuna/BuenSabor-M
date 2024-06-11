@@ -32,6 +32,7 @@ export function CheckoutMP({ pedido }: CheckoutMPParams) {
         factura.totalVenta = pedido.total;
         factura.totalCosto = pedido.totalCosto;
         factura.pedido = pedido;
+        factura.formaPago = "MercadoPago"
 
         await saveFactura(factura);
     }
