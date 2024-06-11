@@ -1,4 +1,4 @@
-import Usuario, { UsuarioLogin, UsuarioCliente } from "../models/Usuario";
+import Usuario, { UsuarioLogin, UsuarioCliente, UsaurioRegistro } from "../models/Usuario";
 
 // ---------- LOGIN ----------------------
 export async function login(usuarioLogin?: UsuarioLogin) {
@@ -18,7 +18,7 @@ export async function login(usuarioLogin?: UsuarioLogin) {
 }
 
 // ---------- REGISTER ------------------------
-export async function register(usuario: UsuarioCliente) {
+export async function register(usuario: UsaurioRegistro) {
     // const u = {...usuario.usuario, cliente: usuario.cliente}
     const endpoint = 'http://localhost:8080/auth/register';
 
@@ -30,7 +30,7 @@ export async function register(usuario: UsuarioCliente) {
             },
             "body": JSON.stringify(usuario)
         });
-    
+
         console.log(response);
         const json = await response.json();
 
@@ -45,7 +45,7 @@ export async function register(usuario: UsuarioCliente) {
 // -------------- LOG OUT ----------------
 
 
-export async function logout() { 
+export async function logout() {
     const endpoint = 'http://localhost:8080/auth/logout';
 
     try {
@@ -55,7 +55,7 @@ export async function logout() {
                 "Content-Type": 'application/json'
             }
         });
-    
+
         //const json = response.json();
         console.log(response);
         return response;

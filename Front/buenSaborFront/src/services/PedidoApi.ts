@@ -1,4 +1,4 @@
-import Pedido from "../models/Pedido";
+import Pedido, { PedidoCliente } from "../models/Pedido";
 
 //GET
 export async function getPedidos() {
@@ -19,7 +19,7 @@ export async function getPedidos() {
 }
 
 //POST - PUT
-export async function savePedido(pedido?: Pedido) {
+export async function savePedido(pedido?: PedidoCliente) {
     let endpoint = 'http://localhost:8080/pedido';
     let method: string = "POST";
 
