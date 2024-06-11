@@ -11,8 +11,8 @@ interface CartContextType {
     removeItemCarrito: (product: ArticuloDTO) => void;
     limpiarCarrito: () => void;
     limpiarCarritoDespuesPago: () => void;
-    totalPedido?: number;
-    totalCosto?: number;
+    totalPedido: number;
+    totalCosto: number;
 }
 
 export const CartContext = createContext<CartContextType>({
