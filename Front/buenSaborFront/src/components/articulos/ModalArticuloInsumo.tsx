@@ -145,6 +145,10 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
             setTxtValidacion("Debe ingresar un stock Maximo");
             return;
         }
+        if (insumo.stockActual > insumo.stockMaximo) {
+            setTxtValidacion("El stock actual no debe superar al stock maximo");
+            return;
+        }
 
 
         // Creas nuevos objetos de imagen con las URLs proporcionadas
