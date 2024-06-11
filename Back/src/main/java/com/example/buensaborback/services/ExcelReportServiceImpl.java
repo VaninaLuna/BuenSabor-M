@@ -29,7 +29,7 @@ public class ExcelReportServiceImpl implements ExcelReportService{
             Sheet sheet = workbook.createSheet("Reporte de Pedidos");
 
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"Fecha Pedido", "Articulo", "Cantidad", "SubTotal", "TotalPedido"};
+            String[] columns = {"Pedido nro", "Fecha Pedido", "Articulo", "Cantidad", "SubTotal", "TotalPedido"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -40,11 +40,12 @@ public class ExcelReportServiceImpl implements ExcelReportService{
                 for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
                     Row row = sheet.createRow(rowIdx++);
 
-                    row.createCell(0).setCellValue(pedido.getFechaPedido().toString());
-                    row.createCell(1).setCellValue(detalle.getArticulo().getDenominacion());
-                    row.createCell(2).setCellValue(detalle.getCantidad());
-                    row.createCell(3).setCellValue(detalle.getSubTotal());
-                    row.createCell(4).setCellValue(pedido.getTotal());
+                    row.createCell(0).setCellValue(pedido.getId());
+                    row.createCell(1).setCellValue(pedido.getFechaPedido().toString());
+                    row.createCell(2).setCellValue(detalle.getArticulo().getDenominacion());
+                    row.createCell(3).setCellValue(detalle.getCantidad());
+                    row.createCell(4).setCellValue(detalle.getSubTotal());
+                    row.createCell(5).setCellValue(pedido.getTotal());
                 }
             }
 
