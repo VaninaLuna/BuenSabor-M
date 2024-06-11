@@ -35,6 +35,24 @@ export async function getLocalidadPorId(id: number) {
     }
 }
 
+export async function getLocalidadesPorProvincia(idProvincia: number) {
+    const ENDPOINT = `http://localhost:8080/localidad/por_provincia/${idProvincia}`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as Localidad[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+
+
 //POST - PUT
 export async function saveLocalidad(localidad?: Localidad) {
     let endpoint = 'http://localhost:8080/localidad';
