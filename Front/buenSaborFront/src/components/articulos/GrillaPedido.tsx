@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
-import { deletePedidoPorId, getPedidos } from "../../services/PedidoApi";
+import { deletePedidoPorId, getPedidos, getPedidosByCliente } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
@@ -19,7 +19,10 @@ export function GrillaPedido() {
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListaPedidos = async () => {
-        const datos: Pedido[] = await getPedidos();
+        const datos: Pedido[] = usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE
+            ? await getPedidosByCliente(usuarioLogueado.cliente.id)
+            : await getPedidos();
+
         setPedidos(datos);
     };
 
@@ -41,6 +44,7 @@ export function GrillaPedido() {
 
     useEffect(() => {
         getListaPedidos();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -54,6 +58,7 @@ export function GrillaPedido() {
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
+                            <th>Nro Pedido</th>
                             <th>Fecha pedido</th>
                             <th>Hora estimada de finalizacion</th>
                             <th>Total</th>
@@ -63,6 +68,7 @@ export function GrillaPedido() {
                     <tbody>
                         {pedidos.map((pedido: Pedido) =>
                             <tr key={pedido.id}>
+                                <td>{String(pedido.id).padStart(5, '0')}</td>
                                 <td>{pedido.fechaPedido}</td>
                                 <td>{pedido.horaEstimadaFinalizacion}</td>
                                 <td>{pedido.total}</td>

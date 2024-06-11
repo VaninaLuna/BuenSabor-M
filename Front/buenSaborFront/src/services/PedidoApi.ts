@@ -1,4 +1,5 @@
 import Pedido, { PedidoCliente } from "../models/Pedido";
+import PedidosPorMesAnioDTO from "../models/PedidosPorMesAnioDTO";
 
 //GET
 export async function getPedidos() {
@@ -13,6 +14,23 @@ export async function getPedidos() {
 
         const json = await response.json();
         return json as Pedido[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+
+export async function getPedidosByCliente(clienteId: number) {
+    const ENDPOINT = `http://localhost:8080/pedido/byCliente/${clienteId}`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as [];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -56,5 +74,22 @@ export async function deletePedidoPorId(id: number) {
         return isDeleted as boolean;
     } catch (e) {
         throw new Error('Error al hacer fetch de sucursal')
+    }
+}
+
+export async function getPedidosPorMesAnio() {
+    const ENDPOINT = 'http://localhost:8080/pedido/porMesAnio';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as PedidosPorMesAnioDTO[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de pedidos por mes y año');
     }
 }
