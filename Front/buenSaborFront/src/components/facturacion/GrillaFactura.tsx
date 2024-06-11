@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Col, Modal, Row, Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
 import Factura from "../../models/Factura";
-import { getFacturas } from "../../services/FacturaApi";
-import Cliente from "../../models/Cliente";
-import { getClientePorUsuarioClienteId } from "../../services/ClienteAPI";
+import { getFacturas, getFacturasByCliente } from "../../services/FacturaApi";
+import { RolName } from "../../models/RolName";
 
 export function GrillaFactura() {
 
@@ -15,14 +14,14 @@ export function GrillaFactura() {
     //const [cliente, setCliente] = useState<Cliente>(new Cliente())
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
-    //const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
+    const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
+    const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
 
     const getListaFacturas = async () => {
-        const datos: Factura[] = await getFacturas();
-
-
+        const datos: Factura[] = usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE
+            ? await getFacturasByCliente(usuarioLogueado.cliente.id)
+            : await getFacturas()
 
         setFacturas(datos);
     };
