@@ -27,7 +27,8 @@ import { AuthProvider } from './components/context/AuthContext.tsx';
 import { GrillaCliente } from './components/usuarios/GrillaCliente.tsx';
 import { GrillaEmpleado } from './components/usuarios/GrillaEmpleado.tsx';
 import { GrillaSuperUsuario } from './components/usuarios/GrillaSuperUsuario.tsx';
-import { Estadisticas } from './components/empresa/Estadisticas.tsx';
+import ReporteExcel from './components/reportes/ReporteExcel.tsx';
+import Estadisticas from './components/empresa/Estadisticas.tsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -82,13 +83,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   <Route path="/unidadMedida" element={<GrillaUnidadMedida />} />
                 </Route>
 
-                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO]} />}>
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO, RolName.CLIENTE]} />}>
                   <Route path="/pedidos" element={<GrillaPedido />} />
                 </Route>
 
                 {/* FACTURACION */}
-                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.CLIENTE]} />}>
                   <Route path="/facturacion" element={<GrillaFactura />} />
+                </Route>
+
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                  <Route path="/reportes" element={<ReporteExcel />} />
                 </Route>
 
                 {/* USUARIOS */}

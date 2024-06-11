@@ -11,7 +11,7 @@ import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
 
-function Sidebar() {
+export default function Sidebar() {
 
     const { auth } = useContext(AuthContext); // Obtiene el estado de autenticación del contexto
     const usuarioLogueado: UsuarioCliente | null = auth.usuario
@@ -27,150 +27,20 @@ function Sidebar() {
                         </NavLink>
                     </CNavItem>
 
-                    {(usuarioLogueado && usuarioLogueado.rol
-                        && usuarioLogueado.rol.rolName !== RolName.CLIENTE) ? (
-                        <>
-                            {usuarioLogueado.rol.rolName == RolName.ADMIN && (
-                                <CNavGroup
-                                    toggler={
-                                        <>
-                                            <CIcon customClassName="nav-icon" icon={cilBuilding} />
-                                            Empresas
-                                        </>}
-                                >
-                                    <CNavItem>
-                                        <NavLink to="/empresas" className="nav-link">
-                                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                            Empresas
-                                        </NavLink>
-                                    </CNavItem>
-                                    <CNavItem>
-                                        <NavLink to="/sucursales" className="nav-link">
-                                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                            Sucursales
-                                        </NavLink>
-                                    </CNavItem>
-                                </CNavGroup>
-                            )}
-
-
-                            <CNavGroup
-                                toggler={
-                                    <>
-                                        <CIcon customClassName="nav-icon" icon={cilFastfood} />
-                                        Articulos
-                                    </>
+                    {
+                        (!usuarioLogueado || !usuarioLogueado.rol) ?
+                            <CNavItem>
+                                <NavLink to="/articulos" className="nav-link" >
+                                    <CIcon customClassName="nav-icon" icon={cilFastfood} />
+                                    Articulos
+                                </NavLink>
+                            </CNavItem>
+                            : <>
+                                {usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE
+                                    ? <SidebarCliente />
+                                    : <SidebarAdmin rolName={usuarioLogueado.rol.rolName} />
                                 }
-                            >
-                                <CNavItem>
-                                    <NavLink to="/articulos" className="nav-link" >
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Articulos
-                                    </NavLink>
-                                </CNavItem>
-
-
-                                <CNavItem>
-                                    <NavLink to="/insumos" className="nav-link" >
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Insumos
-                                    </NavLink>
-                                </CNavItem>
-                                <CNavItem>
-                                    <NavLink to="/manufacturados" className="nav-link" >
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Manufacturados
-                                    </NavLink>
-                                </CNavItem>
-                                <CNavItem>
-                                    <NavLink to="/categorias" className="nav-link">
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Categorías
-                                    </NavLink>
-                                </CNavItem>
-                                <CNavItem>
-                                    <NavLink to="/unidadmedida" className="nav-link">
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Unidades de Medida
-                                    </NavLink>
-                                </CNavItem>
-                                <CNavItem>
-                                    <NavLink to="/promociones" className="nav-link">
-                                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                        Promociones
-                                    </NavLink>
-                                </CNavItem>
-
-                            </CNavGroup>
-
-                            {usuarioLogueado.rol.rolName == RolName.ADMIN &&
-                                (
-                                    <>
-                                        <CNavGroup
-                                            toggler={
-                                                <>
-                                                    <CIcon customClassName="nav-icon" icon={cilCreditCard} />
-                                                    Facturacion
-                                                </>
-                                            }
-                                        >
-                                            <CNavItem>
-                                                <NavLink to="/facturacion" className="nav-link">
-                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                                    Facturacion
-                                                </NavLink>
-                                            </CNavItem>
-                                            <CNavItem>
-                                                <NavLink to="/pedidos" className="nav-link">
-                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                                    Pedidos
-                                                </NavLink>
-                                            </CNavItem>
-                                        </CNavGroup>
-                                        <CNavItem>
-                                            <NavLink to="/estadisticas" className="nav-link">
-                                                <CIcon customClassName="nav-icon" icon={cilBarChart} />
-                                                Estadisticas
-                                            </NavLink>
-                                        </CNavItem>
-                                        <CNavGroup
-                                            toggler={
-                                                <>
-                                                    <CIcon customClassName="nav-icon" icon={cilPeople} />
-                                                    Usuarios
-                                                </>
-                                            }
-                                        >
-                                            <CNavItem>
-                                                <NavLink to="/clientes" className="nav-link" >
-                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                                    Clientes
-                                                </NavLink>
-                                            </CNavItem>
-                                            <CNavItem>
-                                                <NavLink to="/empleados" className="nav-link">
-                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                                    Empleados
-                                                </NavLink>
-                                            </CNavItem>
-                                            <CNavItem>
-                                                <NavLink to="/modificarRoles" className="nav-link">
-                                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                                    Modificar Roles
-                                                </NavLink>
-                                            </CNavItem>
-                                        </CNavGroup>
-
-                                    </>
-                                )}
-
-                        </>
-                    ) : <CNavItem>
-                        <NavLink to="/articulos" className="nav-link" >
-                            <CIcon customClassName="nav-icon" icon={cilFastfood} />
-                            Articulos
-                        </NavLink>
-                    </CNavItem>
+                            </>
                     }
 
 
@@ -181,4 +51,226 @@ function Sidebar() {
     );
 }
 
-export default Sidebar;
+export function SidebarAdmin({ rolName }: { rolName: RolName }) {
+
+    return (
+        <>
+            {
+                rolName == RolName.ADMIN &&
+                <CNavGroup
+                    toggler={
+                        <>
+                            <CIcon customClassName="nav-icon" icon={cilBuilding} />
+                            Empresas
+                        </>}
+                >
+                    <CNavItem>
+                        <NavLink to="/empresas" className="nav-link">
+                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                            Empresas
+                        </NavLink>
+                    </CNavItem>
+                    <CNavItem>
+                        <NavLink to="/sucursales" className="nav-link">
+                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                            Sucursales
+                        </NavLink>
+                    </CNavItem>
+                </CNavGroup>
+            }
+
+            <CNavGroup
+                toggler={
+                    <>
+                        <CIcon customClassName="nav-icon" icon={cilFastfood} />
+                        Articulos
+                    </>
+                }
+            >
+                <CNavItem>
+                    <NavLink to="/articulos" className="nav-link" >
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Articulos
+                    </NavLink>
+                </CNavItem>
+                <CNavItem>
+                    <NavLink to="/insumos" className="nav-link" >
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Insumos
+                    </NavLink>
+                </CNavItem>
+                <CNavItem>
+                    <NavLink to="/manufacturados" className="nav-link" >
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Manufacturados
+                    </NavLink>
+                </CNavItem>
+                {
+                    (rolName === RolName.CAJERO || rolName === RolName.ADMIN) &&
+                    <>
+                        <CNavItem>
+                            <NavLink to="/categorias" className="nav-link">
+                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                Categorías
+                            </NavLink>
+                        </CNavItem>
+                        <CNavItem>
+                            <NavLink to="/unidadmedida" className="nav-link">
+                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                Unidades de Medida
+                            </NavLink>
+                        </CNavItem>
+                    </>
+                }
+                <CNavItem>
+                    <NavLink to="/promociones" className="nav-link">
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Promociones
+                    </NavLink>
+                </CNavItem>
+            </CNavGroup>
+
+            {
+                rolName === RolName.ADMIN ?
+                    <>
+                        <CNavGroup
+                            toggler={
+                                <>
+                                    <CIcon customClassName="nav-icon" icon={cilCreditCard} />
+                                    Facturacion
+                                </>
+                            }
+                        >
+                            <CNavItem>
+                                <NavLink to="/facturacion" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Facturas
+                                </NavLink>
+                            </CNavItem>
+                            <CNavItem>
+                                <NavLink to="/pedidos" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Pedidos
+                                </NavLink>
+                            </CNavItem>
+                            <CNavItem>
+                                <NavLink to="/reportes" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Reportes
+                                </NavLink>
+                            </CNavItem>
+                        </CNavGroup>
+                        <CNavItem>
+                            <NavLink to="/estadisticas" className="nav-link">
+                                <CIcon customClassName="nav-icon" icon={cilBarChart} />
+                                Estadisticas
+                            </NavLink>
+                        </CNavItem>
+                        <CNavGroup
+                            toggler={
+                                <>
+                                    <CIcon customClassName="nav-icon" icon={cilPeople} />
+                                    Usuarios
+                                </>
+                            }
+                        >
+                            <CNavItem>
+                                <NavLink to="/clientes" className="nav-link" >
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Clientes
+                                </NavLink>
+                            </CNavItem>
+                            <CNavItem>
+                                <NavLink to="/empleados" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Empleados
+                                </NavLink>
+                            </CNavItem>
+                            <CNavItem>
+                                <NavLink to="/modificarRoles" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Modificar Roles
+                                </NavLink>
+                            </CNavItem>
+                        </CNavGroup>
+                    </>
+                    :
+                    <>
+                        <CNavGroup
+                            toggler={
+                                <>
+                                    <CIcon customClassName="nav-icon" icon={cilCreditCard} />
+                                    Facturacion
+                                </>
+                            }
+                        >
+                            <CNavItem>
+                                <NavLink to="/facturacion" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Facturas
+                                </NavLink>
+                            </CNavItem>
+                            <CNavItem>
+                                <NavLink to="/pedidos" className="nav-link">
+                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                    Pedidos
+                                </NavLink>
+                            </CNavItem>
+                        </CNavGroup>
+                    </>
+            }
+        </>
+    );
+
+}
+
+export function SidebarCliente() {
+
+    return (
+        <>
+            <CNavGroup
+                toggler={
+                    <>
+                        <CIcon customClassName="nav-icon" icon={cilFastfood} />
+                        Articulos
+                    </>
+                }
+            >
+                <CNavItem>
+                    <NavLink to="/articulos" className="nav-link" >
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Articulos
+                    </NavLink>
+                </CNavItem>
+                <CNavItem>
+                    <NavLink to="/promociones" className="nav-link">
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Promociones
+                    </NavLink>
+                </CNavItem>
+            </CNavGroup>
+            <CNavGroup
+                toggler={
+                    <>
+                        <CIcon customClassName="nav-icon" icon={cilCreditCard} />
+                        Facturacion
+                    </>
+                }
+            >
+                <CNavItem>
+                    <NavLink to="/facturacion" className="nav-link">
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Facturas
+                    </NavLink>
+                </CNavItem>
+                <CNavItem>
+                    <NavLink to="/pedidos" className="nav-link">
+                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                        Pedidos
+                    </NavLink>
+                </CNavItem>
+            </CNavGroup>
+        </>
+    );
+
+}
