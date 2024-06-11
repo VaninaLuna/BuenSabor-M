@@ -88,7 +88,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </Route>
 
                 {/* FACTURACION */}
-                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.CLIENTE]} />}>
+                <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO, RolName.COCINERO, RolName.CLIENTE]} />}>
                   <Route path="/facturacion" element={<GrillaFactura />} />
                 </Route>
 
