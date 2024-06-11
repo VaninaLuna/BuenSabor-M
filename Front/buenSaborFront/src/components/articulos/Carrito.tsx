@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/Carrito.css";
-import { CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
+import { CCloseButton, CForm, CFormCheck, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCart } from "@coreui/icons";
 import PedidoDetalle from "../../models/PedidoDetalle";
@@ -10,7 +10,6 @@ import Pedido from "../../models/Pedido";
 import { savePedido } from "../../services/PedidoApi";
 import { ModalMensaje } from "./ModalMensaje";
 import { CheckoutMP } from "./CheckOut";
-import { RolName } from "../../models/RolName";
 import { UsuarioCliente } from "../../models/Usuario";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
@@ -42,14 +41,25 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     const [message, setMessage] = useState<string>('');
     const [pagoRealizado] = useState(false);
     const [pedidoGuardado, setPedidoGuardado] = useState(false);
+    const [tipoEnvio, setTipoEnvio] = useState('takeAway'); // Default is 'takeAway'
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
+    const handleTipoEnvioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTipoEnvio(e.target.id);
+    };
+
     const guardarPedido = async () => {
         if (cart.length === 0) {
             setMessage("Al menos debe agregar un articulo al carrito");
+            setShowModal(true);
+            return;
+        }
+
+        if (tipoEnvio === 'delivery') { // Verifica si el usuario tiene un domicilio configurado
+            setMessage("Debe configurar su domicilio antes de generar un pedido con envío");
             setShowModal(true);
             return;
         }
@@ -142,8 +152,16 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             {pedidoGuardado && savedPedido ? (
                                 <CheckoutMP pedido={savedPedido} />
                             ) : (
-                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName !== RolName.CLIENTE) && (
-                                    <button onClick={guardarPedido}> Generar Pedido </button>
+                                (usuarioLogueado && usuarioLogueado.rol) && (
+                                    <>
+                                        <CForm className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
+                                            <CFormCheck type="radio" name="flexRadioDefault" id="delivery" label="Envio a domicilio" onChange={handleTipoEnvioChange} />
+                                            <CFormCheck type="radio" name="flexRadioDefault" id="takeAway" label="Retiro en tienda" onChange={handleTipoEnvioChange} />
+                                        </CForm>
+
+
+                                        <button onClick={guardarPedido}> Generar Pedido </button>
+                                    </>
                                 )
                             )}
 
