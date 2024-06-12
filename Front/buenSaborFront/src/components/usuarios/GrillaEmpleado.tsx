@@ -57,6 +57,7 @@ export function GrillaEmpleado() {
                                 <td>{usuario.cliente?.fechaNacimiento}</td>
                                 <td>{usuario.cliente?.email}</td>
                                 <td>{usuario.cliente?.telefono}</td>
+                                <td>{usuario.rol.rolName}</td>
                             </tr>
                         )}
                     </tbody>
