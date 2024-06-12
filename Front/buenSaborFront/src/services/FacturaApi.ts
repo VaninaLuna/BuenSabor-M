@@ -35,6 +35,21 @@ export async function getFacturasByCliente(clienteId: number) {
     }
 }
 
+export async function sendMailFactura(facturaId: number, mailCliente: string) {
+    const ENDPOINT = `http://localhost:8080/factura/send_pdf_factura/${facturaId}/${mailCliente}`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+    } catch (e) {
+        throw new Error('Error al enviar la factura por correo electrónico')
+    }
+}
+
 //POST - PUT
 export async function saveFactura(factura?: Factura) {
     let endpoint = 'http://localhost:8080/factura';
