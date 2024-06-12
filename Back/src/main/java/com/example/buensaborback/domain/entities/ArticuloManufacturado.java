@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -25,5 +27,5 @@ public class ArticuloManufacturado extends Articulo{
 //    @JoinColumn(name= "articulo_manufacturado_id")
     @Builder.Default
     @JsonManagedReference
-    private Set<ArticuloManufacturadoDetalle> articuloManufacturadoDetalles = new HashSet<>();
+    private List<ArticuloManufacturadoDetalle> articuloManufacturadoDetalles = new ArrayList<>();
 }

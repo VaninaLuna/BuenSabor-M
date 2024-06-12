@@ -119,6 +119,8 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             pedido.total -= pedido.total * 0.10;
         }
 
+        //console.log(JSON.stringify(pedido))
+
 
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);

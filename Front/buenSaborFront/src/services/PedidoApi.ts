@@ -39,7 +39,7 @@ export async function getPedidosByCliente(clienteId: number) {
 
 //POST - PUT
 export async function savePedido(pedido?: PedidoCliente) {
-    let endpoint = 'http://localhost:8080/pedido';
+    let endpoint = 'http://localhost:8080/pedido/guardar_pedido';
     let method: string = "POST";
 
     if (pedido && pedido.id !== 0) {
