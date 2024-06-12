@@ -36,7 +36,7 @@ export async function getFacturasByCliente(clienteId: number) {
 }
 
 export async function sendMailFactura(facturaId: number, mailCliente: string) {
-    const ENDPOINT = `http://localhost:8080/factura/byCliente/${facturaId}/${mailCliente}`;
+    const ENDPOINT = `http://localhost:8080/factura/send_pdf_factura/${facturaId}/${mailCliente}`;
 
     try {
         const response = await fetch(ENDPOINT);
