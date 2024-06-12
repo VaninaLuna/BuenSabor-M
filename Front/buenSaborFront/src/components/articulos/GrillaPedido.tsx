@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
-import { deletePedidoPorId, getPedidos, getPedidosByCliente, getPedidosByEstado, updateEstadoPedido } from "../../services/PedidoApi";
+import { deletePedidoPorId, getPedidos, getPedidosByCliente, getPedidosByCocinero, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
@@ -12,23 +12,21 @@ export function GrillaPedido() {
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
     //Estados del envio
-    const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo para enviar", "En camino", "Entregado"])
+    const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado"])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListaPedidos = async () => {
-        const datos : Pedido[] = []
-        if ( usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE) {
-            await getPedidosByCliente(usuarioLogueado.cliente.id)
+        let datos: Pedido[] = []
+        if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE) {
+            datos = await getPedidosByCliente(usuarioLogueado.cliente.id)
         } else if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.COCINERO) {
-            await getPedidosByEstado("Aprobado")
+            datos = await getPedidosByCocinero()
         } else {
-            await getPedidos();
+            datos = await getPedidos();
         }
-
-        console.log(datos);
         setPedidos(datos);
     };
 
@@ -48,9 +46,9 @@ export function GrillaPedido() {
         window.location.reload();
     }
 
-    const handleEstadoChange = async (pedido: Pedido, estado: string) => {
+    const handleEstadoChange = async (pedido: Pedido, e: string) => {
         // Guardar el cambio
-        await updateEstadoPedido(pedido.id, estado);
+        await updateEstadoPedido(pedido.id, e);
 
         // Actualizar la lista
         getListaPedidos();

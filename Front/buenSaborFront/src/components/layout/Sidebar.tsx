@@ -1,6 +1,6 @@
 
 import { NavLink } from 'react-router-dom';
-import { cilBarChart, cilBuilding, cilCreditCard, cilFastfood, cilPeople } from "@coreui/icons";
+import { cilBarChart, cilBuilding, cilCreditCard, cilFastfood, cilPeople, cilBasket } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CImage, CNavGroup, CNavItem, CSidebar, CSidebarNav } from "@coreui/react";
 import '@coreui/coreui/dist/css/coreui.min.css';
@@ -196,27 +196,39 @@ export function SidebarAdmin({ rolName }: { rolName: RolName }) {
                     </>
                     :
                     <>
-                        <CNavGroup
-                            toggler={
-                                <>
-                                    <CIcon customClassName="nav-icon" icon={cilCreditCard} />
-                                    Facturacion
-                                </>
-                            }
-                        >
-                            <CNavItem>
-                                <NavLink to="/facturacion" className="nav-link">
-                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                    Facturas
-                                </NavLink>
-                            </CNavItem>
-                            <CNavItem>
-                                <NavLink to="/pedidos" className="nav-link">
-                                    <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                    Pedidos
-                                </NavLink>
-                            </CNavItem>
-                        </CNavGroup>
+                        {
+                            rolName === RolName.COCINERO ?
+                                <CNavItem>
+                                    <NavLink to="/pedidos" className="nav-link">
+                                        <CIcon customClassName="nav-icon" icon={cilBasket} />
+                                        Pedidos
+                                    </NavLink>
+                                </CNavItem>
+                                :
+                                <CNavGroup
+                                    toggler={
+                                        <>
+                                            <CIcon customClassName="nav-icon" icon={cilCreditCard} />
+                                            Facturacion
+                                        </>
+                                    }
+                                >
+                                    <CNavItem>
+                                        <NavLink to="/facturacion" className="nav-link">
+                                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                            Facturas
+                                        </NavLink>
+                                    </CNavItem>
+                                    <CNavItem>
+                                        <NavLink to="/pedidos" className="nav-link">
+                                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                            Pedidos
+                                        </NavLink>
+                                    </CNavItem>
+                                </CNavGroup>
+
+                        }
+
                     </>
             }
         </>

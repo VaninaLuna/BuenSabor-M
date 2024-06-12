@@ -21,6 +21,10 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
 
     List<Pedido> findByEstado(String estado);
 
+    @Query("SELECT p FROM Pedido p " +
+            "WHERE p.estado = 'Aprobado' OR p.estado = 'En Preparacion' OR p.estado = 'Listo'")
+    List<Pedido> findByCocinero();
+
     List<Pedido> findByFechaPedidoBetween(LocalDate fechaDesde, LocalDate fechaHasta);
 
     @Query("SELECT new com.example.buensaborback.dto.PedidosPorMesAnioDTO(YEAR(p.fechaPedido), MONTH(p.fechaPedido), COUNT(p)) " +

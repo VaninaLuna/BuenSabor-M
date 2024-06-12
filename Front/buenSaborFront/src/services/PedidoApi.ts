@@ -1,4 +1,4 @@
-import { PedidoCliente } from "../models/Pedido";
+import Pedido, { PedidoCliente } from "../models/Pedido";
 import PedidosPorArticuloDTO from "../models/PedidosPorArticuloDTO";
 import PedidosPorMesAnioDTO from "../models/PedidosPorMesAnioDTO";
 
@@ -14,7 +14,7 @@ export async function getPedidos() {
         }
 
         const json = await response.json();
-        return json as PedidoCliente[];
+        return json as Pedido[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -31,7 +31,7 @@ export async function getPedidosByCliente(clienteId: number) {
         }
 
         const json = await response.json();        
-        return json as PedidoCliente[];
+        return json as Pedido[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -48,8 +48,24 @@ export async function getPedidosByEstado(estado: string) {
         }
 
         const json = await response.json();
-        console.log(json)
-        return json as PedidoCliente[];
+        return json as Pedido[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de los pedidos')
+    }
+}
+
+export async function getPedidosByCocinero() {
+    const ENDPOINT = 'http://localhost:8080/pedido/byCocinero';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as Pedido[];
     } catch (e) {
         throw new Error('Error al hacer fetch de los pedidos')
     }
@@ -72,7 +88,6 @@ export async function savePedido(pedido?: PedidoCliente) {
         },
         "body": JSON.stringify(pedido)
     });
-
     return response.json();
 }
 
@@ -85,7 +100,6 @@ export async function updateEstadoPedido(pedidoId: number, estado: string) {
             "Content-Type": 'application/json'
         }
     });
-
     return response.json();
 }
 

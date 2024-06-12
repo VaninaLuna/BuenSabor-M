@@ -36,6 +36,15 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido,Long> implements P
     }
 
     @Override
+    public List<Pedido> findByCocinero() throws Exception {
+        try{
+            return pedidoRepository.findByCocinero();
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
     public List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear() throws Exception {
         try{
             return pedidoRepository.findPedidosGroupedByMonthAndYear();
