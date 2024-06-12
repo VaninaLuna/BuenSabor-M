@@ -13,6 +13,8 @@ import { CheckoutMP } from "./CheckOut";
 import { UsuarioCliente } from "../../models/Usuario";
 import Cliente from "../../models/Cliente";
 import { Form } from "react-bootstrap";
+import Factura from "../../models/Factura";
+import { saveFactura } from "../../services/FacturaApi";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -56,11 +58,29 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         if (e.target.id === 'delivery') {
             handleFormaPagoChange({ target: { id: 'mp' } } as React.ChangeEvent<HTMLInputElement>);
         }
+
+
     };
 
     const handleFormaPagoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormaPago(e.target.id);
+
     };
+
+    const crearFactura = async (pedido: PedidoCliente) => {
+        const factura = new Factura();
+        factura.fechaFacturacion = pedido.fechaPedido;
+        factura.totalVenta = pedido.total;
+        factura.totalCosto = pedido.totalCosto;
+        factura.pedido = pedido;
+        factura.formaPago = formaPago == "mp" ? "MercadoPago" : "Efectivo";
+
+        if (tipoEnvio == 'pickup') {
+            factura.montoDescuento = pedido.total / 0.9 * 0.1;
+        }
+
+        await saveFactura(factura);
+    }
 
     const guardarPedido = async () => {
         if (cart.length === 0) {
@@ -95,14 +115,24 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
         pedido.cliente = clienteActualizado;
 
+        if (tipoEnvio == 'pickup') {
+            pedido.total -= pedido.total * 0.10;
+        }
+
+
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);
             setPedidoGuardado(pedidoFromDB);
             setShowModal(true);
+
+            if (formaPago == "efectivo") {
+                crearFactura(pedidoFromDB);
+            }
         } catch (error) {
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
             setShowModal(true);
         }
+
     };
 
     const handleCloseModal = () => {
@@ -152,7 +182,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                             <br />
 
                             {pedidoGuardado && pedidoGuardado.id > 0 && formaPago === 'mp' ? (
-                                <CheckoutMP pedido={pedidoGuardado} />
+                                <CheckoutMP pedido={pedidoGuardado} tipoDePago={formaPago} tipoDeEnvio={tipoEnvio} />
                             ) : (
                                 (usuarioLogueado && usuarioLogueado.rol) && (
                                     <>

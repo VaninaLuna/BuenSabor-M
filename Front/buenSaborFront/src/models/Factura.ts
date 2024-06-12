@@ -3,7 +3,7 @@ import { PedidoCliente } from "./Pedido";
 export default class Factura {
     id: number = 0;
     fechaFacturacion: string = "";
-    mpPreferenceId: string = "";
+    mpPreferenceId?: string = "";
     montoDescuento: number = 0;
     formaPago: string = "";
     totalVenta: number = 0;

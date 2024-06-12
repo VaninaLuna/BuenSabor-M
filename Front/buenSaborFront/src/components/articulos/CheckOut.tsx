@@ -6,7 +6,7 @@ import { savePreferenceMP } from "../../services/MercadoPagoApi";
 import Factura from "../../models/Factura";
 import { saveFactura } from "../../services/FacturaApi";
 
-export function CheckoutMP({ pedido }: { pedido: PedidoCliente }) {
+export function CheckoutMP({ pedido, tipoDePago, tipoDeEnvio }: { pedido: PedidoCliente, tipoDePago: string, tipoDeEnvio: string }) {
     const [preferenceId, setPreferenceId] = useState<string>('');
 
     useEffect(() => {
@@ -33,7 +33,11 @@ export function CheckoutMP({ pedido }: { pedido: PedidoCliente }) {
         factura.totalVenta = pedido.total;
         factura.totalCosto = pedido.totalCosto;
         factura.pedido = pedido;
-        factura.formaPago = "MercadoPago"
+        factura.formaPago = tipoDePago == "mp" ? "MercadoPago" : "Efectivo";
+
+        if (tipoDeEnvio == 'pickup') {
+            factura.montoDescuento = pedido.total / 0.9 * 0.1;
+        }
 
         await saveFactura(factura);
     }
