@@ -97,6 +97,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     }
 
     const guardarPedido = async () => {
+        let demoraDelivery = 0
         if (cart.length === 0) {
             setMessage("Al menos debe agregar un articulo al carrito");
             setShowModal(true);
@@ -104,6 +105,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         }
 
         if (tipoEnvio === 'delivery' && !usuarioLogueado.cliente.domicilio) {
+            demoraDelivery = 10
             setMessage("Debe configurar su domicilio antes de generar un pedido con envío");
             setShowModal(true);
             return;
@@ -130,7 +132,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         const año = fechaPedido.getFullYear();
         pedido.fechaPedido = `${dia}/${mes}/${año}`;
 
-        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual);
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual + demoraDelivery);
         const horas = fechaPedido.getHours().toString().padStart(2, '0');
         const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
         const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
