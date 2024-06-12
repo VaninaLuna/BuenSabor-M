@@ -1,13 +1,9 @@
 import { useCarrito } from "../../hooks/UseCarrito";
 import ArticuloDTO from "../../models/ArticuloDTO";
-import ArticuloInsumo from "../../models/ArticuloInsumo";
-import ArticuloManufacturado from "../../models/ArticuloManufacturado";
-// import ArticuloManufacturadoDetalle from "../../models/ArticuloManufacturadoDetalle";
 import { Button, Card, Image } from "react-bootstrap";
 import "../../styles/ArticuloTarjeta.css";
 import addCart from "../../assets/images/addCart.png";
 import deleteCart from "../../assets/images/deleteCart.png";
-import { getArticuloInsumoPorID } from "../../services/FuncionesArticuloInsumoApi";
 
 type ArticuloParams = {
     articulo: ArticuloDTO;
@@ -23,32 +19,6 @@ export function ArticuloTarjeta(args: ArticuloParams) {
     }
 
     const isArticuloInCarrito = verificaArticuloEnCarrito(articulo);
-
-    const checkStockAndToggleCarrito = async () => {
-        if (articulo.type === "articuloInsumo") {
-            const insumo: ArticuloInsumo = await getArticuloInsumoPorID(articulo.id);
-            if (insumo.stockActual > 0) {
-                toggleCarrito();
-            } else {
-                alert("No hay suficiente stock para este artículo.");
-            }
-        } else if (articulo.type === "articuloManufacturado") {
-            const manufacturado: ArticuloManufacturado = articulo as ArticuloManufacturado;
-            let suficienteStock = true;
-            for (const detalle of manufacturado.articuloManufacturadoDetalles) {
-                const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.id);
-                if (insumo.stockActual < detalle.cantidad) {
-                    suficienteStock = false;
-                    break;
-                }
-            }
-            if (suficienteStock) {
-                toggleCarrito();
-            } else {
-                alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado.");
-            }
-        }
-    }
 
     const toggleCarrito = () => {
         isArticuloInCarrito
@@ -70,7 +40,7 @@ export function ArticuloTarjeta(args: ArticuloParams) {
                                 : <a className='iconoMasMenos' onClick={() => removeItemCarrito(articulo)}> - </a>
                         }
 
-                        <Button className='colorFondoBlanco' onClick={checkStockAndToggleCarrito}>
+                        <Button className='colorFondoBlanco' onClick={toggleCarrito}>
                             {
                                 isArticuloInCarrito
                                     ? <Image src={deleteCart} title='Quitar' />

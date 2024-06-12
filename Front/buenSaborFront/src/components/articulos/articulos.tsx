@@ -45,6 +45,7 @@ export function Articulos() {
                     denominacion: manufacturado.denominacion,
                     precioVenta: manufacturado.precioVenta,
                     imagenes: manufacturado.imagenes,
+                    articuloManufacturadoDetalles: manufacturado.articuloManufacturadoDetalles,
                     type: "articuloManufacturado"
                 }
                 newArticulos.push(newArticulo);

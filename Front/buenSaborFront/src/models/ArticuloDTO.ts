@@ -1,3 +1,4 @@
+import ArticuloManufacturadoDetalle from "./ArticuloManufacturadoDetalle";
 import Imagen from "./Imagen";
 
 export default class ArticuloDTO {
@@ -6,4 +7,5 @@ export default class ArticuloDTO {
     precioVenta: number = 0;
     imagenes: Imagen[] = [];
     type: string = "";
+    articuloManufacturadoDetalles?: ArticuloManufacturadoDetalle[] = []; 
 }

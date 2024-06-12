@@ -3,6 +3,8 @@ import ArticuloDTO from "../../models/ArticuloDTO";
 import PedidoDetalle from "../../models/PedidoDetalle";
 import { getArticuloInsumoPorID } from "../../services/FuncionesArticuloInsumoApi";
 import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
+import ArticuloInsumo from "../../models/ArticuloInsumo";
+import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 
 interface CartContextType {
     cart: PedidoDetalle[];
@@ -37,14 +39,40 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart]);
 
-    const addCarrito = (articulo: ArticuloDTO) => {
+    const checkStock = async (articulo: ArticuloDTO) => {
+        console.log(articulo)
+        const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
+        if (articulo.type === "articuloInsumo") {
+            const insumo: ArticuloInsumo = await getArticuloInsumoPorID(articulo.id);
+            if (insumo.stockActual <= 0 || (productInCart && insumo.stockActual <= productInCart.cantidad)) {
+                alert("No hay suficiente stock para este artículo.");
+                removeItemCarrito(articulo)
+            }
+        } else if (articulo.type === "articuloManufacturado") {
+            const manufacturado: ArticuloManufacturado = articulo as ArticuloManufacturado;
+            for (const detalle of manufacturado.articuloManufacturadoDetalles) {
+                const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.id);
+                if (insumo.stockActual < detalle.cantidad || 
+                (productInCart && insumo.stockActual <= (detalle.cantidad * productInCart.cantidad))) {
+                    alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
+                    removeItemCarrito(articulo)
+                    break;
+                }
+            }           
+        }
+    }
+
+    const addCarrito = async (articulo: ArticuloDTO) => {
+        await checkStock(articulo)
+        
         setCart(prevCart => {
             const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
 
             if (productInCart) {
                 const updatedCart = prevCart.map(detalle =>
                     detalle.articulo.id === articulo.id
-                        ? { ...detalle, cantidad: detalle.cantidad + 1, subTotal: detalle.articulo.precioVenta * (detalle.cantidad + 1) }
+                        ? { ...detalle, cantidad: detalle.cantidad + 1, 
+                            subTotal: detalle.articulo.precioVenta * (detalle.cantidad + 1) }
                         : detalle
                 );
                 return updatedCart;
