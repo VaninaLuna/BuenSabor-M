@@ -14,7 +14,7 @@ import { UsuarioCliente } from "../../models/Usuario";
 import Cliente from "../../models/Cliente";
 import { Form } from "react-bootstrap";
 import Factura from "../../models/Factura";
-import { saveFactura } from "../../services/FacturaApi";
+import { saveFactura, sendMailFactura } from "../../services/FacturaApi";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -79,7 +79,9 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             factura.montoDescuento = pedido.total / 0.9 * 0.1;
         }
 
-        await saveFactura(factura);
+        const facturaFromDB: Factura = await saveFactura(factura);
+
+        await sendMailFactura(facturaFromDB.id, pedido.cliente.email as string)
     }
 
     const guardarPedido = async () => {

@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 import { PedidoCliente } from "../../models/Pedido";
 import { savePreferenceMP } from "../../services/MercadoPagoApi";
 import Factura from "../../models/Factura";
-import { saveFactura } from "../../services/FacturaApi";
+import { saveFactura, sendMailFactura } from "../../services/FacturaApi";
 
 export function CheckoutMP({ pedido, tipoDePago, tipoDeEnvio }: { pedido: PedidoCliente, tipoDePago: string, tipoDeEnvio: string }) {
     const [preferenceId, setPreferenceId] = useState<string>('');
@@ -39,7 +39,9 @@ export function CheckoutMP({ pedido, tipoDePago, tipoDeEnvio }: { pedido: Pedido
             factura.montoDescuento = pedido.total / 0.9 * 0.1;
         }
 
-        await saveFactura(factura);
+        const facturaFromDB: Factura = await saveFactura(factura);
+
+        await sendMailFactura(facturaFromDB.id, pedido.cliente.email as string)
     }
 
     return (
