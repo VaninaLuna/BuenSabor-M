@@ -19,6 +19,8 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
             "WHERE c.id = :id")
     List<Pedido> buscarPedidosByCliente(@Param("id") Long id) throws Exception;
 
+    List<Pedido> findByEstado(String estado);
+
     List<Pedido> findByFechaPedidoBetween(LocalDate fechaDesde, LocalDate fechaHasta);
 
     @Query("SELECT new com.example.buensaborback.dto.PedidosPorMesAnioDTO(YEAR(p.fechaPedido), MONTH(p.fechaPedido), COUNT(p)) " +

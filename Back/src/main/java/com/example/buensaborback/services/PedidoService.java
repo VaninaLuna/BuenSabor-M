@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface PedidoService extends BaseService<Pedido,Long>{
     List<Pedido> buscarPedidosByCliente(Long clienteId) throws Exception ;
+    List<Pedido> findByEstado(String estado) throws Exception;
     List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear() throws Exception;
     List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo()throws Exception;
 

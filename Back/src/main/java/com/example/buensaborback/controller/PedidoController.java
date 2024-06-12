@@ -87,10 +87,35 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
         }
     }
 
+    @PostMapping("/actualizar_estado/{pedidoId}/{estado}")
+    public ResponseEntity<?> actualizarEstadoPedido(@PathVariable Long pedidoId, @PathVariable String estado) {
+        try {
+            var pedido = pedidoService.findById(pedidoId);
+
+            if (pedido != null) {
+                pedido.setEstado(estado);
+
+                return ResponseEntity.ok(pedidoService.update(pedido.getId(), pedido));
+            }
+        } catch (Exception e) {
+            System.err.print(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
     @GetMapping("/byCliente/{clienteId}")
     public ResponseEntity<?> getPedidosByCliente(@PathVariable Long clienteId) {
         try {
             return ResponseEntity.ok(pedidoService.buscarPedidosByCliente(clienteId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @GetMapping("/byEstado/{estado}")
+    public ResponseEntity<?> getPedidosByEstado(@PathVariable String estado) {
+        try {
+            return ResponseEntity.ok(pedidoService.findByEstado(estado));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }

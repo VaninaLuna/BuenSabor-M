@@ -7,6 +7,7 @@ export default class Pedido {
     total: number = 0;
     totalCosto: number = 0;
     fechaPedido: string = "";
+    estado: string = "Recibido";
     pedidoDetalles: PedidoDetalle[] = [];
 }
 
@@ -16,6 +17,7 @@ export class PedidoCliente {
     total: number = 0;
     totalCosto: number = 0;
     fechaPedido: string = "";
+    estado: string = "Recibido";
     pedidoDetalles: PedidoDetalle[] = [];
     cliente: Cliente = new Cliente();
 }

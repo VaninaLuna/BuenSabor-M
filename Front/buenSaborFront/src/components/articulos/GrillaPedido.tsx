@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
-import { deletePedidoPorId, getPedidos, getPedidosByCliente } from "../../services/PedidoApi";
+import { deletePedidoPorId, getPedidos, getPedidosByCliente, getPedidosByEstado, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
@@ -12,17 +12,23 @@ export function GrillaPedido() {
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
     //Estados del envio
-    const [estadosEnvio] = useState<string[]>(["Recibido", "En Preparacion", "Listo para enviar", "En camino", "Entregado"])
+    const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo para enviar", "En camino", "Entregado"])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListaPedidos = async () => {
-        const datos: Pedido[] = usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE
-            ? await getPedidosByCliente(usuarioLogueado.cliente.id)
-            : await getPedidos();
+        const datos : Pedido[] = []
+        if ( usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE) {
+            await getPedidosByCliente(usuarioLogueado.cliente.id)
+        } else if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.COCINERO) {
+            await getPedidosByEstado("Aprobado")
+        } else {
+            await getPedidos();
+        }
 
+        console.log(datos);
         setPedidos(datos);
     };
 
@@ -41,6 +47,14 @@ export function GrillaPedido() {
         await deletePedidoPorId(idPedido);
         window.location.reload();
     }
+
+    const handleEstadoChange = async (pedido: Pedido, estado: string) => {
+        // Guardar el cambio
+        await updateEstadoPedido(pedido.id, estado);
+
+        // Actualizar la lista
+        getListaPedidos();
+    };
 
     useEffect(() => {
         getListaPedidos();
@@ -74,7 +88,7 @@ export function GrillaPedido() {
                                 <td>{pedido.total}</td>
                                 <td>{pedido.totalCosto}</td>
                                 <td>
-                                    <select>
+                                    <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)}>
                                         {estadosEnvio.map((estado, index) =>
                                             <option key={index} value={estado}>{estado}</option>
                                         )}

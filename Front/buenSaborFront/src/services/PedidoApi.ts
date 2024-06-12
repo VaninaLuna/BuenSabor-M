@@ -1,4 +1,4 @@
-import Pedido, { PedidoCliente } from "../models/Pedido";
+import { PedidoCliente } from "../models/Pedido";
 import PedidosPorArticuloDTO from "../models/PedidosPorArticuloDTO";
 import PedidosPorMesAnioDTO from "../models/PedidosPorMesAnioDTO";
 
@@ -14,7 +14,7 @@ export async function getPedidos() {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -30,10 +30,28 @@ export async function getPedidosByCliente(clienteId: number) {
             throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
         }
 
-        const json = await response.json();
-        return json as [];
+        const json = await response.json();        
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+
+export async function getPedidosByEstado(estado: string) {
+    const ENDPOINT = `http://localhost:8080/pedido/byEstado/${estado}`;
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        console.log(json)
+        return json as PedidoCliente[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de los pedidos')
     }
 }
 
@@ -53,6 +71,19 @@ export async function savePedido(pedido?: PedidoCliente) {
             "Content-Type": 'application/json'
         },
         "body": JSON.stringify(pedido)
+    });
+
+    return response.json();
+}
+
+export async function updateEstadoPedido(pedidoId: number, estado: string) {
+    const endpoint = `http://localhost:8080/pedido/actualizar_estado/${pedidoId}/${estado}`;
+
+    const response = await fetch(endpoint, {
+        "method": "PUT",
+        "headers": {
+            "Content-Type": 'application/json'
+        }
     });
 
     return response.json();
