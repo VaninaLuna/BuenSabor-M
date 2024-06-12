@@ -1,7 +1,7 @@
 package com.example.buensaborback.repositories;
 
-import com.example.buensaborback.domain.entities.Factura;
 import com.example.buensaborback.domain.entities.Pedido;
+import com.example.buensaborback.dto.PedidoCocinaDTO;
 import com.example.buensaborback.dto.PedidosPorArticuloDTO;
 import com.example.buensaborback.dto.PedidosPorMesAnioDTO;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +24,15 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
     @Query("SELECT p FROM Pedido p " +
             "WHERE p.estado = 'Aprobado' OR p.estado = 'En Preparacion' OR p.estado = 'Listo'")
     List<Pedido> findByCocinero();
+
+    @Query("SELECT new com.example.buensaborback.dto.PedidoCocinaDTO(" +
+            "p.id, p.estado, pd.id, pd.cantidad, am.id, am.tiempoEstimadoMinutos) " +
+            "FROM Pedido p " +
+            "INNER JOIN p.pedidoDetalles pd " +
+            "INNER JOIN pd.articulo a " +
+            "INNER JOIN ArticuloManufacturado am ON am.id = a.id " +
+            "WHERE p.estado = 'Aprobado' OR p.estado = 'En Preparacion'")
+    List<PedidoCocinaDTO> findPedidosByTiempoEstimado();
 
     List<Pedido> findByFechaPedidoBetween(LocalDate fechaDesde, LocalDate fechaHasta);
 

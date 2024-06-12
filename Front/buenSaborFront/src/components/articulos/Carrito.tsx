@@ -7,7 +7,7 @@ import PedidoDetalle from "../../models/PedidoDetalle";
 import ArticuloDTO from "../../models/ArticuloDTO";
 import { useCarrito } from "../../hooks/UseCarrito";
 import { PedidoCliente } from "../../models/Pedido";
-import { savePedido } from "../../services/PedidoApi";
+import { getTiempoDemoraCocina, savePedido } from "../../services/PedidoApi";
 import { ModalMensaje } from "./ModalMensaje";
 import { CheckoutMP } from "./CheckOut";
 import { UsuarioCliente } from "../../models/Usuario";
@@ -15,6 +15,7 @@ import Cliente from "../../models/Cliente";
 import { Form } from "react-bootstrap";
 import Factura from "../../models/Factura";
 import { saveFactura } from "../../services/FacturaApi";
+import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {
     return (
@@ -58,14 +59,25 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         if (e.target.id === 'delivery') {
             handleFormaPagoChange({ target: { id: 'mp' } } as React.ChangeEvent<HTMLInputElement>);
         }
-
-
     };
 
     const handleFormaPagoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormaPago(e.target.id);
 
     };
+
+    const getTiempoManufacturado = async (detalle: PedidoDetalle) => {
+        let tiempo = 0;
+        const m = await getArticuloManufacturadoPorID(detalle.articulo.id)
+        console.log("getTiempoManufacturado")
+        console.log(m)
+        if (m) {
+            tiempo = m.tiempoEstimadoMinutos * detalle.cantidad;
+            console.log(tiempo)
+        }
+        console.log("------------")
+        return tiempo;
+    }
 
     const crearFactura = async (pedido: PedidoCliente) => {
         const factura = new Factura();
@@ -95,22 +107,38 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             return;
         }
 
+        const tiempoDemoraCocina = await getTiempoDemoraCocina();
+        let tiempoDemoraPedidoActual = 0;
+        console.log("tiempo cocina: " + tiempoDemoraCocina);
+
         const fechaPedido = new Date();
         const pedido: PedidoCliente = new PedidoCliente();
         pedido.total = totalPedido ?? 0;
         pedido.totalCosto = totalCosto ?? 0;
         pedido.pedidoDetalles = cart;
 
+        for (const detalle of cart) {
+            if (detalle.articulo.type === 'articuloManufacturado') {
+                tiempoDemoraPedidoActual += await getTiempoManufacturado(detalle)
+            }
+        }
+
         const dia = fechaPedido.getDate().toString().padStart(2, '0');
         const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
         const año = fechaPedido.getFullYear();
         pedido.fechaPedido = `${dia}/${mes}/${año}`;
 
-        fechaPedido.setMinutes(fechaPedido.getMinutes() + 30);
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual);
         const horas = fechaPedido.getHours().toString().padStart(2, '0');
         const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
         const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
         pedido.horaEstimadaFinalizacion = `${horas}:${minutos}:${segundos}`;
+
+        console.log("PEDIDO")
+        console.log("tiempo pedido actual calculado: " + (tiempoDemoraCocina + tiempoDemoraPedidoActual));
+        console.log(fechaPedido)
+        console.log(pedido.horaEstimadaFinalizacion)
+        console.log("-----------------")
 
         const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
         pedido.cliente = clienteActualizado;
@@ -118,9 +146,6 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         if (tipoEnvio == 'pickup') {
             pedido.total -= pedido.total * 0.10;
         }
-
-        //console.log(JSON.stringify(pedido))
-
 
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);

@@ -3,12 +3,13 @@ package com.example.buensaborback.controller;
 import com.example.buensaborback.controller.mercadoPago.MercadoPagoController;
 import com.example.buensaborback.controller.mercadoPago.PreferenceMP;
 import com.example.buensaborback.domain.entities.*;
+import com.example.buensaborback.domain.entities.enums.RolName;
 import com.example.buensaborback.dto.PedidosPorArticuloDTO;
 import com.example.buensaborback.dto.PedidosPorMesAnioDTO;
 import com.example.buensaborback.services.ArticuloInsumoService;
 import com.example.buensaborback.services.PedidoService;
 import com.example.buensaborback.services.PedidoServiceImpl;
-import org.apache.coyote.Response;
+import com.example.buensaborback.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,10 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
 
     @Autowired
     private PedidoService pedidoService;
-
     @Autowired
     private ArticuloInsumoService articuloInsumoService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     //----- MercadoPago Pedido
     @PostMapping("/create_preference_mp")
@@ -101,6 +103,28 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
             return ResponseEntity.ok("Pedido no encontrado");
         } catch (Exception e) {
             System.err.print(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @GetMapping("/tiempoEstimado")
+    public ResponseEntity<?> getTiempoEstimadoPedido() {
+        try {
+            var pedidosCocina = pedidoService.findPedidosByTiempoEstimado();
+
+            var cocineros = usuarioService.getEmpleadosByRol(RolName.COCINERO);
+
+            long tiempoCocina = 0;
+
+            for (var detalle : pedidosCocina) {
+                tiempoCocina += ((long) detalle.getCantidad() * detalle.getTiempoEstimadoMinutos());
+            }
+
+            var tiempoEstimado = tiempoCocina / (long) cocineros.size();
+
+            return ResponseEntity.ok(tiempoEstimado);
+
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }

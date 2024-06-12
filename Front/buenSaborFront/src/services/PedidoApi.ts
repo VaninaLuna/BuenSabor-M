@@ -71,6 +71,23 @@ export async function getPedidosByCocinero() {
     }
 }
 
+export async function getTiempoDemoraCocina() {
+    const ENDPOINT = 'http://localhost:8080/pedido/tiempoEstimado';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json;
+    } catch (e) {
+        throw new Error('Error al hacer fetch de los pedidos')
+    }
+}
+
 //POST - PUT
 export async function savePedido(pedido?: PedidoCliente) {
     let endpoint = 'http://localhost:8080/pedido/guardar_pedido';

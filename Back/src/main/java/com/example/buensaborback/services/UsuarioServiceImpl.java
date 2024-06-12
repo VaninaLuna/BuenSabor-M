@@ -6,6 +6,7 @@ import com.example.buensaborback.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +38,19 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioCliente, Long> im
                     .collect(Collectors.toList());
 
             return empleados;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<UsuarioCliente> getEmpleadosByRol(RolName rol) throws Exception {
+        try {
+            var usuarios = usuarioRepository.findAll();
+
+            return usuarios.stream()
+                    .filter(u -> Objects.equals(u.getRol().getRolName(), rol))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
