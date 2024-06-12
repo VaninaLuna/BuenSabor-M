@@ -34,7 +34,8 @@ public class UsuarioServiceImpl extends BaseServiceImpl<UsuarioCliente, Long> im
             var empleados = usuarios.stream()
                     .filter(usuario -> usuario.getRol().getRolName() == RolName.CAJERO
                             || usuario.getRol().getRolName() == RolName.COCINERO
-                            || usuario.getRol().getRolName() == RolName.DELIVERY)
+                            || usuario.getRol().getRolName() == RolName.DELIVERY
+                            || usuario.getRol().getRolName() == RolName.ADMIN)
                     .collect(Collectors.toList());
 
             return empleados;
