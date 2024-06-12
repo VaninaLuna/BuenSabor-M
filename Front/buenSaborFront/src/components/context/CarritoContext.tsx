@@ -4,7 +4,6 @@ import PedidoDetalle from "../../models/PedidoDetalle";
 import { getArticuloInsumoPorID } from "../../services/FuncionesArticuloInsumoApi";
 import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
 import ArticuloInsumo from "../../models/ArticuloInsumo";
-import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 
 interface CartContextType {
     cart: PedidoDetalle[];
@@ -40,23 +39,25 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
     }, [cart]);
 
     const checkStock = async (articulo: ArticuloDTO) => {
-        console.log(articulo)
         const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
         if (productInCart?.articulo.type === "articuloInsumo") {
-            const insumo: ArticuloInsumo = await getArticuloInsumoPorID(articulo.id);
+            console.log("productInCart?.articulo.id: " + productInCart?.articulo.id);
+            const insumo: ArticuloInsumo = await getArticuloInsumoPorID(productInCart?.articulo.id);
             if (insumo.stockActual <= 0 || (productInCart && insumo.stockActual <= productInCart.cantidad)) {
                 alert("No hay suficiente stock para este artículo.");
                 removeItemCarrito(articulo)
             }
         } else if (productInCart?.articulo.type === "articuloManufacturado") {
-            const manufacturado: ArticuloManufacturado = articulo as ArticuloManufacturado;
-            for (const detalle of manufacturado.articuloManufacturadoDetalles) {
-                const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.id);
-                if (insumo.stockActual < detalle.cantidad ||
-                    (productInCart && insumo.stockActual <= (detalle.cantidad * productInCart.cantidad))) {
-                    alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
-                    removeItemCarrito(articulo)
-                    break;
+            const manufacturado = articulo;
+            if (manufacturado.articuloManufacturadoDetalles) {
+                for (const detalle of manufacturado.articuloManufacturadoDetalles) {
+                    const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.articuloInsumo.id);
+                    if (insumo.stockActual < detalle.cantidad ||
+                        (productInCart && insumo.stockActual <= (detalle.cantidad * productInCart.cantidad))) {
+                        alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
+                        removeItemCarrito(articulo)
+                        break;
+                    }
                 }
             }
         }
