@@ -48,5 +48,6 @@ public abstract class Articulo extends Base{
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
+    @JsonManagedReference
     private Categoria categoria;
 }

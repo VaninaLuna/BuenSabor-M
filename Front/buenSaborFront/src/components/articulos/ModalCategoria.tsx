@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getCategoriaPorID, saveCategoria } from '../../services/FuncionesCategoriaApi';
+import { getCategoriaPorID, getCategorias, saveCategoria } from '../../services/FuncionesCategoriaApi';
 
 interface ModalProps {
     showModal: boolean;
@@ -13,6 +13,7 @@ interface ModalProps {
 export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
 
     const [categoria, setCategoria] = useState<Categoria>(new Categoria());
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
@@ -21,6 +22,13 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
     };
 
     useEffect(() => {
+        getCategorias()
+            .then(data => { setCategorias(data) })
+            .then(() => setCategorias(data => {
+                return data.filter(c => c.id !== selectedId && c.categoriaPadre?.id !== selectedId);
+            }))
+            .catch(e => console.error(e));
+
         if (!selectedId) {
             setCategoria(new Categoria());
         } else {
@@ -37,6 +45,11 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         setTxtValidacion("");
 
         setCategoria({ ...categoria, [e.target.name]: e.target.value });
+    };
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedCategoria = categorias.find(c => c.id === Number(e.target.value));
+        setCategoria({ ...categoria, categoriaPadre: selectedCategoria });
     };
 
     // Manejador de envío del formulario
@@ -68,6 +81,17 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={categoria?.denominacion} onChange={handleInputChange} />
                     </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Categoria Padre</Form.Label>
+                        <Form.Select name="categoriaPadre" onChange={handleSelectChange} value={categoria?.categoriaPadre?.id || 0}>
+                            <option value={0}>Seleccione una categoria padre</option>
+                            {categorias.map((c, index) => (
+                                <option key={index} value={c.id}>{c.denominacion}</option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>
                     </div>

@@ -70,6 +70,7 @@ export function GrillaCategoria() {
                     <thead>
                         <tr>
                             <th>Denominacion</th>
+                            <th>Categoria Padre</th>
                             {
                                 (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                 <th style={{ minWidth: "220px" }}>Opciones</th>
@@ -81,6 +82,7 @@ export function GrillaCategoria() {
                         {categorias.map((categoria: Categoria, index) =>
                             <tr key={index}>
                                 <td>{categoria.denominacion}</td>
+                                <td>{categoria.categoriaPadre?.denominacion}</td>
                                 {
                                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                     <td>
