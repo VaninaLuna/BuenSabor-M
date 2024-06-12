@@ -52,6 +52,11 @@ export function GrillaFactura() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleDownloadPdf = (factura: Factura) => {
+        const url = `http://localhost:8080/factura/download_pdf_factura/${factura.id}`
+        window.open(url, "_blank");
+    };
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
@@ -78,6 +83,7 @@ export function GrillaFactura() {
 
                                 <td>
                                     <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(factura)}>Detalle</Button>
+                                    <Button variant="outline-info" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleDownloadPdf(factura)}>Descargar como PDF</Button>
                                 </td>
 
                             </tr>
