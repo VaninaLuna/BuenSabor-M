@@ -44,9 +44,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <BrowserRouter>
           <Sidebar />
-          <div className="h-100 w-100 flex-grow-1 " style={{
+          <div className="h-100 w-100 flex-grow-1" style={{
             backgroundImage: `url(${fondo})`,
-            backgroundSize: 'cover',
+            backgroundSize: 'auto',
             backgroundPosition: 'center',
             backgroundColor: '#e06f72',
             // Este color será visible si la imagen no carga
