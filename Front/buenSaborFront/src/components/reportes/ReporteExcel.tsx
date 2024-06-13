@@ -38,14 +38,14 @@ const ReporteExcel = () => {
     return (
         <>
             <div className="d-flex justify-content-center">
-                <h2 style={{ alignSelf: "center" }}>Generar Reporte De Pedidos En Excel</h2>
+                <h2 style={{ alignSelf: "center", color: "whitesmoke" }}>Generar Reporte De Pedidos En Excel</h2>
             </div>
             <div className="d-flex flex-column w-50  m-auto"
                 style={{ minHeight: '80vh' }}>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="fechaDesde" className="form-label">Fecha Desde:</label>
+                        <h2><label htmlFor="fechaDesde" className="form-label" style={{ color: "whitesmoke" }}>Fecha Desde:</label></h2>
                         <input type="date" id="fechaDesde" value={fechaDesde}
                             onChange={(e) => setFechaDesde(e.target.value)}
 
@@ -59,7 +59,7 @@ const ReporteExcel = () => {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="fechaHasta" className="form-label">Fecha Hasta:</label>
+                        <h2><label htmlFor="fechaHasta" className="form-label" style={{ color: "whitesmoke" }}>Fecha Hasta:</label></h2>
                         <input type="date" id="fechaHasta" value={fechaHasta}
                             style={{
                                 width: ' 100%',
