@@ -12,7 +12,7 @@ interface ModalProps {
 
 export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
 
-    const [categoria, setCategoria] = useState<Categoria>(new Categoria());
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria>(new Categoria());
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
@@ -21,51 +21,70 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         setTxtValidacion("");
     };
 
-    useEffect(() => {
-        getCategorias()
-            .then(data => { setCategorias(data) })
-            .then(() => setCategorias(data => {
-                return data.filter(c => c.id !== selectedId && c.categoriaPadre?.id !== selectedId);
-            }))
-            .catch(e => console.error(e));
+    // const mapCategorias = (data: Categoria[], selectedId: number | null | undefined) => {
+    //     const flatCategorias: Categoria[] = [];
 
-        if (!selectedId) {
-            setCategoria(new Categoria());
-        } else {
-            getCategoriaPorID(selectedId)
-                .then(data => {
-                    setCategoria(data)
-                })
-                .catch(e => console.error(e));
-        }
+    //     const processCategoria = (categoria: Categoria, parent: Categoria | null) => {
+    //         const newCategoria = { ...categoria, categoriaPadre: parent };
+
+    //         if (newCategoria.id !== selectedId && newCategoria.categoriaPadre?.id !== selectedId) {
+    //             flatCategorias.push(newCategoria);
+
+    //             if (categoria.subCategorias && categoria.subCategorias.length > 0) {
+    //                 categoria.subCategorias.forEach(subCategoria => processCategoria(subCategoria, newCategoria));
+    //             }
+    //         }
+
+    //     };
+    //     data.forEach(categoria => processCategoria(categoria, null));
+
+    //     return flatCategorias;
+    // };
+
+    useEffect(() => {
+        const fetchAndProcessCategories = async () => {
+            try {
+                const data = await getCategorias();
+                // const processedCategorias = mapCategorias(data, selectedId);
+                const filter = data.filter(c => c.id !== selectedId && c.categoriaPadre?.id !== selectedId);
+                setCategorias(filter);
+
+                if (selectedId) {
+                    const selectedCategory = await getCategoriaPorID(selectedId);
+                    setCategoriaSeleccionada(selectedCategory);
+                } else {
+                    setCategoriaSeleccionada(new Categoria());
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        fetchAndProcessCategories()
     }, [selectedId])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Limpiamos el mensaje de validación
         setTxtValidacion("");
 
-        setCategoria({ ...categoria, [e.target.name]: e.target.value });
+        setCategoriaSeleccionada({ ...categoriaSeleccionada, [e.target.name]: e.target.value });
     };
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCategoria = categorias.find(c => c.id === Number(e.target.value));
-        setCategoria({ ...categoria, categoriaPadre: selectedCategoria });
+        const selectedCategoriaId = Number(e.target.value);
+        const selectedCategoria = categorias.find(c => c.id === selectedCategoriaId);
+        setCategoriaSeleccionada({ ...categoriaSeleccionada, categoriaPadre: selectedCategoria || null });
     };
 
     // Manejador de envío del formulario
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (categoria?.denominacion === undefined || categoria.denominacion === "") {
+        if (categoriaSeleccionada?.denominacion === undefined || categoriaSeleccionada.denominacion === "") {
             setTxtValidacion("Debe ingresar una denominacion");
             return;
         }
-
-        // Luego, asignas el array de nuevas imágenes al estado del insumo
-        setCategoria(categoria);
-
-        console.log(JSON.stringify(categoria));
-        await saveCategoria(categoria);
+        console.log(JSON.stringify(categoriaSeleccionada));
+        await saveCategoria(categoriaSeleccionada);
         window.location.reload();
     };
 
@@ -79,12 +98,12 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
-                        <Form.Control type="text" name="denominacion" value={categoria?.denominacion} onChange={handleInputChange} />
+                        <Form.Control type="text" name="denominacion" value={categoriaSeleccionada?.denominacion || ''} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Categoria Padre</Form.Label>
-                        <Form.Select name="categoriaPadre" onChange={handleSelectChange} value={categoria?.categoriaPadre?.id || 0}>
+                        <Form.Select name="categoriaPadre" onChange={handleSelectChange} value={categoriaSeleccionada?.categoriaPadre?.id || 0}>
                             <option value={0}>Seleccione una categoria padre</option>
                             {categorias.map((c, index) => (
                                 <option key={index} value={c.id}>{c.denominacion}</option>

@@ -22,8 +22,27 @@ export function GrillaCategoria() {
 
     const getListadoCategorias = async () => {
         const datos: Categoria[] = await getCategorias();
+        //const categoriasProcesadas = mapCategorias(datos);
         setCategorias(datos);
     };
+
+    // const mapCategorias = (data: Categoria[]) => {
+    //     const flatCategorias: Categoria[] = [];
+
+    //     const processCategoria = (categoria: Categoria, parent: Categoria | null) => {
+    //         const newCategoria = { ...categoria, categoriaPadre: parent };
+    //         flatCategorias.push(newCategoria);
+
+    //         if (categoria.subCategorias && categoria.subCategorias.length > 0) {
+    //             categoria.subCategorias.forEach(subCategoria => processCategoria(subCategoria, newCategoria));
+    //         }
+
+    //     };
+    //     data.forEach(categoria => processCategoria(categoria, null));
+
+    //     return flatCategorias;
+    // };
+
 
     const handleOpen = async () => {
         setEditing(true)
