@@ -47,6 +47,7 @@ export function GrillaEmpleado() {
                             <th>Fecha Nacimiento</th>
                             <th>Email</th>
                             <th>Telefono</th>
+                            <th>Rol</th>
                         </tr>
                     </thead>
                     <tbody>
