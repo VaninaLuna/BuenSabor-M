@@ -91,21 +91,24 @@ export function ArticuloTarjeta(args: ArticuloParams) {
                 </Modal.Header>
                 {articulo.type === "articuloManufacturado" && (
                     <Modal.Body>
-                        <h5>Preparación:</h5>
-                        <p>{selectedArticulo.preparacion}</p>
-                        <h5>Descripcion: </h5>
-                        <p>{selectedArticulo.descripcion}</p>
-                        <p> <strong>Tiempo Estimado: </strong>{selectedArticulo.tiempoEstimadoMinutos} minutos</p>
-                        <p><strong>Ingredientes:</strong></p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--INGREDIENTES-- </span> </h5>}</p>
                         {selectedArticulo.articuloManufacturadoDetalles.length > 0 && (
                             <ul>
                                 {selectedArticulo.articuloManufacturadoDetalles.map((detalle, index) => (
                                     <li key={index}>
-                                        {detalle.articuloInsumo.denominacion} - Cantidad: {detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion}
+                                        <span style={{ fontWeight: 'bold' }}>Insumo:</span> {detalle.articuloInsumo.denominacion} <br />
+                                        <span style={{ fontWeight: 'bold' }}>Cantidad:</span> {detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion}
                                     </li>
                                 ))}
                             </ul>
                         )}
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--PREPARACION-- </span> </h5>}</p>
+                        <p>{selectedArticulo.preparacion}</p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--DESCRIPCION-- </span> </h5>}</p>
+                        <p>{selectedArticulo.descripcion}</p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--TIEMPO-- </span> </h5>}</p>
+                        <p> <strong>Tiempo Estimado: </strong>{selectedArticulo.tiempoEstimadoMinutos} minutos</p>
+
                     </Modal.Body>
                 )}
                 <Modal.Footer>
