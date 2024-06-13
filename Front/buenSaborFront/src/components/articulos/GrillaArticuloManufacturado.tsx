@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
-import { Button, Table, Form, Modal, Image } from "react-bootstrap";
+import { Button, Table, Form, Modal, Image, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
@@ -13,11 +13,11 @@ export function GrillaArticuloManufacturado() {
     const [articulosmanufacturados, setArticulosmanufacturados] = useState<ArticuloManufacturado[]>([]);
     const [filteredArticulos, setFilteredArticulos] = useState<ArticuloManufacturado[]>([]);
     const [filter, setFilter] = useState("");
-    //  const [filterDenominacion, setFilterDenominacion] = useState("");
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedArticulo, setSelectedArticulo] = useState<ArticuloManufacturado | null>(null);
+    const [showPreparationModal, setShowPreparationModal] = useState(false);
+    const [preparationText, setPreparationText] = useState("");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
@@ -68,6 +68,17 @@ export function GrillaArticuloManufacturado() {
         setShowDetailModal(false);
         setSelectedArticulo(null);
     };
+
+    const handleShowPreparation = (preparation: string) => {
+        setPreparationText(preparation);
+        setShowPreparationModal(true);
+    };
+
+    const handleClosePreparationModal = () => {
+        setShowPreparationModal(false);
+        setPreparationText("");
+    };
+
     useEffect(() => {
         getListadoArticulosManufacturados();
     }, []);
@@ -104,7 +115,6 @@ export function GrillaArticuloManufacturado() {
                     <Table striped bordered hover size="sm">
                         <thead>
                             <tr>
-                                {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
                                 <th>Imagen</th>
                                 <th style={{ minWidth: "150px" }}>Denominacion</th>
                                 <th>Unidad de Medida</th>
@@ -119,7 +129,6 @@ export function GrillaArticuloManufacturado() {
                         <tbody>
                             {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
                                 <tr key={index}>
-                                    {/* <td>{articulomanufacturado.id}</td> */}
                                     <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
                                         <Image src={articulomanufacturado.imagenes[0].url}
                                             alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
@@ -131,17 +140,30 @@ export function GrillaArticuloManufacturado() {
                                     <td>{articulomanufacturado.descripcion}</td>
                                     <td>{articulomanufacturado.precioVenta}</td>
                                     <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
-                                    <td>{articulomanufacturado.preparacion}</td>
+                                    <td style={{ minWidth: "400px" }}>
+                                        <OverlayTrigger
+                                            placement="top"
+                                            overlay={<Tooltip>{articulomanufacturado.preparacion}</Tooltip>}
+                                        >
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <span>
+                                                    {articulomanufacturado.preparacion.length > 40 ?
+                                                        articulomanufacturado.preparacion.substring(0, 40) + "..." :
+                                                        articulomanufacturado.preparacion
+                                                    }
+                                                </span>
+                                                <Button variant="secondary" className="ml-auto" onClick={() => handleShowPreparation(articulomanufacturado.preparacion)}>Más</Button>
+                                            </div>
+                                        </OverlayTrigger>
+                                    </td>
                                     <td>
                                         {
                                             (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                             <>
                                                 <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
                                                 <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
-
                                             </>
                                         }
-
                                         <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
                                     </td>
                                 </tr>
@@ -155,17 +177,37 @@ export function GrillaArticuloManufacturado() {
                         <Modal.Title>{selectedArticulo?.denominacion}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--INGREDIENTES-- </span> </h5>}</p>
                         {selectedArticulo && selectedArticulo.articuloManufacturadoDetalles.map((detalle, index) => (
+
                             <p key={index}>
                                 <span style={{ fontWeight: 'bold' }}>Insumo:</span> {detalle.articuloInsumo.denominacion} <br />
                                 <span style={{ fontWeight: 'bold' }}>Cantidad:</span> {detalle.cantidad} {detalle.articuloInsumo.unidadMedida.denominacion}
                             </p>
-                        ))}
-                    </Modal.Body>
 
+                        ))}
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--RECETA-- </span> </h5>}</p>
+                        <p>{<span style={{ fontWeight: 'bold' }}>Preparacion:</span>} {selectedArticulo?.preparacion}</p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--TIEMPO DE PREPARACION-- </span> </h5>}</p>
+                        <p>{<span style={{ fontWeight: 'bold' }}>Tiempo:</span>} {selectedArticulo?.tiempoEstimadoMinutos} minutos</p>
+                    </Modal.Body>
 
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleCloseDetailModal}>
+                            Cerrar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                <Modal show={showPreparationModal} onHide={handleClosePreparationModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Preparación</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {preparationText}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClosePreparationModal}>
                             Cerrar
                         </Button>
                     </Modal.Footer>
