@@ -29,7 +29,7 @@ export function GrillaCliente() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Clientes</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Clientes</h1>
 
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

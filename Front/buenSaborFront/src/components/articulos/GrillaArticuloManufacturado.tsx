@@ -18,6 +18,7 @@ export function GrillaArticuloManufacturado() {
     const [showPreparationModal, setShowPreparationModal] = useState(false);
     const [preparationText, setPreparationText] = useState("");
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
@@ -86,7 +87,7 @@ export function GrillaArticuloManufacturado() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Articulos Manufacturados</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Articulos Manufacturados</h1>
 
                 <ModalArticuloManufacturado
                     handleClose={handleClose}

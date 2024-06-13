@@ -45,7 +45,7 @@ export function GrillaUnidadMedida() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Unidades de Medida</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Unidades de Medida</h1>
 
 
                 {

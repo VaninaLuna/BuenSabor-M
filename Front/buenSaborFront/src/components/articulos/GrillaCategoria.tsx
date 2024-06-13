@@ -52,7 +52,7 @@ export function GrillaCategoria() {
         <>
 
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Categorias</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Categorias</h1>
                 {
                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                     <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
