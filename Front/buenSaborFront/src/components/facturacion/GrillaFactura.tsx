@@ -60,7 +60,7 @@ export function GrillaFactura() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Facturacion</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Facturacion</h1>
 
 
 
@@ -71,6 +71,7 @@ export function GrillaFactura() {
                             <th>Fecha facturacion</th>
                             <th>Forma de pago</th>
                             <th>Total Venta</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
