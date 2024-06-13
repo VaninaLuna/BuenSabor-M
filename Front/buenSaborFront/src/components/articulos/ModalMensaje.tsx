@@ -17,7 +17,7 @@ export const ModalMensaje: React.FC<ModalProps> = ({ showModal, handleClose, ped
                 </Modal.Header>
 
                 <Modal.Body>
-                    {pedido ? (
+                    {pedido && pedido.id ? (
                         <>
                             <p>El pedido <b>n°{pedido.id}</b> se creo correctamente</p>
                             <p>Hora estimada de entrega: <b>{pedido.horaEstimadaFinalizacion}</b></p>

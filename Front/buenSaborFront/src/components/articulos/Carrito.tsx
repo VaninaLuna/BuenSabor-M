@@ -80,20 +80,26 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     }
 
     const crearFactura = async (pedido: PedidoCliente) => {
-        const factura = new Factura();
-        factura.fechaFacturacion = pedido.fechaPedido;
-        factura.totalVenta = pedido.total;
-        factura.totalCosto = pedido.totalCosto;
-        factura.pedido = pedido;
-        factura.formaPago = formaPago == "mp" ? "MercadoPago" : "Efectivo";
 
-        if (tipoEnvio == 'pickup') {
-            factura.montoDescuento = pedido.total / 0.9 * 0.1;
+        if (formaPago == "efectivo") {
+            const factura = new Factura();
+            factura.fechaFacturacion = pedido.fechaPedido;
+            factura.totalVenta = pedido.total;
+            factura.totalCosto = pedido.totalCosto;
+            factura.pedido = pedido;
+            factura.formaPago = "Efectivo" //formaPago == "mp" ? "MercadoPago" : "Efectivo";
+
+            if (tipoEnvio == 'pickup') {
+                factura.montoDescuento = pedido.total / 0.9 * 0.1;
+            }
+
+            const facturaFromDB: Factura = await saveFactura(factura);
+
+            await sendMailFactura(facturaFromDB.id, pedido.cliente.email as string)
+
+        } else {
+            setShowModal(true);
         }
-
-        const facturaFromDB: Factura = await saveFactura(factura);
-
-        await sendMailFactura(facturaFromDB.id, pedido.cliente.email as string)
     }
 
     const guardarPedido = async () => {
@@ -117,6 +123,29 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
         const fechaPedido = new Date();
         const pedido: PedidoCliente = new PedidoCliente();
+
+        const dia = fechaPedido.getDay();
+        const diaFecha = fechaPedido.getDate().toString().padStart(2, '0');
+        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
+        const año = fechaPedido.getFullYear();
+        pedido.fechaPedido = `${diaFecha}/${mes}/${año}`;
+
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual + demoraDelivery);
+        const horas = fechaPedido.getHours();
+        const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
+        pedido.horaEstimadaFinalizacion = `${horas.toString().padStart(2, '0')}:${minutos}:${segundos}`;
+
+        if ((dia == 0 || dia == 6) && (horas >= 0 && horas < 11 || (horas >= 15 && horas < 20))) {
+            setMessage("No puede realizar un pedido fuera del horario de apertura");
+            setShowModal(true);
+            return
+        } else if (horas >= 0 && horas < 20) {
+            setMessage("No puede realizar un pedido fuera del horario de apertura");
+            setShowModal(true);
+            return
+        }
+
         pedido.total = totalPedido ?? 0;
         pedido.totalCosto = totalCosto ?? 0;
         pedido.pedidoDetalles = cart;
@@ -126,23 +155,6 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                 tiempoDemoraPedidoActual += await getTiempoManufacturado(detalle)
             }
         }
-
-        const dia = fechaPedido.getDate().toString().padStart(2, '0');
-        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
-        const año = fechaPedido.getFullYear();
-        pedido.fechaPedido = `${dia}/${mes}/${año}`;
-
-        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual + demoraDelivery);
-        const horas = fechaPedido.getHours().toString().padStart(2, '0');
-        const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
-        const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
-        pedido.horaEstimadaFinalizacion = `${horas}:${minutos}:${segundos}`;
-
-        console.log("PEDIDO")
-        console.log("tiempo pedido actual calculado: " + (tiempoDemoraCocina + tiempoDemoraPedidoActual));
-        console.log(fechaPedido)
-        console.log(pedido.horaEstimadaFinalizacion)
-        console.log("-----------------")
 
         const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
         pedido.cliente = clienteActualizado;
@@ -154,11 +166,8 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         try {
             const pedidoFromDB: PedidoCliente = await savePedido(pedido);
             setPedidoGuardado(pedidoFromDB);
-            setShowModal(true);
 
-            if (formaPago == "efectivo") {
-                crearFactura(pedidoFromDB);
-            }
+            await crearFactura(pedidoFromDB);
         } catch (error) {
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
             setShowModal(true);
@@ -226,6 +235,8 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                     checked={tipoEnvio === 'pickup'} onChange={handleTipoEnvioChange}
                                                 />
                                             </Form.Group>
+
+                                            <p>10% de descuento retirando en tienda</p>
 
                                             {tipoEnvio && (
                                                 <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
