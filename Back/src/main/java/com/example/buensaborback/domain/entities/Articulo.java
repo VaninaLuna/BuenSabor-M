@@ -2,6 +2,7 @@ package com.example.buensaborback.domain.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -27,10 +28,6 @@ import java.util.Set;
         @JsonSubTypes.Type(value = ArticuloManufacturado.class, name = "articuloManufacturado")
 })
 public abstract class Articulo extends Base{
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    protected Long id;
     protected String denominacion;
     protected Double precioVenta;
 
@@ -48,6 +45,5 @@ public abstract class Articulo extends Base{
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    @JsonManagedReference
     private Categoria categoria;
 }

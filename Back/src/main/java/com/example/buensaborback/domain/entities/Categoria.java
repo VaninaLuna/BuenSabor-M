@@ -1,6 +1,7 @@
 package com.example.buensaborback.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,15 +22,11 @@ public class Categoria extends Base {
 
     @ManyToOne
     @JoinColumn(name = "categoriaPadreId")
+    @JsonBackReference("categoria-subCategorias")
     private Categoria categoriaPadre;
 
     @Builder.Default
     @OneToMany(mappedBy = "categoriaPadre", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonManagedReference("categoria-subCategorias")
     private List<Categoria> subCategorias = new ArrayList<>();
-
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "categoria_id") // Nombre de la columna en la tabla Articulo que referencia a la categoria
-//    @Builder.Default
-//    private Set<Articulo> articulos = new HashSet<>();
 }
