@@ -29,6 +29,7 @@ import { GrillaEmpleado } from './components/usuarios/GrillaEmpleado.tsx';
 import { GrillaSuperUsuario } from './components/usuarios/GrillaSuperUsuario.tsx';
 import ReporteExcel from './components/reportes/ReporteExcel.tsx';
 import Estadisticas from './components/empresa/Estadisticas.tsx';
+import fondo from './assets/images/fondo3.jpg';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -43,7 +44,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <BrowserRouter>
           <Sidebar />
-          <div className="h-100 w-100 flex-grow-1 ">
+          <div className="h-100 w-100 flex-grow-1 " style={{
+            backgroundImage: `url(${fondo})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundColor: '#e06f72',
+            // Este color será visible si la imagen no carga
+          }}>
             <NavBar />
             <div className='content' style={{ marginLeft: 60, marginRight: 60 }}>
               <Routes>
