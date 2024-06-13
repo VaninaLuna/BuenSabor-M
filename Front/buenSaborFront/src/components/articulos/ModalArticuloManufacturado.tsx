@@ -242,9 +242,14 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                                 <Form.Control type="insumo" name="insumo" value={detalle.articuloInsumo.denominacion}
                                     onChange={e => handleCantidadInsumoChange(e, index)} disabled />
                             </Form.Group>
-                            <Form.Group as={Col} className="mb-3">
+                            <Form.Group as={Col} xs="auto" className="mb-3">
                                 <Form.Label>Cantidad</Form.Label>
-                                <Form.Control type="number" name="cantidad" value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
+                                <Form.Control type="number" name="cantidad" style={{ width: '150px' }} value={detalle.cantidad} onChange={e => handleCantidadInsumoChange(e, index)} />
+                            </Form.Group>
+
+                            <Form.Group as={Col} xs="auto" className="mb-8">
+                                <Form.Label>Unidad de Medida</Form.Label>
+                                <Form.Control type="text" name="unidad" style={{ width: '150px' }} value={detalle.articuloInsumo.unidadMedida.denominacion} readOnly />
                             </Form.Group>
                             <Col xs="auto">
                                 <Button variant="danger" style={{ marginTop: '32px' }} onClick={() => handleRemoveInsumo(index)}>X</Button>
