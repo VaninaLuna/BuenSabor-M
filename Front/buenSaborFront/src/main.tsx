@@ -30,6 +30,7 @@ import { GrillaSuperUsuario } from './components/usuarios/GrillaSuperUsuario.tsx
 import ReporteExcel from './components/reportes/ReporteExcel.tsx';
 import Estadisticas from './components/empresa/Estadisticas.tsx';
 import fondo from './assets/images/fondo3.jpg';
+import { Promociones } from './components/articulos/Promociones.tsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -60,6 +61,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route index element={<Home />} />
                 <Route path='/home' element={<Home />} />
                 <Route path="/articulos" element={<Articulos />} />
+                <Route path='/promociones' element={<Promociones />} />
                 {/* EMPRESA */}
                 <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
                   <Route path="/empresas" element={<GrillaEmpresa />} />
