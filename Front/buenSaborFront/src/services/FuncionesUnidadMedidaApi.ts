@@ -71,3 +71,43 @@ export async function deleteUnidadMedidaPorID(id: number) {
         throw new Error('Error al hacer fetch de unidadMedida')
     }
 }
+
+//Delete logico
+export async function updateEstadoEliminado(id: number) {
+    const endpoint = `http://localhost:8080/unidadMedida/cambiar_estado_eliminado/${id}`;
+
+    try {
+        const response = await fetch(endpoint, {
+            "method": "PUT",
+            "headers": {
+                "Content-Type": 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (e) {
+        throw new Error('Error al cambiar el estado eliminado')
+    }
+}
+
+//Get eliminados o no eliminados
+export async function getByEstaEliminado(eliminado: boolean) {
+    const endpoint = `http://localhost:8080/unidadMedida/esta_eliminado/${eliminado}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as UnidadMedida[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch')
+    }
+}

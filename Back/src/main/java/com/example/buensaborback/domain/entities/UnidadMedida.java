@@ -16,6 +16,7 @@ import java.util.Set;
 public class UnidadMedida extends Base{
 
     private String denominacion;
+    private boolean eliminado;
 
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "unidad_medida_id") // Nombre de la columna en la tabla Articulo que referencia a la unidad de medida

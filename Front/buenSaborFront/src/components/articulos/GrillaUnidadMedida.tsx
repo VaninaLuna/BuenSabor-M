@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import UnidadMedida from '../../models/UnidadMedida';
-import { deleteUnidadMedidaPorID, getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
+import { deleteUnidadMedidaPorID, getByEstaEliminado, getUnidadesMedidas, updateEstadoEliminado } from '../../services/FuncionesUnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
@@ -12,13 +12,15 @@ export function GrillaUnidadMedida() {
     const [editing, setEditing] = useState(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [uMedidas, setUMedidas] = useState<UnidadMedida[]>([]);
+    //estado para alternar entre obtener datos con eliminacion logica o no
+    const [eliminados, setEliminados] = useState<boolean>(false);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoUMedidas = async () => {
-        const datos: UnidadMedida[] = await getUnidadesMedidas();
+        const datos: UnidadMedida[] = await getByEstaEliminado(eliminados);
         setUMedidas(datos);
     };
 
@@ -32,27 +34,33 @@ export function GrillaUnidadMedida() {
         setSelectedId(null);
     };
 
-    const deleteUMedida = async (idUMedida: number) => {
-        await deleteUnidadMedidaPorID(idUMedida);
-        window.location.reload();
+    const updateEstadoDelete = async (idUMedida: number) => {
+        await updateEstadoEliminado(idUMedida);
+        getListadoUMedidas();
     }
 
     useEffect(() => {
         getListadoUMedidas();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [eliminados]);
 
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Unidades de Medida</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}> {eliminados ? "Unidades de Medida Eliminadas" : "Unidades de Medida"}</h1>
 
 
                 {
                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                    <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
-                        Crear Unidad de Medida
-                    </Button>
+                    <div>
+                        <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
+                            Crear Unidad de Medida
+                        </Button>
+                        <Button size="lg" style={{ margin: 10, backgroundColor: '#46b6ee', border: '#46b6ee' }} onClick={() => { setEliminados(!eliminados) }}>
+                            {eliminados ? "Ver Unidades de Medidas Actuales" : "Ver Unidades de Medida Eliminadas"}
+                        </Button>
+                    </div>
 
                 }
                 <ModalUnidadMedida
@@ -81,8 +89,16 @@ export function GrillaUnidadMedida() {
                                     <td>
                                         <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
                                             onClick={() => { setSelectedId(uMedida.id); handleOpen(); }}>Modificar</Button>
-                                        <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-                                            onClick={() => deleteUMedida(uMedida.id)}>Eliminar</Button>
+                                        {
+                                            eliminados
+                                                ?
+                                                <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                                    onClick={() => updateEstadoDelete(uMedida.id)}>Restaurar</Button>
+                                                :
+                                                <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+                                                    onClick={() => updateEstadoDelete(uMedida.id)}>Eliminar</Button>
+                                        }
+
                                     </td>
                                 }
                             </tr>

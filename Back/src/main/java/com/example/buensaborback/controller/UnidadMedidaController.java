@@ -1,20 +1,37 @@
 package com.example.buensaborback.controller;
 
-import com.example.buensaborback.domain.entities.ArticuloInsumo;
-import com.example.buensaborback.domain.entities.Categoria;
 import com.example.buensaborback.domain.entities.UnidadMedida;
-import com.example.buensaborback.services.ArticuloInsumoService;
-import com.example.buensaborback.services.UnidadMedidaService;
 import com.example.buensaborback.services.UnidadMedidaServiceImpl;
-import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/unidadMedida")
 @CrossOrigin(origins = "*")
 public class UnidadMedidaController extends BaseControllerImpl<UnidadMedida, UnidadMedidaServiceImpl> {
 
+
+    @GetMapping("/esta_eliminado/{eliminado}")
+    public ResponseEntity<?> getByEsParaElaborar(@PathVariable boolean eliminado) {
+        try {
+            return ResponseEntity.ok(servicio.findByEliminado(eliminado));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @PutMapping("/cambiar_estado_eliminado/{id}")
+    public ResponseEntity<?> cambiarEstado(@PathVariable Long id) {
+        try {
+            var unidadMedida = servicio.findById(id);
+
+            unidadMedida.setEliminado(!unidadMedida.isEliminado());
+
+            return ResponseEntity.ok(servicio.update(unidadMedida.getId(), unidadMedida));
+        } catch (Exception e) {
+            System.err.print(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 }

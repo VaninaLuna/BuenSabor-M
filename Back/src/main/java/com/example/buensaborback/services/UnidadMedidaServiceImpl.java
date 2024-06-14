@@ -1,5 +1,6 @@
 package com.example.buensaborback.services;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.UnidadMedida;
 import com.example.buensaborback.repositories.BaseRepository;
 import com.example.buensaborback.repositories.UnidadMedidaRepository;
@@ -20,5 +21,14 @@ public class UnidadMedidaServiceImpl extends BaseServiceImpl<UnidadMedida, Long>
     public UnidadMedidaServiceImpl(UnidadMedidaRepository unidadMedidaRepository) {
         super(unidadMedidaRepository);
         this.unidadMedidaRepository = unidadMedidaRepository;
+    }
+
+    @Override
+    public List<UnidadMedida> findByEliminado(boolean eliminado) throws Exception {
+        try{
+            return unidadMedidaRepository.findByEliminado(eliminado);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
 }
