@@ -51,8 +51,8 @@ export function ArticuloTarjeta(args: ArticuloParams) {
             <Card className="m-4 mx-auto text-center articulo" style={{ width: '18rem' }}>
                 <Card.Img variant="top" src={articulo.imagenes[0]?.url} alt={articulo.denominacion} className="card-img" />
                 <Card.Body>
-                    <Card.Title>{articulo.denominacion}</Card.Title>
-                    <Card.Text>{`$${articulo.precioVenta}`}</Card.Text>
+                    <Card.Title style={{ color: 'black' }}>{articulo.denominacion}</Card.Title>
+                    <Card.Text style={{ color: 'black' }}>{`$${articulo.precioVenta}`}</Card.Text>
                     {articulo.type === 'articuloManufacturado' ?
                         <Card.Text><Button className="btn btn-success" style={{
                             width: '150px', backgroundColor: '#e06f72',
