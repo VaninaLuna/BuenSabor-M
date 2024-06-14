@@ -68,7 +68,7 @@ public class BaseServiceImpl<T extends Base, ID extends Serializable> implements
     public boolean delete(ID id) throws Exception {
         try {
             if (!baseRepository.existsById(id)) {
-                throw new NoSuchElementException("No existe un articulo insumo con ese Id");
+                throw new NoSuchElementException("No existe un elemento con ese Id");
             }
 
             baseRepository.deleteById(id);
