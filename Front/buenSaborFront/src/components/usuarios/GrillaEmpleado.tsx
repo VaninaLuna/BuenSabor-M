@@ -28,7 +28,7 @@ export function GrillaEmpleado() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px' }}>Empleados</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Empleados</h1>
 
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
