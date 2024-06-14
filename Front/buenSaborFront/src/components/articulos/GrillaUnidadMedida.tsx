@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import UnidadMedida from '../../models/UnidadMedida';
-import { deleteUnidadMedidaPorID, getByEstaEliminado, getUnidadesMedidas, updateEstadoEliminado } from '../../services/FuncionesUnidadMedidaApi';
+import { getByEstaEliminado, updateEstadoEliminado } from '../../services/FuncionesUnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
@@ -48,19 +48,13 @@ export function GrillaUnidadMedida() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}> {eliminados ? "Unidades de Medida Eliminadas" : "Unidades de Medida"}</h1>
-
+                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}> {eliminados ? "Unidades de Medida Eliminadas" : "Unidades de Medida"}</h1>
 
                 {
                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                    <div>
-                        <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
-                            Crear Unidad de Medida
-                        </Button>
-                        <Button size="lg" style={{ margin: 10, backgroundColor: '#46b6ee', border: '#46b6ee' }} onClick={() => { setEliminados(!eliminados) }}>
-                            {eliminados ? "Ver Unidades de Medidas Actuales" : "Ver Unidades de Medida Eliminadas"}
-                        </Button>
-                    </div>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
+                        Crear Unidad de Medida
+                    </Button>
 
                 }
                 <ModalUnidadMedida
@@ -105,7 +99,14 @@ export function GrillaUnidadMedida() {
                         )}
                     </tbody>
                 </Table>
+
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
+                        {eliminados ? "Ver Actuales" : "Ver Eliminados"}
+                    </Button>
+                </div>
             </div>
+
         </>
     );
 }

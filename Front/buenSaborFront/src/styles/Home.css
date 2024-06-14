@@ -1,15 +1,16 @@
 .img-carousel {
-    display: flex;
-    margin: auto;
-    width: 600px;
-    height: auto;
-  }
-  /* Home.css */
+  display: flex;
+  margin: auto;
+  width: 600px;
+  height: auto;
+}
+/* Home.css */
 
 .title {
   margin: 30px;
   align-self: center;
   color: whitesmoke;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .custom-carousel {
