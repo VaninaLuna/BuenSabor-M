@@ -117,16 +117,27 @@ export function GrillaPedido() {
                             <Modal.Title>Detalles del pedido</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
+
                             {selectedPedido && selectedPedido.pedidoDetalles.map((detalle) => (
                                 <p key={detalle.id}>
-                                    <span style={{ fontWeight: 'bold' }}>Articulo:</span> {detalle.articulo.denominacion} <br />
+
+
+                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Fecha </span> </h5>}</p>
+                                    <p>{<span style={{ fontWeight: 'bold' }}></span>} {selectedPedido.fechaPedido}</p>
+                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Hora del pedido </span> </h5>}</p>
+                                    <p>{<span style={{ fontWeight: 'bold' }}></span>} {selectedPedido.horaEstimadaFinalizacion}</p>
+
+                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Detalle del pedido </span> </h5>}</p>
+                                    <p>{<span style={{ fontWeight: 'bold' }}></span>}  {detalle.articulo.denominacion}</p>
+
                                     <img style={{ maxWidth: "80px", objectFit: "contain" }}
                                         className="cart-img"
                                         src={`${detalle.articulo.imagenes[0].url}`}
                                         alt={detalle.articulo.denominacion}
                                     /> <br /> <br />
-                                    <span style={{ fontWeight: 'bold' }}>Cantidad:</span> {detalle.cantidad} <br />
-                                    <span style={{ fontWeight: 'bold' }}>Subtotal:</span> {detalle.subTotal}
+                                    <h5 style={{ fontWeight: 'bold' }}>Cantidad:</h5> {detalle.cantidad} <br />
+                                    <h5 style={{ fontWeight: 'bold' }}>Subtotal:</h5> {detalle.subTotal}<br />
+                                    <h4 style={{ fontWeight: 'bold' }}>Total:</h4> {selectedPedido.total}
                                     <hr />
                                 </p>
                             ))}
