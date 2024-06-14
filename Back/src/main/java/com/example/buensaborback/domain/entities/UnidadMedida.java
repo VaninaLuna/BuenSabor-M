@@ -2,6 +2,7 @@ package com.example.buensaborback.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Builder
+@Audited
 public class UnidadMedida extends Base{
 
     private String denominacion;

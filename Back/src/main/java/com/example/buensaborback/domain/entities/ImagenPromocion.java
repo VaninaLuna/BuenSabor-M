@@ -1,9 +1,9 @@
 package com.example.buensaborback.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,11 +12,14 @@ import lombok.*;
 @Entity
 @ToString
 @Builder
+@Audited
 public class ImagenPromocion extends Base{
-    @Lob
-    @Column(name = "imagen", columnDefinition = "LONGBLOB")
-    private byte[] imagen;
-    private String imagenPath;
 
+    private String url;
 
+    @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(name= "promocion_id")
+    @JsonBackReference(value = "imagen_promocion")
+    private Promocion promocion;
 }

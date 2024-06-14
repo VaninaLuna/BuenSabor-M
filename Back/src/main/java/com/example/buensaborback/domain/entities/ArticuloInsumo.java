@@ -3,6 +3,7 @@ package com.example.buensaborback.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Entity
 @ToString
 @SuperBuilder
+@Audited
 public class ArticuloInsumo extends Articulo {
 
     private Double precioCompra;

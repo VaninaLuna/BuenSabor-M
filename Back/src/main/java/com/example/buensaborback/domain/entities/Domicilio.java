@@ -3,6 +3,7 @@ package com.example.buensaborback.domain.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Builder
+@Audited
 public class Domicilio extends Base {
 
     private String calle;

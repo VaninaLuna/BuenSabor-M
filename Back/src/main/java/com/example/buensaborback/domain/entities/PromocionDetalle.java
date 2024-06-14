@@ -1,10 +1,10 @@
 package com.example.buensaborback.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
@@ -16,12 +16,13 @@ import org.hibernate.envers.Audited;
 @ToString
 @Builder
 @Audited
-public class Imagen extends Base{
+public class PromocionDetalle extends Base {
 
-    private String url;
+    private Integer cantidad;
 
     @ManyToOne
-    @JoinColumn(name = "articulo_id")
-    @JsonBackReference
-    private Articulo articulo;
+    @ToString.Exclude
+    @JoinColumn(name = "promocion_id")
+    @JsonBackReference(value = "detallepedido_pedido")
+    private Promocion promocion;
 }

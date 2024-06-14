@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +28,7 @@ import java.util.Set;
         @JsonSubTypes.Type(value = ArticuloInsumo.class, name = "articuloInsumo"),
         @JsonSubTypes.Type(value = ArticuloManufacturado.class, name = "articuloManufacturado")
 })
+@Audited
 public abstract class Articulo extends Base{
     protected String denominacion;
     protected Double precioVenta;
