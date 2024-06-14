@@ -61,7 +61,7 @@ public class BaseControllerImpl<T extends Base, S extends BaseServiceImpl<T, Lon
         try {
             return ResponseEntity.ok(servicio.delete(id));
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, por favor intente mas tarde\"");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error: " + e.toString());
         }
     }
 }
