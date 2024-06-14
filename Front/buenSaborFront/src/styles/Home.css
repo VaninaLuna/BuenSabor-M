@@ -4,4 +4,35 @@
     width: 600px;
     height: auto;
   }
-  
+  /* Home.css */
+
+.title {
+  margin: 30px;
+  align-self: center;
+  color: whitesmoke;
+}
+
+.custom-carousel {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  transition: transform 0.5s ease; /* Animación suave */
+}
+
+.custom-carousel:hover {
+  transform: scale(1.02); /* Efecto de hover */
+}
+
+.img-carousel {
+  border-radius: 15px;
+}
+
+.text-center {
+  align-self: center;
+  color: whitesmoke;
+}
+
+.text-light {
+  color: whitesmoke;
+}
