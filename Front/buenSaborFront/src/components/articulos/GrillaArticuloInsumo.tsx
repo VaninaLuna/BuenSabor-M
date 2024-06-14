@@ -118,7 +118,7 @@ export function GrillaArticuloInsumo() {
                                     }</td>
                                     <td>{articuloInsumo.denominacion}</td>
                                     <td>{articuloInsumo.unidadMedida.denominacion}</td>
-                                    <td>{articuloInsumo.categoria.denominacion}</td>
+                                    <td>{articuloInsumo.categoria.codigo} {articuloInsumo.categoria.denominacion}</td>
                                     <td>{articuloInsumo.precioCompra}</td>
                                     <td>{articuloInsumo.precioVenta}</td>
                                     <td>{articuloInsumo.stockActual}</td>

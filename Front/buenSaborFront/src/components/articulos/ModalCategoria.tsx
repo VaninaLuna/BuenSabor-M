@@ -83,13 +83,13 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         window.location.reload();
     };
 
-    const renderCategorias = (categorias: Categoria[], prefix: string = ''): JSX.Element[] => {
-        return categorias.map((categoria: Categoria, index: number) => {
-            const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
+    const renderCategorias = (categorias: Categoria[], /*prefix: string = '' */): JSX.Element[] => {
+        return categorias.map((categoria: Categoria, /*index: number */) => {
+            // const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
             return (
                 <React.Fragment key={categoria.id}>
-                    <option value={categoria.id}>{currentPrefix} {categoria.denominacion}</option>
-                    {renderCategorias(categoria.subCategorias, currentPrefix)}
+                    <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                    {renderCategorias(categoria.subCategorias, /*currentPrefix*/)}
                 </React.Fragment>
             );
         });

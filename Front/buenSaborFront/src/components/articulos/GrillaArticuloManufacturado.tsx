@@ -137,7 +137,7 @@ export function GrillaArticuloManufacturado() {
                                     }</td>
                                     <td>{articulomanufacturado.denominacion}</td>
                                     <td>{articulomanufacturado.unidadMedida.denominacion}</td>
-                                    <td>{articulomanufacturado.categoria.denominacion}</td>
+                                    <td>{articulomanufacturado.categoria.codigo} {articulomanufacturado.categoria.denominacion}</td>
                                     <td>{articulomanufacturado.descripcion}</td>
                                     <td>{articulomanufacturado.precioVenta}</td>
                                     <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
@@ -187,9 +187,9 @@ export function GrillaArticuloManufacturado() {
                             </p>
 
                         ))}
-                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--RECETA-- </span> </h5>}</p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--RECETA--</span></h5>}</p>
                         <p>{<span style={{ fontWeight: 'bold' }}>Preparacion:</span>} {selectedArticulo?.preparacion}</p>
-                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--TIEMPO DE PREPARACION-- </span> </h5>}</p>
+                        <p className="text-center">{<h5><span style={{ fontWeight: 'bold' }}>--TIEMPO DE PREPARACION--</span></h5>}</p>
                         <p>{<span style={{ fontWeight: 'bold' }}>Tiempo:</span>} {selectedArticulo?.tiempoEstimadoMinutos} minutos</p>
                     </Modal.Body>
 

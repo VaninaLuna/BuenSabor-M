@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getCategorias } from '../../services/FuncionesCategoriaApi';
+import { getArbolCategorias } from '../../services/FuncionesCategoriaApi';
 import UnidadMedida from '../../models/UnidadMedida';
 import { getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
@@ -56,7 +56,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     };
 
     useEffect(() => {
-        getCategorias()
+        getArbolCategorias()
             .then(data => setCategoria(data))
             .catch(e => console.error(e));
 
@@ -169,6 +169,18 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         window.location.reload();
     };
 
+    const renderCategorias = (categorias: Categoria[], /*prefix: string = '' */): JSX.Element[] => {
+        return categorias.map((categoria: Categoria, /*index: number */) => {
+            // const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
+            return (
+                <React.Fragment key={categoria.id}>
+                    <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                    {renderCategorias(categoria.subCategorias, /*currentPrefix*/)}
+                </React.Fragment>
+            );
+        });
+    };
+
     return (
         <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
             <Modal.Header closeButton>
@@ -225,9 +237,10 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Label>Categoria</Form.Label>
                                 <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
                                     <option value={0}>Seleccionar Categoria</option>
-                                    {categorias.map((categoria: Categoria) =>
-                                        <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                                    )}
+                                    {renderCategorias(categorias)}
+                                    {/* {categorias.map((categoria: Categoria) =>
+                                        <option key={categoria.id} value={categoria.id}> {categoria.codigo} {categoria.denominacion} </option>
+                                    )} */}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
