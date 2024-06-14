@@ -18,6 +18,7 @@ import java.util.Set;
 @ToString
 @Builder
 public class Categoria extends Base {
+    private String codigo;
     private String denominacion;
 
     @ManyToOne

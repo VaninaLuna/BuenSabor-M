@@ -1,59 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getCategoriaPorID, getCategorias, saveCategoria } from '../../services/FuncionesCategoriaApi';
+import { getArbolCategorias, getCategoriaPadreDesdeHijo, getCategoriaPorID, saveCategoria } from '../../services/FuncionesCategoriaApi';
 
 interface ModalProps {
     showModal: boolean;
     handleClose: () => void;
     editing?: boolean;
-    selectedId?: number | null;
+    categoriaSeleccionada?: Categoria | null;
 }
 
-export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, categoriaSeleccionada }) => {
 
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria>(new Categoria());
+    const [newCategoria, setNewCategoria] = useState<Categoria>(new Categoria());
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
         handleClose();
         setTxtValidacion("");
+        setNewCategoria(new Categoria());
     };
-
-    // const mapCategorias = (data: Categoria[], selectedId: number | null | undefined) => {
-    //     const flatCategorias: Categoria[] = [];
-
-    //     const processCategoria = (categoria: Categoria, parent: Categoria | null) => {
-    //         const newCategoria = { ...categoria, categoriaPadre: parent };
-
-    //         if (newCategoria.id !== selectedId && newCategoria.categoriaPadre?.id !== selectedId) {
-    //             flatCategorias.push(newCategoria);
-
-    //             if (categoria.subCategorias && categoria.subCategorias.length > 0) {
-    //                 categoria.subCategorias.forEach(subCategoria => processCategoria(subCategoria, newCategoria));
-    //             }
-    //         }
-
-    //     };
-    //     data.forEach(categoria => processCategoria(categoria, null));
-
-    //     return flatCategorias;
-    // };
 
     useEffect(() => {
         const fetchAndProcessCategories = async () => {
             try {
-                const data = await getCategorias();
-                // const processedCategorias = mapCategorias(data, selectedId);
-                const filter = data.filter(c => c.id !== selectedId && c.categoriaPadre?.id !== selectedId);
-                setCategorias(filter);
-
-                if (selectedId) {
-                    const selectedCategory = await getCategoriaPorID(selectedId);
-                    setCategoriaSeleccionada(selectedCategory);
-                } else {
-                    setCategoriaSeleccionada(new Categoria());
+                const data = await getArbolCategorias();
+                setCategorias(data);
+                if (categoriaSeleccionada && categoriaSeleccionada.id) {
+                    const categoriaPadre = await getCategoriaPadreDesdeHijo(categoriaSeleccionada.id)
+                    categoriaPadre && categoriaPadre.id ? setNewCategoria({ ...categoriaSeleccionada, categoriaPadre })
+                        : setNewCategoria(categoriaSeleccionada);
                 }
             } catch (e) {
                 console.error(e);
@@ -61,31 +38,61 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         };
 
         fetchAndProcessCategories()
-    }, [selectedId])
+    }, [categoriaSeleccionada]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTxtValidacion("");
-
-        setCategoriaSeleccionada({ ...categoriaSeleccionada, [e.target.name]: e.target.value });
+        setNewCategoria({ ...newCategoria, [e.target.name]: e.target.value });
     };
 
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleSelectChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+
         const selectedCategoriaId = Number(e.target.value);
-        const selectedCategoria = categorias.find(c => c.id === selectedCategoriaId);
-        setCategoriaSeleccionada({ ...categoriaSeleccionada, categoriaPadre: selectedCategoria || null });
+        const selectedCategoria = await getCategoriaPorID(selectedCategoriaId)//categorias.find(c => c.id === selectedCategoriaId);
+        console.log(selectedCategoria)
+        setNewCategoria({ ...newCategoria, categoriaPadre: selectedCategoria || null });
     };
 
-    // Manejador de envío del formulario
+    const generateCodigo = (parentCodigo: string | null, siblings: Categoria[]): string => {
+        if (!parentCodigo) {
+            // No parent means it's a root category
+            const lastRootCodigo = categorias
+                .filter(c => !c.categoriaPadre)
+                .map(c => parseInt(c.codigo))
+                .sort((a, b) => b - a)[0] || 0;
+            return `${lastRootCodigo + 1}`;
+        } else {
+            // It's a subcategory
+            const lastSiblingCodigo = siblings
+                .map(c => parseInt(c.codigo.split('.').pop()!))
+                .sort((a, b) => b - a)[0] || 0;
+            return `${parentCodigo}.${lastSiblingCodigo + 1}`;
+        }
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        if (categoriaSeleccionada?.denominacion === undefined || categoriaSeleccionada.denominacion === "") {
+        if (newCategoria.denominacion === undefined || newCategoria.denominacion === "") {
             setTxtValidacion("Debe ingresar una denominacion");
             return;
         }
-        console.log(JSON.stringify(categoriaSeleccionada));
-        await saveCategoria(categoriaSeleccionada);
+        const parentCodigo = newCategoria.categoriaPadre?.codigo || null;
+        const siblings = categorias.filter(c => c.categoriaPadre?.id === newCategoria.categoriaPadre?.id);
+        newCategoria.codigo = generateCodigo(parentCodigo, siblings).concat(".");
+        await saveCategoria(newCategoria);
         window.location.reload();
+    };
+
+    const renderCategorias = (categorias: Categoria[], prefix: string = ''): JSX.Element[] => {
+        return categorias.map((categoria: Categoria, index: number) => {
+            const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
+            return (
+                <React.Fragment key={categoria.id}>
+                    <option value={categoria.id}>{currentPrefix} {categoria.denominacion}</option>
+                    {renderCategorias(categoria.subCategorias, currentPrefix)}
+                </React.Fragment>
+            );
+        });
     };
 
     return (
@@ -97,17 +104,19 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
+                        <Form.Label>Codigo</Form.Label>
+                        <Form.Control type="text" name="codigo" value={newCategoria.codigo || ''} onChange={handleInputChange} disabled />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
-                        <Form.Control type="text" name="denominacion" value={categoriaSeleccionada?.denominacion || ''} onChange={handleInputChange} />
+                        <Form.Control type="text" name="denominacion" value={newCategoria.denominacion || ''} onChange={handleInputChange} />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Categoria Padre</Form.Label>
-                        <Form.Select name="categoriaPadre" onChange={handleSelectChange} value={categoriaSeleccionada?.categoriaPadre?.id || 0}>
+                        <Form.Select name="categoriaPadre" onChange={handleSelectChange} value={newCategoria.categoriaPadre?.id || 0}>
                             <option value={0}>Seleccione una categoria padre</option>
-                            {categorias.map((c, index) => (
-                                <option key={index} value={c.id}>{c.denominacion}</option>
-                            ))}
+                            {renderCategorias(categorias)}
                         </Form.Select>
                     </Form.Group>
 

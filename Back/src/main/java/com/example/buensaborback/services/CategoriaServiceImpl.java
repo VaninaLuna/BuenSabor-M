@@ -19,4 +19,15 @@ public class CategoriaServiceImpl extends BaseServiceImpl<Categoria,Long> implem
         super(categoriaRepository);
         this.categoriaRepository = categoriaRepository;
     }
+
+    @Override
+    public List<Categoria> getCategoriasTree() {
+        List<Categoria> rootCategorias = categoriaRepository.findByCategoriaPadreIsNull();
+        return rootCategorias;
+    }
+
+    @Override
+    public Categoria getCategoriaPadre(Long id) {
+        return categoriaRepository.findCategoriaPadreById(id);
+    }
 }
