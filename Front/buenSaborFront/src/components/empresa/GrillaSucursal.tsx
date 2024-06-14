@@ -56,7 +56,7 @@ export function GrillaSucursal() {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke" }}>Sucursales</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>Sucursales</h1>
                 <ModalSucursal
                     handleClose={handleClose}
                     showModal={showModal}
