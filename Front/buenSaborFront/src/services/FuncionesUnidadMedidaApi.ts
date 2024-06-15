@@ -73,7 +73,7 @@ export async function deleteUnidadMedidaPorID(id: number) {
 }
 
 //Delete logico
-export async function updateEstadoEliminado(id: number) {
+export async function updateEstadoEliminadoUM(id: number) {
     const endpoint = `http://localhost:8080/unidadMedida/cambiar_estado_eliminado/${id}`;
 
     try {
@@ -95,7 +95,7 @@ export async function updateEstadoEliminado(id: number) {
 }
 
 //Get eliminados o no eliminados
-export async function getByEstaEliminado(eliminado: boolean) {
+export async function getUMByEstaEliminado(eliminado: boolean) {
     const endpoint = `http://localhost:8080/unidadMedida/esta_eliminado/${eliminado}`;
 
     try {

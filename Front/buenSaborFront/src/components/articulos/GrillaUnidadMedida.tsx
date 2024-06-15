@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import UnidadMedida from '../../models/UnidadMedida';
-import { getByEstaEliminado, updateEstadoEliminado } from '../../services/FuncionesUnidadMedidaApi';
+import { getUMByEstaEliminado, updateEstadoEliminadoUM } from '../../services/FuncionesUnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
@@ -20,7 +20,7 @@ export function GrillaUnidadMedida() {
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoUMedidas = async () => {
-        const datos: UnidadMedida[] = await getByEstaEliminado(eliminados);
+        const datos: UnidadMedida[] = await getUMByEstaEliminado(eliminados);
         setUMedidas(datos);
     };
 
@@ -35,7 +35,7 @@ export function GrillaUnidadMedida() {
     };
 
     const updateEstadoDelete = async (idUMedida: number) => {
-        await updateEstadoEliminado(idUMedida);
+        await updateEstadoEliminadoUM(idUMedida);
         getListadoUMedidas();
     }
 

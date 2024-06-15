@@ -13,7 +13,7 @@ public class UnidadMedidaController extends BaseControllerImpl<UnidadMedida, Uni
 
 
     @GetMapping("/esta_eliminado/{eliminado}")
-    public ResponseEntity<?> getByEsParaElaborar(@PathVariable boolean eliminado) {
+    public ResponseEntity<?> gerByEstaEliminado(@PathVariable boolean eliminado) {
         try {
             return ResponseEntity.ok(servicio.findByEliminado(eliminado));
         } catch (Exception e) {
@@ -22,13 +22,13 @@ public class UnidadMedidaController extends BaseControllerImpl<UnidadMedida, Uni
     }
 
     @PutMapping("/cambiar_estado_eliminado/{id}")
-    public ResponseEntity<?> cambiarEstado(@PathVariable Long id) {
+    public ResponseEntity<?> cambiarEstadoEliminado(@PathVariable Long id) {
         try {
-            var unidadMedida = servicio.findById(id);
+            var object = servicio.findById(id);
 
-            unidadMedida.setEliminado(!unidadMedida.isEliminado());
+            object.setEliminado(!object.isEliminado());
 
-            return ResponseEntity.ok(servicio.update(unidadMedida.getId(), unidadMedida));
+            return ResponseEntity.ok(servicio.update(object.getId(), object));
         } catch (Exception e) {
             System.err.print(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
