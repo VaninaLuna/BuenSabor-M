@@ -3,7 +3,7 @@ import ArticuloInsumo from "../models/ArticuloInsumo";
 
 //GET
 export async function getArticulosInsumos() {
-    const ENDPOINT = 'http://localhost:8080/articuloInsumo/all';
+    const ENDPOINT = 'http://localhost:8080/articuloInsumo/esta_eliminado/false';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -54,7 +54,7 @@ export async function getArticuloInsumoPorID(id: number) {
 
 //POST - PUT
 export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
-    const dataInsumo = {...articuloInsumo, type: "articuloInsumo"}
+    const dataInsumo = { ...articuloInsumo, type: "articuloInsumo" }
     let endpoint = 'http://localhost:8080/articuloInsumo';
     let method: string = "POST";
 
@@ -89,5 +89,45 @@ export async function deleteArticuloInsumoPorID(id: number) {
         return isDeleted as boolean;
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+
+//Delete logico
+export async function updateEstadoEliminadoInsumo(id: number) {
+    const endpoint = `http://localhost:8080/articuloInsumo/cambiar_estado_eliminado/${id}`;
+
+    try {
+        const response = await fetch(endpoint, {
+            "method": "PUT",
+            "headers": {
+                "Content-Type": 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (e) {
+        throw new Error('Error al cambiar el estado eliminado')
+    }
+}
+
+//Get eliminados o no eliminados
+export async function getInsumoByEstaEliminado(eliminado: boolean) {
+    const endpoint = `http://localhost:8080/articuloInsumo/esta_eliminado/${eliminado}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as ArticuloInsumo[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch')
     }
 }

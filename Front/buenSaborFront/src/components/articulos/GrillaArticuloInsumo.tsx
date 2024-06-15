@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
-import { deleteArticuloInsumoPorID, getArticulosInsumos } from '../../services/FuncionesArticuloInsumoApi';
+import { getInsumoByEstaEliminado, updateEstadoEliminadoInsumo } from '../../services/FuncionesArticuloInsumoApi';
 import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 
@@ -15,12 +15,15 @@ export function GrillaArticuloInsumo() {
     const [articulosInsumos, setArticulosInsumos] = useState<ArticuloInsumo[]>([]);
     const [filtro, setFiltro] = useState('');
 
+    //estado para alternar entre obtener datos con eliminacion logica o no
+    const [eliminados, setEliminados] = useState<boolean>(false);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoArticulosInsumos = async () => {
-        const datos: ArticuloInsumo[] = await getArticulosInsumos();
+        const datos: ArticuloInsumo[] = await getInsumoByEstaEliminado(eliminados);
         setArticulosInsumos(datos);
     };
 
@@ -41,14 +44,15 @@ export function GrillaArticuloInsumo() {
         setSelectedId(null);
     };
 
-    const deleteArticuloInsumo = async (idArticuloInsumo: number) => {
-        await deleteArticuloInsumoPorID(idArticuloInsumo);
-        window.location.reload();
-    };
+    const updateEstadoDelete = async (id: number) => {
+        await updateEstadoEliminadoInsumo(id);
+        getListadoArticulosInsumos();
+    }
 
     useEffect(() => {
         getListadoArticulosInsumos();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [eliminados]);
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFiltro(event.target.value);
@@ -59,10 +63,11 @@ export function GrillaArticuloInsumo() {
         articulo.denominacion.toLowerCase().includes(filtro.toLowerCase())
     );
 
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>Articulos Insumos</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>{eliminados ? "Articulos Insumo Eliminados" : "Articulos Insumo"}</h1>
                 <ModalArticuloInsumo
                     handleClose={handleClose}
                     showModal={showModal}
@@ -87,58 +92,70 @@ export function GrillaArticuloInsumo() {
 
                 </div>
 
-                {
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
-                                <th>Imagen</th>
-                                <th style={{ minWidth: "150px" }}>Denominacion</th>
-                                <th>Unidad de Medida</th>
-                                <th>Categoria</th>
-                                <th>Precio de Compra</th>
-                                <th>Precio Venta</th>
-                                <th>Stock Actual</th>
-                                <th>Stock Maximo</th>
-                                <th>Para Elaborar</th>
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            {/* <th style={{ maxWidth: "80px" }}>ID</th> */}
+                            <th>Imagen</th>
+                            <th style={{ minWidth: "150px" }}>Denominacion</th>
+                            <th>Unidad de Medida</th>
+                            <th>Categoria</th>
+                            <th>Precio de Compra</th>
+                            <th>Precio Venta</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Maximo</th>
+                            <th>Para Elaborar</th>
+                            {
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                <th style={{ minWidth: "220px" }}>Opciones</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
+                            <tr key={index}>
+                                {/* <td>{articuloInsumo.id}</td> */}
+                                <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
+                                    <Image src={articuloInsumo.imagenes[0].url}
+                                        alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
+                                    : 'No image'
+                                }</td>
+                                <td>{articuloInsumo.denominacion}</td>
+                                <td>{articuloInsumo.unidadMedida.denominacion}</td>
+                                <td>{articuloInsumo.categoria.codigo} {articuloInsumo.categoria.denominacion}</td>
+                                <td>{articuloInsumo.precioCompra}</td>
+                                <td>{articuloInsumo.precioVenta}</td>
+                                <td>{articuloInsumo.stockActual}</td>
+                                <td>{articuloInsumo.stockMaximo}</td>
+                                <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
+
                                 {
                                     (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                                    <th style={{ minWidth: "220px" }}>Opciones</th>
+                                    <td>
+                                        <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
+                                        {
+                                            eliminados
+                                                ?
+                                                <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                                    onClick={() => updateEstadoDelete(articuloInsumo.id)}>Restaurar</Button>
+                                                :
+                                                <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+                                                    onClick={() => updateEstadoDelete(articuloInsumo.id)}>Eliminar</Button>
+                                        }
+                                    </td>
+
                                 }
+
                             </tr>
-                        </thead>
-                        <tbody>
-                            {filteredArticulosInsumos.map((articuloInsumo: ArticuloInsumo, index) =>
-                                <tr key={index}>
-                                    {/* <td>{articuloInsumo.id}</td> */}
-                                    <td>{articuloInsumo.imagenes && articuloInsumo.imagenes[0] ?
-                                        <Image src={articuloInsumo.imagenes[0].url}
-                                            alt={articuloInsumo.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
-                                        : 'No image'
-                                    }</td>
-                                    <td>{articuloInsumo.denominacion}</td>
-                                    <td>{articuloInsumo.unidadMedida.denominacion}</td>
-                                    <td>{articuloInsumo.categoria.codigo} {articuloInsumo.categoria.denominacion}</td>
-                                    <td>{articuloInsumo.precioCompra}</td>
-                                    <td>{articuloInsumo.precioVenta}</td>
-                                    <td>{articuloInsumo.stockActual}</td>
-                                    <td>{articuloInsumo.stockMaximo}</td>
-                                    <td>{articuloInsumo.esParaElaborar ? 'Si' : 'No'}</td>
+                        )}
+                    </tbody>
+                </Table>
 
-                                    {
-                                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                                        <td>
-                                            <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articuloInsumo.id); handleOpenEdit(); }}>Modificar</Button>
-                                            <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteArticuloInsumo(articuloInsumo.id)}>Eliminar</Button>
-                                        </td>
-
-                                    }
-
-                                </tr>
-                            )}
-                        </tbody>
-                    </Table>
-                }
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
+                        {eliminados ? "Ver Actuales" : "Ver Eliminados"}
+                    </Button>
+                </div>
             </div>
         </>
     );
