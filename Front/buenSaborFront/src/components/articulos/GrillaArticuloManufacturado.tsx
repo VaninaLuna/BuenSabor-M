@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
-import { deleteArticuloManufacturadoPorID, getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getManufacturadoByEstaEliminado, updateEstadoEliminadoManufacturado } from "../../services/FuncionesArticuloManufacturadoApi";
 import { Button, Table, Form, Modal, Image, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 import { UsuarioCliente } from "../../models/Usuario";
@@ -18,12 +18,15 @@ export function GrillaArticuloManufacturado() {
     const [showPreparationModal, setShowPreparationModal] = useState(false);
     const [preparationText, setPreparationText] = useState("");
 
+    //estado para alternar entre obtener datos con eliminacion logica o no
+    const [eliminados, setEliminados] = useState<boolean>(false);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListadoArticulosManufacturados = async () => {
-        const datos: ArticuloManufacturado[] = await getArticulosManufacturados();
+        const datos: ArticuloManufacturado[] = await getManufacturadoByEstaEliminado(eliminados);
         setArticulosmanufacturados(datos);
         setFilteredArticulos(datos);
     };
@@ -45,9 +48,9 @@ export function GrillaArticuloManufacturado() {
         setSelectedArticulo(null);
     };
 
-    const deleteArticuloManufacturado = async (idArticuloManufacturado: number) => {
-        await deleteArticuloManufacturadoPorID(idArticuloManufacturado);
-        window.location.reload();
+    const updateEstadoDelete = async (id: number) => {
+        await updateEstadoEliminadoManufacturado(id);
+        getListadoArticulosManufacturados();
     }
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,12 +85,13 @@ export function GrillaArticuloManufacturado() {
 
     useEffect(() => {
         getListadoArticulosManufacturados();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [eliminados]);
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>Articulos Manufacturados</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>{eliminados ? "Articulos Manufacturados Eliminados" : "Articulos Manufacturados"}</h1>
 
                 <ModalArticuloManufacturado
                     handleClose={handleClose}
@@ -112,66 +116,80 @@ export function GrillaArticuloManufacturado() {
                     }
                 </div>
 
-                {
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>Imagen</th>
-                                <th style={{ minWidth: "150px" }}>Denominacion</th>
-                                <th>Unidad de Medida</th>
-                                <th>Categoria</th>
-                                <th style={{ minWidth: "150px" }}>Descripcion</th>
-                                <th>Precio Venta</th>
-                                <th>Tiempo Estimado Minutos</th>
-                                <th style={{ minWidth: "150px" }}>Preparacion</th>
-                                <th style={{ minWidth: "300px" }}>Opciones</th>
+
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th style={{ minWidth: "150px" }}>Denominacion</th>
+                            <th>Unidad de Medida</th>
+                            <th>Categoria</th>
+                            <th style={{ minWidth: "150px" }}>Descripcion</th>
+                            <th>Precio Venta</th>
+                            <th>Tiempo Estimado Minutos</th>
+                            <th style={{ minWidth: "150px" }}>Preparacion</th>
+                            <th style={{ minWidth: "300px" }}>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
+                            <tr key={index}>
+                                <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
+                                    <Image src={articulomanufacturado.imagenes[0].url}
+                                        alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
+                                    : 'No image'
+                                }</td>
+                                <td>{articulomanufacturado.denominacion}</td>
+                                <td>{articulomanufacturado.unidadMedida.denominacion}</td>
+                                <td>{articulomanufacturado.categoria.codigo} {articulomanufacturado.categoria.denominacion}</td>
+                                <td>{articulomanufacturado.descripcion}</td>
+                                <td>{articulomanufacturado.precioVenta}</td>
+                                <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
+                                <td style={{ minWidth: "400px" }}>
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip>{articulomanufacturado.preparacion}</Tooltip>}
+                                    >
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span>
+                                                {articulomanufacturado.preparacion.length > 40 ?
+                                                    articulomanufacturado.preparacion.substring(0, 40) + "..." :
+                                                    articulomanufacturado.preparacion
+                                                }
+                                            </span>
+                                            <Button variant="secondary" className="ml-auto" onClick={() => handleShowPreparation(articulomanufacturado.preparacion)}>Más</Button>
+                                        </div>
+                                    </OverlayTrigger>
+                                </td>
+                                <td>
+                                    {
+                                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                        <>
+                                            <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
+                                            {
+                                                eliminados
+                                                    ?
+                                                    <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                                        onClick={() => updateEstadoDelete(articulomanufacturado.id)}>Restaurar</Button>
+                                                    :
+                                                    <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+                                                        onClick={() => updateEstadoDelete(articulomanufacturado.id)}>Eliminar</Button>
+                                            }
+                                        </>
+                                    }
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {filteredArticulos.map((articulomanufacturado: ArticuloManufacturado, index) =>
-                                <tr key={index}>
-                                    <td>{articulomanufacturado.imagenes && articulomanufacturado.imagenes[0] ?
-                                        <Image src={articulomanufacturado.imagenes[0].url}
-                                            alt={articulomanufacturado.denominacion} style={{ height: "50px", width: "50px", objectFit: 'cover' }} rounded />
-                                        : 'No image'
-                                    }</td>
-                                    <td>{articulomanufacturado.denominacion}</td>
-                                    <td>{articulomanufacturado.unidadMedida.denominacion}</td>
-                                    <td>{articulomanufacturado.categoria.codigo} {articulomanufacturado.categoria.denominacion}</td>
-                                    <td>{articulomanufacturado.descripcion}</td>
-                                    <td>{articulomanufacturado.precioVenta}</td>
-                                    <td>{articulomanufacturado.tiempoEstimadoMinutos}</td>
-                                    <td style={{ minWidth: "400px" }}>
-                                        <OverlayTrigger
-                                            placement="top"
-                                            overlay={<Tooltip>{articulomanufacturado.preparacion}</Tooltip>}
-                                        >
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <span>
-                                                    {articulomanufacturado.preparacion.length > 40 ?
-                                                        articulomanufacturado.preparacion.substring(0, 40) + "..." :
-                                                        articulomanufacturado.preparacion
-                                                    }
-                                                </span>
-                                                <Button variant="secondary" className="ml-auto" onClick={() => handleShowPreparation(articulomanufacturado.preparacion)}>Más</Button>
-                                            </div>
-                                        </OverlayTrigger>
-                                    </td>
-                                    <td>
-                                        {
-                                            (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                                            <>
-                                                <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
-                                                <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deleteArticuloManufacturado(articulomanufacturado.id)}>Eliminar</Button>
-                                            </>
-                                        }
-                                        <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </Table>
-                }
+                        )}
+                    </tbody>
+                </Table>
+
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
+                        {eliminados ? "Ver Actuales" : "Ver Eliminados"}
+                    </Button>
+                </div>
+
 
                 <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
                     <Modal.Header closeButton>

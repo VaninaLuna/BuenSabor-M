@@ -22,6 +22,7 @@ public class ArticuloManufacturado extends Articulo{
     private String descripcion;
     private Integer tiempoEstimadoMinutos;
     private String preparacion;
+    private boolean eliminado;
 
     @OneToMany(mappedBy = "articuloManufacturado", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name= "articulo_manufacturado_id")

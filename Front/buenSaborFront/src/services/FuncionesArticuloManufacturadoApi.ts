@@ -2,7 +2,7 @@ import ArticuloManufacturado from "../models/ArticuloManufacturado";
 
 //GET
 export async function getArticulosManufacturados() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloManufacturado/all';
+    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/articuloManufacturado/esta_eliminado/false';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -41,7 +41,7 @@ export async function getArticuloManufacturadoPorID(id: number) {
 
 //POST - PUT
 export async function saveArticuloManufacturado(articuloManufacturado?: ArticuloManufacturado) {
-    const dataManufacturado = {...articuloManufacturado, type: "articuloManufacturado"}
+    const dataManufacturado = { ...articuloManufacturado, type: "articuloManufacturado" }
     let endpoint = 'http://localhost:8080/articuloManufacturado';
     let method: string = "POST";
 
@@ -76,5 +76,45 @@ export async function deleteArticuloManufacturadoPorID(id: number) {
         return isDeleted as boolean;
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloManufacturado')
+    }
+}
+
+//Delete logico
+export async function updateEstadoEliminadoManufacturado(id: number) {
+    const endpoint = `http://localhost:8080/articuloManufacturado/cambiar_estado_eliminado/${id}`;
+
+    try {
+        const response = await fetch(endpoint, {
+            "method": "PUT",
+            "headers": {
+                "Content-Type": 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (e) {
+        throw new Error('Error al cambiar el estado eliminado')
+    }
+}
+
+//Get eliminados o no eliminados
+export async function getManufacturadoByEstaEliminado(eliminado: boolean) {
+    const endpoint = `http://localhost:8080/articuloManufacturado/esta_eliminado/${eliminado}`;
+
+    try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as ArticuloManufacturado[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch')
     }
 }
