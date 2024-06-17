@@ -86,21 +86,23 @@ export async function saveCategoria(categoria?: Categoria) {
     });
 }
 
-//DELETE
-export async function deleteCategoriaPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/categoria/${id}`
+//Delete logico
+export async function updateEstadoEliminadoC(id: number) {
+    const endpoint = `http://localhost:8080/categoria/cambiar_estado_eliminado/${id}`
 
     try {
-        const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
-            method: 'DELETE',
+        const response = await fetch(endpoint, {
+            "method": "PUT",
+            "headers": {
+                "Content-Type": 'application/json'
+            },
         });
 
         if (!response.ok) {
             throw new Error(`Error al eliminar la categoria: ${response.status} ${response.statusText}`);
         }
 
-        const isDeleted = await response.json();
-        return isDeleted as boolean;
+        return await response.json();
     } catch (e) {
         throw new Error('Error al hacer fetch de categoria')
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Categoria from '../../models/Categoria';
-import { deleteCategoriaPorID, getArbolCategorias } from '../../services/FuncionesCategoriaApi';
+import { updateEstadoEliminadoC, getArbolCategorias } from '../../services/FuncionesCategoriaApi';
 import { ModalCategoria } from './ModalCategoria';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
@@ -12,6 +12,7 @@ export function GrillaCategoria() {
     const [editing, setEditing] = useState(false);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria | null>(null);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [eliminados, setEliminados] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
@@ -32,20 +33,51 @@ export function GrillaCategoria() {
         setCategoriaSeleccionada(null);
     };
 
-    const deleteCategoria = async (idCategoria: number) => {
-        await deleteCategoriaPorID(idCategoria);
-        //window.location.reload();
+    const cambiarEstadoCategoria = async (idCategoria: number) => {
+        await updateEstadoEliminadoC(idCategoria);
+        getListadoCategorias();
     }
 
     useEffect(() => {
         getListadoCategorias();
     }, []);
 
-    const renderCategorias = (categorias: Categoria[], /*prefix: string = ''*/): JSX.Element[] => {
-        return categorias.map((categoria: Categoria /*, index: number */) => {
-            // const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
-            // categoria.codigo = currentPrefix
-            return (
+    // const rendersCategorias = (categorias: Categoria[]): JSX.Element[] => {
+    //     return categorias
+    //         .filter(categoria => categoria.eliminado == eliminados) // Filtrar categorías no eliminadas
+    //         .map((categoria: Categoria) => (
+    //             <React.Fragment key={categoria.id}>
+    //                 <tr>
+    //                     <td>{categoria.codigo} {categoria.denominacion}</td>
+    //                     {usuarioLogueado?.rol?.rolName === RolName.ADMIN && (
+    //                         <td>
+    //                             <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
+    //                                 onClick={() => { setCategoriaSeleccionada(categoria); handleOpen(); }}>Modificar</Button>
+    //                             {
+    //                                 eliminados
+    //                                     ?
+    //                                     <Button variant="outline-info" style={{ maxHeight: "40px" }}
+    //                                         onClick={() => cambiarEstadoCategoria(categoria.id)}>Restaurar</Button>
+    //                                     :
+    //                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+    //                                         onClick={() => cambiarEstadoCategoria(categoria.id)}>Eliminar</Button>
+    //                             }
+    //                         </td>
+    //                     )}
+    //                 </tr>
+    //                 {rendersCategorias(categoria.subCategorias)}
+    //             </React.Fragment>
+    //         ));
+    // };
+
+    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
+        return categorias.flatMap((categoria: Categoria) => {
+            const subCategoriasEliminadas = categoria.subCategorias.filter(subCat => subCat.eliminado);
+            const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
+
+            const mostrarCategoria = (!eliminados && !categoria.eliminado) || (eliminados && categoria.eliminado);
+
+            return mostrarCategoria ? (
                 <React.Fragment key={categoria.id}>
                     <tr>
                         <td>{categoria.codigo} {categoria.denominacion}</td>
@@ -53,16 +85,24 @@ export function GrillaCategoria() {
                             <td>
                                 <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
                                     onClick={() => { setCategoriaSeleccionada(categoria); handleOpen(); }}>Modificar</Button>
-                                <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-                                    onClick={() => deleteCategoria(categoria.id)}>Eliminar</Button>
+                                {eliminados
+                                    ? <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                        onClick={() => cambiarEstadoCategoria(categoria.id)}>Restaurar</Button>
+                                    : <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+                                        onClick={() => cambiarEstadoCategoria(categoria.id)}>Eliminar</Button>
+                                }
                             </td>
                         )}
                     </tr>
-                    {renderCategorias(categoria.subCategorias, /*currentPrefix*/)}
+                    {renderCategorias(subCategoriasNoEliminadas)}
+                    {eliminados && renderCategorias(subCategoriasEliminadas)}
                 </React.Fragment>
-            );
+            ) : (eliminados && subCategoriasEliminadas.length > 0 ? (
+                renderCategorias(subCategoriasEliminadas)
+            ) : []);
         });
     };
+
 
     return (
         <>
@@ -95,23 +135,14 @@ export function GrillaCategoria() {
                     </thead>
                     <tbody>
                         {renderCategorias(categorias)}
-                        {/* {categorias.map((categoria: Categoria, index) =>
-                            <tr key={index}>
-                                <td>{categoria.denominacion}</td>
-                                <td>{categoria.categoriaPadre?.denominacion}</td>
-                                {
-                                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                                    <td>
-                                        <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
-                                            onClick={() => { setSelectedId(categoria.id); handleOpen(); }}>Modificar</Button>
-                                        <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-                                            onClick={() => deleteCategoria(categoria.id)}>Eliminar</Button>
-                                    </td>
-                                }
-                            </tr>
-                        )} */}
                     </tbody>
                 </Table>
+
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados); }}>
+                        {eliminados ? "Ver Actuales" : "Ver Eliminados"}
+                    </Button>
+                </div>
             </div>
         </>
     );

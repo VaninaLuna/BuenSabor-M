@@ -20,6 +20,7 @@ import java.util.Set;
 public class Categoria extends Base {
     private String codigo;
     private String denominacion;
+    private boolean eliminado;
 
     @ManyToOne
     @JoinColumn(name = "categoriaPadreId")

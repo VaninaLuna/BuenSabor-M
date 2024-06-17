@@ -7,4 +7,6 @@ import java.util.List;
 public interface CategoriaService extends BaseService<Categoria,Long> {
     List<Categoria> getCategoriasTree();
     Categoria getCategoriaPadre(Long id);
+    List<Categoria> findByEliminado(boolean eliminado) throws Exception;
+    int cambiarEstadoEliminado(Long id, boolean estado);
 }

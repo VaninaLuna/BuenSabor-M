@@ -26,4 +26,18 @@ public class CategoriaController extends BaseControllerImpl<Categoria, Categoria
         }
         return ResponseEntity.ok(categoriaPadre);
     }
+
+    @PutMapping("/cambiar_estado_eliminado/{id}")
+    public ResponseEntity<?> cambiarEstadoEliminado(@PathVariable Long id) {
+        try{
+            var categoria = servicio.findById(id);
+            if (categoria != null) {
+                return ResponseEntity.ok(servicio.cambiarEstadoEliminado(id, !categoria.isEliminado()));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Categoria no encontrada\"}");
+        } catch (Exception e) {
+            System.err.print(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 }
