@@ -42,34 +42,6 @@ export function GrillaCategoria() {
         getListadoCategorias();
     }, []);
 
-    // const rendersCategorias = (categorias: Categoria[]): JSX.Element[] => {
-    //     return categorias
-    //         .filter(categoria => categoria.eliminado == eliminados) // Filtrar categorías no eliminadas
-    //         .map((categoria: Categoria) => (
-    //             <React.Fragment key={categoria.id}>
-    //                 <tr>
-    //                     <td>{categoria.codigo} {categoria.denominacion}</td>
-    //                     {usuarioLogueado?.rol?.rolName === RolName.ADMIN && (
-    //                         <td>
-    //                             <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
-    //                                 onClick={() => { setCategoriaSeleccionada(categoria); handleOpen(); }}>Modificar</Button>
-    //                             {
-    //                                 eliminados
-    //                                     ?
-    //                                     <Button variant="outline-info" style={{ maxHeight: "40px" }}
-    //                                         onClick={() => cambiarEstadoCategoria(categoria.id)}>Restaurar</Button>
-    //                                     :
-    //                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-    //                                         onClick={() => cambiarEstadoCategoria(categoria.id)}>Eliminar</Button>
-    //                             }
-    //                         </td>
-    //                     )}
-    //                 </tr>
-    //                 {rendersCategorias(categoria.subCategorias)}
-    //             </React.Fragment>
-    //         ));
-    // };
-
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
         return categorias.flatMap((categoria: Categoria) => {
             const subCategoriasEliminadas = categoria.subCategorias.filter(subCat => subCat.eliminado);
