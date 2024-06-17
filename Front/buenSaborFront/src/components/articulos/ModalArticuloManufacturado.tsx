@@ -182,7 +182,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
     };
 
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-        return categorias.flatMap((categoria: Categoria) => {
+        return categorias.filter(c => !c.eliminado).flatMap((categoria: Categoria) => {
             const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
             return <React.Fragment key={categoria.id}>
                 <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
@@ -190,6 +190,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             </React.Fragment>;
         });
     };
+
 
     return (
         <Modal show={showModal} onHide={handleCloseAndClear} size="xl">

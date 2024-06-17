@@ -170,7 +170,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     };
 
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-        return categorias.flatMap((categoria: Categoria) => {
+        return categorias.filter(c => !c.eliminado).flatMap((categoria: Categoria) => {
             const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
             return <React.Fragment key={categoria.id}>
                 <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
