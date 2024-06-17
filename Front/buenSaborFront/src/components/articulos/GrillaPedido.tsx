@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
-import { deletePedidoPorId, getPedidos, getPedidosByCliente, getPedidosByCocinero, updateEstadoPedido } from "../../services/PedidoApi";
+import { getPedidoByEstaEliminado, getPedidosByCliente, getPedidosByCocinero, updateEstadoEliminadoPedido, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 
@@ -14,6 +14,9 @@ export function GrillaPedido() {
     //Estados del envio
     const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado"])
 
+    //estado para alternar entre obtener datos con eliminacion logica o no
+    const [eliminados, setEliminados] = useState<boolean>(false);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
@@ -21,11 +24,14 @@ export function GrillaPedido() {
     const getListaPedidos = async () => {
         let datos: Pedido[] = []
         if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE) {
+            console.log("cliente")
             datos = await getPedidosByCliente(usuarioLogueado.cliente.id)
         } else if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.COCINERO) {
+            console.log("cocinero")
             datos = await getPedidosByCocinero()
         } else {
-            datos = await getPedidos();
+            console.log("eliminado")
+            datos = await getPedidoByEstaEliminado(eliminados);
         }
         setPedidos(datos);
     };
@@ -41,11 +47,6 @@ export function GrillaPedido() {
         setSelectedPedido(null);
     };
 
-    const deletePedido = async (idPedido: number) => {
-        await deletePedidoPorId(idPedido);
-        window.location.reload();
-    }
-
     const handleEstadoChange = async (pedido: Pedido, e: string) => {
         // Guardar el cambio
         await updateEstadoPedido(pedido.id, e);
@@ -54,16 +55,24 @@ export function GrillaPedido() {
         getListaPedidos();
     };
 
+    const updateEstadoDelete = async (id: number) => {
+
+        console.log(id)
+
+        await updateEstadoEliminadoPedido(id);
+        getListaPedidos();
+    }
+
     useEffect(() => {
         getListaPedidos();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [eliminados]);
 
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>Pedidos</h1>
+                <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>{eliminados ? "Pedidos Eliminados" : "Pedidos"}</h1>
 
 
 
@@ -100,7 +109,16 @@ export function GrillaPedido() {
                                     {
                                         (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                         <>
-                                            <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => deletePedido(pedido.id)}>Eliminar</Button>
+                                            {
+                                                eliminados
+                                                    ?
+                                                    <Button variant="outline-info" style={{ maxHeight: "40px", marginRight: '10px' }}
+                                                        onClick={() => updateEstadoDelete(pedido.id)}>Restaurar</Button>
+                                                    :
+                                                    <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }}
+
+                                                        onClick={() => updateEstadoDelete(pedido.id)}>Eliminar</Button>
+                                            }
                                         </>
                                     }
                                     <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(pedido)}>Detalle</Button>
@@ -110,6 +128,12 @@ export function GrillaPedido() {
                         )}
                     </tbody>
                 </Table>
+
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
+                        {eliminados ? "Ver Actuales" : "Ver Eliminados"}
+                    </Button>
+                </div>
 
                 {
                     <Modal show={showModalDetalles} onHide={handleCloseDetalles}>

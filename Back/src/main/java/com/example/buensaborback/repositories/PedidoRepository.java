@@ -1,5 +1,6 @@
 package com.example.buensaborback.repositories;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.Pedido;
 import com.example.buensaborback.dto.PedidoCocinaDTO;
 import com.example.buensaborback.dto.PedidosPorArticuloDTO;
@@ -16,13 +17,13 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
 
     @Query("SELECT p FROM Pedido p " +
             "INNER JOIN p.cliente c " +
-            "WHERE c.id = :id")
-    List<Pedido> buscarPedidosByCliente(@Param("id") Long id) throws Exception;
+            "WHERE c.id = :id AND p.eliminado = false")
+    List<Pedido> buscarPedidosByCliente(@Param("id") Long id);
 
     List<Pedido> findByEstado(String estado);
 
     @Query("SELECT p FROM Pedido p " +
-            "WHERE p.estado = 'Aprobado' OR p.estado = 'En Preparacion' OR p.estado = 'Listo'")
+            "WHERE (p.estado = 'Aprobado' OR p.estado = 'En Preparacion' OR p.estado = 'Listo') AND p.eliminado = false")
     List<Pedido> findByCocinero();
 
     @Query("SELECT new com.example.buensaborback.dto.PedidoCocinaDTO(" +
@@ -43,4 +44,6 @@ public interface PedidoRepository extends BaseRepository<Pedido,Long> {
     @Query("SELECT new com.example.buensaborback.dto.PedidosPorArticuloDTO(pd.articulo.denominacion, COUNT(pd)) " +
             "FROM PedidoDetalle pd GROUP BY pd.articulo.denominacion")
     List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo();
+
+    List<Pedido> findByEliminado(boolean eliminado) throws Exception;
 }

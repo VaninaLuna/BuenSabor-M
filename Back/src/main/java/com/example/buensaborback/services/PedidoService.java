@@ -1,5 +1,6 @@
 package com.example.buensaborback.services;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.Pedido;
 import com.example.buensaborback.dto.PedidoCocinaDTO;
 import com.example.buensaborback.dto.PedidosPorArticuloDTO;
@@ -14,5 +15,6 @@ public interface PedidoService extends BaseService<Pedido,Long>{
     List<PedidoCocinaDTO> findPedidosByTiempoEstimado() throws Exception;
     List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear() throws Exception;
     List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo()throws Exception;
+    List<Pedido> findByEliminado(boolean eliminado) throws Exception;
 
 }

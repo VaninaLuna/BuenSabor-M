@@ -1,5 +1,6 @@
 package com.example.buensaborback.services;
 
+import com.example.buensaborback.domain.entities.ArticuloInsumo;
 import com.example.buensaborback.domain.entities.Pedido;
 import com.example.buensaborback.dto.*;
 import com.example.buensaborback.repositories.PedidoRepository;
@@ -74,4 +75,12 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido,Long> implements P
         }
     }
 
+    @Override
+    public List<Pedido> findByEliminado(boolean eliminado) throws Exception {
+        try{
+            return pedidoRepository.findByEliminado(eliminado);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 }

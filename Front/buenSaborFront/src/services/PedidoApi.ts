@@ -30,7 +30,7 @@ export async function getPedidosByCliente(clienteId: number) {
             throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
         }
 
-        const json = await response.json();        
+        const json = await response.json();
         return json as Pedido[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
@@ -88,6 +88,41 @@ export async function getTiempoDemoraCocina() {
     }
 }
 
+export async function getPedidosPorMesAnio() {
+    const ENDPOINT = 'http://localhost:8080/pedido/porMesAnio';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as PedidosPorMesAnioDTO[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de pedidos por mes y año');
+    }
+}
+
+export async function getPedidosPorArticulo() {
+    const ENDPOINT = 'http://localhost:8080/pedido/porArticulo';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        console.log(json)
+        return json as PedidosPorArticuloDTO[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de pedidos por articulo');
+    }
+}
+
 //POST - PUT
 export async function savePedido(pedido?: PedidoCliente) {
     let endpoint = 'http://localhost:8080/pedido/guardar_pedido';
@@ -140,37 +175,44 @@ export async function deletePedidoPorId(id: number) {
     }
 }
 
-export async function getPedidosPorMesAnio() {
-    const ENDPOINT = 'http://localhost:8080/pedido/porMesAnio';
+
+//Delete logico
+export async function updateEstadoEliminadoPedido(id: number) {
+    const endpoint = `http://localhost:8080/pedido/cambiar_estado_eliminado/${id}`;
 
     try {
-        const response = await fetch(ENDPOINT);
+        const response = await fetch(endpoint, {
+            "method": "PUT",
+            "headers": {
+                "Content-Type": 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (e) {
+        throw new Error('Error al cambiar el estado eliminado')
+    }
+}
+
+//Get eliminados o no eliminados
+export async function getPedidoByEstaEliminado(eliminado: boolean) {
+    const endpoint = `http://localhost:8080/pedido/esta_eliminado/${eliminado}`;
+
+    try {
+        const response = await fetch(endpoint);
 
         if (!response.ok) {
             throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
         }
 
         const json = await response.json();
-        return json as PedidosPorMesAnioDTO[];
+        return json as Pedido[];
     } catch (e) {
-        throw new Error('Error al hacer fetch de pedidos por mes y año');
+        throw new Error('Error al hacer fetch')
     }
 }
 
-export async function getPedidosPorArticulo() {
-    const ENDPOINT = 'http://localhost:8080/pedido/porArticulo';
-
-    try {
-        const response = await fetch(ENDPOINT);
-
-        if (!response.ok) {
-            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
-        }
-
-        const json = await response.json();
-        console.log(json)
-        return json as PedidosPorArticuloDTO[];
-    } catch (e) {
-        throw new Error('Error al hacer fetch de pedidos por articulo');
-    }
-}
