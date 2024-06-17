@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getCategorias } from '../../services/FuncionesCategoriaApi';
+import { getArbolCategorias } from '../../services/FuncionesCategoriaApi';
 import UnidadMedida from '../../models/UnidadMedida';
 import { getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
 import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../../services/FuncionesArticuloManufacturadoApi';
@@ -71,7 +71,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
     };
 
     useEffect(() => {
-        getCategorias()
+        getArbolCategorias()
             .then(data => setCategoria(data))
             .catch(e => console.error(e));
 
@@ -181,6 +181,16 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setShowModalInsumos(false);
     };
 
+    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
+        return categorias.flatMap((categoria: Categoria) => {
+            const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
+            return <React.Fragment key={categoria.id}>
+                <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                {renderCategorias(subCategoriasNoEliminadas)}
+            </React.Fragment>;
+        });
+    };
+
     return (
         <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
             <ModalAgregarInsumo
@@ -220,9 +230,7 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                             <Form.Label>Categoria</Form.Label>
                             <Form.Select aria-label="Default select example" name="categoria" value={manufacturado?.categoria?.id || 0} onChange={handleInputChange}>
                                 <option value={0}>Seleccionar Categoria</option>
-                                {categorias.map((categoria: Categoria) =>
-                                    <option key={categoria.id} value={categoria.id}> {categoria.denominacion} </option>
-                                )}
+                                {renderCategorias(categorias)}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} className="mb-3">

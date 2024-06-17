@@ -169,15 +169,13 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         window.location.reload();
     };
 
-    const renderCategorias = (categorias: Categoria[], /*prefix: string = '' */): JSX.Element[] => {
-        return categorias.map((categoria: Categoria, /*index: number */) => {
-            // const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
-            return (
-                <React.Fragment key={categoria.id}>
-                    <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
-                    {renderCategorias(categoria.subCategorias, /*currentPrefix*/)}
-                </React.Fragment>
-            );
+    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
+        return categorias.flatMap((categoria: Categoria) => {
+            const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
+            return <React.Fragment key={categoria.id}>
+                <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                {renderCategorias(subCategoriasNoEliminadas)}
+            </React.Fragment>;
         });
     };
 
@@ -238,9 +236,6 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                                 <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
                                     <option value={0}>Seleccionar Categoria</option>
                                     {renderCategorias(categorias)}
-                                    {/* {categorias.map((categoria: Categoria) =>
-                                        <option key={categoria.id} value={categoria.id}> {categoria.codigo} {categoria.denominacion} </option>
-                                    )} */}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
