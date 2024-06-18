@@ -1,4 +1,4 @@
-import Pedido, { PedidoCliente } from "../models/Pedido";
+import { PedidoCliente } from "../models/Pedido";
 import PedidosPorArticuloDTO from "../models/PedidosPorArticuloDTO";
 import PedidosPorMesAnioDTO from "../models/PedidosPorMesAnioDTO";
 
@@ -14,7 +14,7 @@ export async function getPedidos() {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -31,7 +31,7 @@ export async function getPedidosByCliente(clienteId: number) {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de articuloInsumo')
     }
@@ -48,7 +48,7 @@ export async function getPedidosByEstado(estado: string) {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de los pedidos')
     }
@@ -65,7 +65,7 @@ export async function getPedidosByCocinero() {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch de los pedidos')
     }
@@ -210,7 +210,7 @@ export async function getPedidosCancelados() {
         }
 
         const json = await response.json();
-        return json as Pedido[];
+        return json as PedidoCliente[];
     } catch (e) {
         throw new Error('Error al hacer fetch')
     }

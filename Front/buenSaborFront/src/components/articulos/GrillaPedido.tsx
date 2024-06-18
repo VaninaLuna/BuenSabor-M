@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
-import Pedido from "../../models/Pedido";
-import { Button, Modal, Table } from "react-bootstrap";
-import { cancelarPedido, getPedidos, getPedidosByCliente, getPedidosByCocinero, getPedidosCancelados, updateEstadoPedido } from "../../services/PedidoApi";
+import { PedidoCliente } from "../../models/Pedido";
+import { Button, Col, Modal, Row, Table } from "react-bootstrap";
+import { cancelarPedido, getPedidos, getPedidosByCliente, getPedidosByCocinero, getPedidosByEstado, getPedidosCancelados, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 import { ConfirmModal } from "./ConfirmModal";
 
 export function GrillaPedido() {
 
-    const [pedidos, setPedidos] = useState<Pedido[]>([]);
+    const [pedidos, setPedidos] = useState<PedidoCliente[]>([]);
     //Modal detalles
     const [showModalDetalles, setShowModalDetalles] = useState(false);
-    const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
+    const [selectedPedido, setSelectedPedido] = useState<PedidoCliente | null>(null);
     //Estados del envio
     const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado", "Cancelado"])
 
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
+    const [listos, setListos] = useState<boolean>(false);
+
 
     //Modal Confirmar eliminacion
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -28,20 +30,22 @@ export function GrillaPedido() {
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
 
     const getListaPedidos = async () => {
-        let datos: Pedido[] = []
+        let datos: PedidoCliente[] = []
         if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.CLIENTE) {
             datos = await getPedidosByCliente(usuarioLogueado.cliente.id)
         } else if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.COCINERO) {
             datos = await getPedidosByCocinero()
         } else if (eliminados) {
             datos = await getPedidosCancelados();
+        } else if (listos) {
+            datos = await getPedidosByEstado("Listo");
         } else {
             datos = await getPedidos();
         }
         setPedidos(datos);
     };
 
-    const handleShowDetalles = (pedido: Pedido) => {
+    const handleShowDetalles = (pedido: PedidoCliente) => {
         setSelectedPedido(pedido)
         setShowModalDetalles(true);
 
@@ -52,7 +56,7 @@ export function GrillaPedido() {
         setSelectedPedido(null);
     };
 
-    const handleEstadoChange = async (pedido: Pedido, e: string) => {
+    const handleEstadoChange = async (pedido: PedidoCliente, e: string) => {
         // Guardar el cambio
         await updateEstadoPedido(pedido.id, e);
 
@@ -89,15 +93,18 @@ export function GrillaPedido() {
     useEffect(() => {
         getListaPedidos();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [eliminados]);
+    }, [eliminados, listos]);
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '15px 15px' }}>{eliminados ? "Pedidos Cancelados" : "Pedidos"}</h1>
 
-
-
+                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setListos(!listos), setEliminados(false) }}>
+                        {listos ? "Ver Todos" : "Ver Listos"}
+                    </Button>
+                </div>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
@@ -111,7 +118,7 @@ export function GrillaPedido() {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidos.map((pedido: Pedido) =>
+                        {pedidos.map((pedido: PedidoCliente) =>
                             <tr key={pedido.id}>
                                 <td>{String(pedido.id).padStart(5, '0')}</td>
                                 <td>{pedido.fechaPedido}</td>
@@ -119,7 +126,7 @@ export function GrillaPedido() {
                                 <td>{pedido.total}</td>
                                 <td>{pedido.totalCosto}</td>
                                 <td>
-                                    <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados}>
+                                    <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados || pedido.estado == "Cancelado"}>
                                         {estadosEnvio.map((estado, index) =>
                                             <option key={index} value={estado}>{estado}</option>
                                         )}
@@ -146,8 +153,8 @@ export function GrillaPedido() {
                     </tbody>
                 </Table>
                 <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
-                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
-                        {eliminados ? "Ver Actuales" : "Ver Cancelados"}
+                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados), setListos(false) }}>
+                        {eliminados ? "Ver Todos" : "Ver Cancelados"}
                     </Button>
                 </div>
 
@@ -168,30 +175,42 @@ export function GrillaPedido() {
 
                             {selectedPedido &&
                                 <>
-                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Fecha </span> </h5>}</p>
-                                    <p>{<span style={{ fontWeight: 'bold' }}></span>} {selectedPedido.fechaPedido}</p>
-                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Hora del pedido </span> </h5>}</p>
-                                    <p>{<span style={{ fontWeight: 'bold' }}></span>} {selectedPedido.horaEstimadaFinalizacion}</p>
-                                    <p>{<h5><span style={{ fontWeight: 'bold' }}>Detalle del pedido </span> </h5>}</p>
+                                    <Row>
+                                        <Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Informacion del Cliente</span> <br /></Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Nombre: </span> {selectedPedido.cliente.nombre}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Apellido: </span> {selectedPedido.cliente.apellido}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Email: </span> {selectedPedido.cliente.email}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {selectedPedido.cliente.telefono}</Col>
+                                        </Col>
+                                    </Row>
+                                    <br />
+                                    <Col>
+                                        <Col>{<span style={{ fontWeight: 'bold' }}>Fecha: </span>}{selectedPedido.fechaPedido}</Col>
+                                        <Col>{<span style={{ fontWeight: 'bold' }}>Hora del pedido: </span>}{selectedPedido.horaEstimadaFinalizacion}</Col>
+                                        <br />
+                                        <Col><p>{<span style={{ fontWeight: 'bold' }}>Detalle del pedido </span>}</p></Col>
+                                    </Col>
 
-                                    {selectedPedido && selectedPedido.pedidoDetalles.map((detalle) => (
-                                        <p key={detalle.id}>
+                                    <Row >
+                                        {selectedPedido && selectedPedido.pedidoDetalles.map((detalle) => (
+                                            <Col key={detalle.id}>
+                                                <Col>{detalle.articulo.denominacion}</Col>
+                                                <Col> <img style={{ maxWidth: "80px", height: "80px", objectFit: "contain" }}
+                                                    className="cart-img"
+                                                    src={`${detalle.articulo.imagenes[0].url}`}
+                                                    alt={detalle.articulo.denominacion}
+                                                /></Col>
+                                                <Col>{<span style={{ fontWeight: 'bold' }}>Cantidad: </span>}{detalle.cantidad}</Col>
+                                                <Col>{<span style={{ fontWeight: 'bold' }}>Subtotal: </span>} ${detalle.subTotal}</Col>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                    <hr />
 
 
-                                            <p>{<span style={{ fontWeight: 'bold' }}></span>}  {detalle.articulo.denominacion}</p>
 
-                                            <img style={{ maxWidth: "80px", objectFit: "contain" }}
-                                                className="cart-img"
-                                                src={`${detalle.articulo.imagenes[0].url}`}
-                                                alt={detalle.articulo.denominacion}
-                                            /> <br /> <br />
-                                            <h5 style={{ fontWeight: 'bold' }}>Cantidad:</h5> {detalle.cantidad} <br />
-                                            <h5 style={{ fontWeight: 'bold' }}>Subtotal:</h5> {detalle.subTotal}<br />
-
-                                            <hr />
-                                        </p>
-                                    ))}
-                                    <h4 style={{ fontWeight: 'bold' }}>Total:</h4> {selectedPedido.total}
+                                    <h4><span style={{ fontWeight: 'bold' }}>Total Pedido: </span>${selectedPedido.total}</h4>
                                 </>
                             }
 
