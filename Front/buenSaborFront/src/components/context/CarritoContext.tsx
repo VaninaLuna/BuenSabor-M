@@ -40,53 +40,82 @@ export function CarritoContextProvider({ children }: { children: ReactNode }) {
 
     const checkStock = async (articulo: ArticuloDTO) => {
         const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
-        if (productInCart?.articulo.type === "articuloInsumo") {
-            console.log("productInCart?.articulo.id: " + productInCart?.articulo.id);
-            const insumo: ArticuloInsumo = await getArticuloInsumoPorID(productInCart?.articulo.id);
-            if (insumo.stockActual <= 0 || (productInCart && insumo.stockActual <= productInCart.cantidad)) {
-                alert("No hay suficiente stock para este artículo.");
-                removeItemCarrito(articulo)
+        if (productInCart) {
+            if (productInCart.articulo.type === "articuloInsumo") {
+                console.log("productInCart?.articulo.id: " + productInCart?.articulo.id);
+                const insumo: ArticuloInsumo = await getArticuloInsumoPorID(productInCart?.articulo.id);
+                if (insumo.stockActual <= 0 || (productInCart && insumo.stockActual <= productInCart.cantidad)) {
+                    alert("No hay suficiente stock para este artículo.");
+                    removeItemCarrito(articulo)
+                    return false;
+                }
+            } else if (productInCart.articulo.type === "articuloManufacturado") {
+                const manufacturado = articulo;
+                if (manufacturado.articuloManufacturadoDetalles) {
+                    for (const detalle of manufacturado.articuloManufacturadoDetalles) {
+                        const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.articuloInsumo.id);
+                        if (insumo.stockActual < detalle.cantidad ||
+                            (productInCart && insumo.stockActual <= (detalle.cantidad * productInCart.cantidad))) {
+                            alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
+                            removeItemCarrito(articulo)
+                            return false;
+                        }
+                    }
+                }
             }
-        } else if (productInCart?.articulo.type === "articuloManufacturado") {
-            const manufacturado = articulo;
-            if (manufacturado.articuloManufacturadoDetalles) {
-                for (const detalle of manufacturado.articuloManufacturadoDetalles) {
-                    const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.articuloInsumo.id);
-                    if (insumo.stockActual < detalle.cantidad ||
-                        (productInCart && insumo.stockActual <= (detalle.cantidad * productInCart.cantidad))) {
-                        alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
-                        removeItemCarrito(articulo)
-                        break;
+        } else {
+            if (articulo.type === "articuloInsumo") {
+                console.log("productInCart?.articulo.id: " + articulo.id);
+                const insumo: ArticuloInsumo = await getArticuloInsumoPorID(articulo.id);
+                if (insumo.stockActual <= 0) {
+                    alert("No hay suficiente stock para este artículo.");
+                    removeItemCarrito(articulo)
+                    return false;
+                }
+            } else if (articulo.type === "articuloManufacturado") {
+                const manufacturado = articulo;
+                if (manufacturado.articuloManufacturadoDetalles) {
+                    for (const detalle of manufacturado.articuloManufacturadoDetalles) {
+                        const insumo: ArticuloInsumo = await getArticuloInsumoPorID(detalle.articuloInsumo.id);
+                        if (insumo.stockActual < detalle.cantidad) {
+                            alert("No hay suficiente stock para uno o más componentes de este artículo manufacturado..");
+                            removeItemCarrito(articulo)
+                            return false;
+                        }
                     }
                 }
             }
         }
+
+        return true;
     }
 
     const addCarrito = async (articulo: ArticuloDTO) => {
-        await checkStock(articulo)
+        const articuloStock = await checkStock(articulo)
 
-        setCart(prevCart => {
-            const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
+        if (articuloStock) {
+            setCart(prevCart => {
+                const productInCart = cart.find((detalle) => detalle.articulo.id === articulo.id);
 
-            if (productInCart) {
-                const updatedCart = prevCart.map(detalle =>
-                    detalle.articulo.id === articulo.id
-                        ? {
-                            ...detalle, cantidad: detalle.cantidad + 1,
-                            subTotal: detalle.articulo.precioVenta * (detalle.cantidad + 1)
-                        }
-                        : detalle
-                );
-                return updatedCart;
-            } else {
-                const newDetalle = new PedidoDetalle();
-                newDetalle.cantidad = 1;
-                newDetalle.articulo = articulo;
-                newDetalle.subTotal = newDetalle.articulo.precioVenta * newDetalle.cantidad;
-                return [...prevCart, newDetalle];
-            }
-        });
+                if (productInCart) {
+                    const updatedCart = prevCart.map(detalle =>
+                        detalle.articulo.id === articulo.id
+                            ? {
+                                ...detalle, cantidad: detalle.cantidad + 1,
+                                subTotal: detalle.articulo.precioVenta * (detalle.cantidad + 1)
+                            }
+                            : detalle
+                    );
+                    return updatedCart;
+                } else {
+                    const newDetalle = new PedidoDetalle();
+                    newDetalle.cantidad = 1;
+                    newDetalle.articulo = articulo;
+                    newDetalle.subTotal = newDetalle.articulo.precioVenta * newDetalle.cantidad;
+                    return [...prevCart, newDetalle];
+                }
+            });
+        }
     }
 
     const removeCarrito = (articulo: ArticuloDTO) => {
