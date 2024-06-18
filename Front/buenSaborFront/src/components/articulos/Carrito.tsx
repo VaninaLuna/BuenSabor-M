@@ -40,7 +40,7 @@ function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle
 }
 
 export function Carrito({ visible, setVisible }: { visible: boolean, setVisible: (visible: boolean) => void }) {
-    const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, totalPedido, totalCosto } = useCarrito();
+    const { cart, addCarrito, removeItemCarrito, limpiarCarritoDespuesPago, limpiarCarrito, totalPedido, totalCosto } = useCarrito();
     const [showModal, setShowModal] = useState(false);
     const [message, setMessage] = useState<string>('');
     const [pedidoGuardado, setPedidoGuardado] = useState<PedidoCliente>(new PedidoCliente());
@@ -69,13 +69,9 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     const getTiempoManufacturado = async (detalle: PedidoDetalle) => {
         let tiempo = 0;
         const m = await getArticuloManufacturadoPorID(detalle.articulo.id)
-        console.log("getTiempoManufacturado")
-        console.log(m)
         if (m) {
             tiempo = m.tiempoEstimadoMinutos * detalle.cantidad;
-            console.log(tiempo)
         }
-        console.log("------------")
         return tiempo;
     }
 
@@ -119,44 +115,47 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
         const tiempoDemoraCocina = await getTiempoDemoraCocina();
         let tiempoDemoraPedidoActual = 0;
-        console.log("tiempo cocina: " + tiempoDemoraCocina);
 
         const fechaPedido = new Date();
-        const pedido: PedidoCliente = new PedidoCliente();
 
-        const dia = fechaPedido.getDay();
-        const diaFecha = fechaPedido.getDate().toString().padStart(2, '0');
-        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
-        const año = fechaPedido.getFullYear();
-        pedido.fechaPedido = `${diaFecha}/${mes}/${año}`;
+        const validarDia = fechaPedido.getDay();
+        const validarHoras = fechaPedido.getHours();
 
-        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual + demoraDelivery);
-        const horas = fechaPedido.getHours();
-        const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
-        const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
-        pedido.horaEstimadaFinalizacion = `${horas.toString().padStart(2, '0')}:${minutos}:${segundos}`;
-
-        if ((dia == 0 || dia == 6) && (horas >= 0 && horas < 11 || (horas >= 15 && horas < 20))) {
+        if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
             setMessage("No puede realizar un pedido fuera del horario de apertura");
             setShowModal(true);
             return
-        } else if (horas >= 0 && horas < 20) {
+        } else if (validarHoras >= 0 && validarHoras < 20) {
             setMessage("No puede realizar un pedido fuera del horario de apertura");
             setShowModal(true);
             return
         }
-
-        pedido.total = totalPedido ?? 0;
-        pedido.totalCosto = totalCosto ?? 0;
-        pedido.pedidoDetalles = cart;
 
         for (const detalle of cart) {
             if (detalle.articulo.type === 'articuloManufacturado') {
                 tiempoDemoraPedidoActual += await getTiempoManufacturado(detalle)
             }
         }
-
         const clienteActualizado = JSON.parse(JSON.stringify(usuarioLogueado.cliente)) as Cliente;
+
+        const pedido: PedidoCliente = new PedidoCliente();
+
+        fechaPedido.setMinutes(fechaPedido.getMinutes() + tiempoDemoraCocina + tiempoDemoraPedidoActual + demoraDelivery);
+
+        const diaFecha = fechaPedido.getDate().toString().padStart(2, '0');
+        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
+        const año = fechaPedido.getFullYear();
+
+        pedido.fechaPedido = `${diaFecha}/${mes}/${año}`;
+        const horas = fechaPedido.getHours();
+        const minutos = fechaPedido.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaPedido.getSeconds().toString().padStart(2, '0');
+        pedido.horaEstimadaFinalizacion = `${horas.toString().padStart(2, '0')}:${minutos}:${segundos}`;
+
+        pedido.total = totalPedido ?? 0;
+        pedido.totalCosto = totalCosto ?? 0;
+        pedido.pedidoDetalles = cart;
+
         pedido.cliente = clienteActualizado;
 
         if (tipoEnvio == 'pickup') {
@@ -177,6 +176,16 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
     const handleCloseModal = () => {
         setShowModal(false);
+        if (formaPago == "efectivo") {
+            limpiarTodo()
+        }
+    };
+
+    const limpiarTodo = () => {
+        limpiarCarrito();
+        setTipoEnvio('');
+        setFormaPago('');
+        setPedidoGuardado(new PedidoCliente());
     };
 
     useEffect(() => {
@@ -208,7 +217,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                 <h3>Total: ${totalPedido}</h3>
                             </div>
                             <br />
-                            <button title='Limpiar Todo' onClick={() => limpiarCarritoDespuesPago()}>
+                            <button title='Limpiar Todo' onClick={() => limpiarTodo()}>
                                 <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1' stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
                                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                                     <path d='M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
@@ -249,16 +258,6 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                 </Form.Group>
                                             )}
                                         </Form>
-
-                                        {/* <div className="cart-actions">
-                                            {formaPago === "mp" && (
-                                                <CheckoutMP pedido={pedidoGuardado} />
-                                            )}
-                                            {formaPago === "efectivo" && (
-                                                <button onClick={guardarPedido}>Generar Pedido</button>
-                                            )}
-                                        </div> */}
-
                                         <button onClick={guardarPedido}> Generar Pedido </button>
                                     </>
                                 )
@@ -275,7 +274,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                         <p>No hay productos en el carrito.</p>
                     )}
                 </COffcanvasBody>
-            </COffcanvas>
+            </COffcanvas >
         </>
     );
 }
