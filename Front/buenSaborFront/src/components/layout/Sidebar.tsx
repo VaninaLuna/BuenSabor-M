@@ -87,12 +87,15 @@ export function SidebarAdmin({ rolName }: { rolName: RolName }) {
                     </>
                 }
             >
-                <CNavItem>
-                    <NavLink to="/articulos" className="nav-link" >
-                        <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                        Articulos
-                    </NavLink>
-                </CNavItem>
+                {(rolName == RolName.ADMIN || rolName == RolName.CAJERO) &&
+
+                    <CNavItem>
+                        <NavLink to="/articulos" className="nav-link" >
+                            <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                            Articulos
+                        </NavLink>
+                    </CNavItem>
+                }
                 <CNavItem>
                     <NavLink to="/insumos" className="nav-link" >
                         <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
