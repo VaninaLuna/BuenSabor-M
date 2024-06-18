@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import UnidadMedida from '../../models/UnidadMedida';
-import { getUMByEstaEliminado, updateEstadoEliminadoUM } from '../../services/FuncionesUnidadMedidaApi';
+import { getUMByEstaEliminado, updateEstadoEliminadoUM } from '../../services/UnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';

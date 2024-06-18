@@ -4,7 +4,7 @@ import { UsuarioCliente } from "../../models/Usuario";
 import { getUsuariosCliente, saveUsuarioCliente } from "../../services/UsuarioClienteAPI";
 import { RolName } from "../../models/RolName";
 import Rol from "../../models/Rol";
-import { getRoles } from "../../services/FuncionesRolesApi";
+import { getRoles } from "../../services/RolesApi";
 
 export function GrillaSuperUsuario() {
 

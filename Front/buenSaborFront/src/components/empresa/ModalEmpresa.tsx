@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
-import { getEmpresaPorID, saveEmpresa } from '../../services/FuncionesEmpresa';
+import { getEmpresaPorID, saveEmpresa } from '../../services/EmpresaApi';
 import Empresa from '../../models/Empresa';
 
 interface ModalProps {

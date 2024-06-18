@@ -14,7 +14,7 @@ import { UsuarioCliente } from "../../models/Usuario";
 import Cliente from "../../models/Cliente";
 import { Form } from "react-bootstrap";
 import Factura from "../../models/Factura";
-import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getArticuloManufacturadoPorID } from "../../services/ArticuloManufacturadoApi";
 import { saveFactura, sendMailFactura } from "../../services/FacturaApi";
 
 function CartItem({ item, addCarrito, removeItemCarrito }: { item: PedidoDetalle, addCarrito: (articulo: ArticuloDTO) => void, removeItemCarrito: (articulo: ArticuloDTO) => void }) {

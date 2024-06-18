@@ -1,8 +1,8 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import ArticuloDTO from "../../models/ArticuloDTO";
 import PedidoDetalle from "../../models/PedidoDetalle";
-import { getArticuloInsumoPorID } from "../../services/FuncionesArticuloInsumoApi";
-import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getArticuloInsumoPorID } from "../../services/ArticuloInsumoApi";
+import { getArticuloManufacturadoPorID } from "../../services/ArticuloManufacturadoApi";
 import ArticuloInsumo from "../../models/ArticuloInsumo";
 
 interface CartContextType {

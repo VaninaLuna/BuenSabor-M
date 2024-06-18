@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UsuarioLogin } from "../../models/Usuario";
-import { AuthContext, AuthContextType } from "../context/AuthContext";
-import { login } from "../../services/FuncionesAuth";
+// import { AuthContext, AuthContextType } from "../context/AuthContext";
+import { login } from "../../services/AuthApi";
 import { LoginAuth0Button } from "./LoginAuth0Button";
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
     const navigate = useNavigate();
     const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>(new UsuarioLogin());
     const [message, setMessage] = useState<string>("");
-    const { setAuth }: AuthContextType = useContext(AuthContext);
+    //const { setAuth }: AuthContextType = useContext(AuthContext);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,7 +23,7 @@ export default function Login() {
                     setMessage("Error al iniciar sesión");
                 } else {
                     console.log(response);
-                    setAuth({ usuario: response });
+                    //setAuth({ usuario: response });
                     navigate('/home');
                 }
             }

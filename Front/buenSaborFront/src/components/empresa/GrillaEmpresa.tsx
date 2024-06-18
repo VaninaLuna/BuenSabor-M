@@ -3,7 +3,7 @@ import { Button, Table, FormControl } from 'react-bootstrap';
 
 
 import Empresa from '../../models/Empresa';
-import { deleteEmpresaPorID, getEmpresa } from '../../services/FuncionesEmpresa';
+import { deleteEmpresaPorID, getEmpresa } from '../../services/EmpresaApi';
 import { ModalEmpresa } from './ModalEmpresa';
 
 

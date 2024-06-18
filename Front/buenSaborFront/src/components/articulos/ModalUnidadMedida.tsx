@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import UnidadMedida from '../../models/UnidadMedida';
-import { getUnidadMedidaPorID, saveUnidadMedida } from '../../services/FuncionesUnidadMedidaApi';
+import { getUnidadMedidaPorID, saveUnidadMedida } from '../../services/UnidadMedidaApi';
 
 interface ModalProps {
     showModal: boolean;

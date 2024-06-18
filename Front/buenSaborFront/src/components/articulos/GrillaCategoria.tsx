@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Categoria from '../../models/Categoria';
-import { updateEstadoEliminadoC, getArbolCategorias } from '../../services/FuncionesCategoriaApi';
+import { updateEstadoEliminadoC, getArbolCategorias } from '../../services/CategoriaApi';
 import { ModalCategoria } from './ModalCategoria';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
-import { getManufacturadoByEstaEliminado, updateEstadoEliminadoManufacturado } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getManufacturadoByEstaEliminado, updateEstadoEliminadoManufacturado } from "../../services/ArticuloManufacturadoApi";
 import { Button, Table, Form, Modal, Image, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 import { UsuarioCliente } from "../../models/Usuario";

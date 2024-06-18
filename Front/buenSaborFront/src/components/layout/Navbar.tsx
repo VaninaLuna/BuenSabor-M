@@ -12,7 +12,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import LogoutAuth0Button from "../auth/LogoutAuth0Button";
 import { LoginAuth0Button } from "../auth/LoginAuth0Button";
 import { UsuarioLogin, UsaurioRegistro } from "../../models/Usuario";
-import { register } from "../../services/FuncionesAuth";
+import { register } from "../../services/AuthApi";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
 import { ClienteRegistro } from "../../models/Cliente";
 import Rol from "../../models/Rol";

@@ -6,7 +6,7 @@ import addCart from "../../assets/images/addCart.png";
 import deleteCart from "../../assets/images/deleteCart.png";
 import { useState } from "react";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
-import { getArticuloManufacturadoPorID } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getArticuloManufacturadoPorID } from "../../services/ArticuloManufacturadoApi";
 
 type ArticuloParams = {
     articulo: ArticuloDTO;

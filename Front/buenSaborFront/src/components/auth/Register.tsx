@@ -2,7 +2,7 @@ import { useState } from "react";
 import Usuario from "../../models/Usuario";
 import { useRoles } from "../../hooks/UseRoles";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../services/FuncionesAuth";
+// import { register } from "../../services/AuthApi";
 import { CFormSelect } from "@coreui/react";
 import Rol from "../../models/Rol";
 
@@ -16,10 +16,10 @@ const Register: React.FC = () => {
         e.preventDefault();
         try {
             if (validateForm()) {
-                const response = await register(usuario);
-                console.log(response);
-                if (!response.ok) setMessage("error al guardar el usuario");
-                else navigate('/home');
+                // const response = await register(usuario);
+                // if (!response.ok) setMessage("error al guardar el usuario");
+                // else 
+                navigate('/home');
             }
         } catch (error) {
             console.log(error);
@@ -32,10 +32,10 @@ const Register: React.FC = () => {
             setMessage("Debe ingresar el nombre de Usuario");
             return false;
         }
-        if (usuario?.password === undefined || usuario.password === "") {
-            setMessage("Debe ingresar la contraseña");
-            return false;
-        }
+        // if (usuario?.password === undefined || usuario.password === "") {
+        //     setMessage("Debe ingresar la contraseña");
+        //     return false;
+        // }
         if (usuario?.rol?.rolName === undefined || usuario.rol.rolName === null) {
             setMessage("Debe seleccionar un rol");
             return false;
@@ -68,8 +68,8 @@ const Register: React.FC = () => {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="txtContraseña" className="form-label">Contraseña</label>
-                        <input type="password" name="password" id='txtContraseña' className="form-control" placeholder="Ingrese la Contraseña"
-                            defaultValue={usuario.password} onChange={e => usuario.password = String(e.target.value)} />
+                        {/* <input type="password" name="password" id='txtContraseña' className="form-control" placeholder="Ingrese la Contraseña"
+                            defaultValue={usuario.password} onChange={e => usuario.password = String(e.target.value)} /> */}
                     </div>
 
                     <div className="d-flex flex-column mb-3">

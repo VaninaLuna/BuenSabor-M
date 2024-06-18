@@ -3,12 +3,12 @@ import Sucursal from "../../models/Sucursal";
 import { useEffect, useState } from "react";
 import { getSucursalPorId, saveSucursal } from "../../services/SucursalApi";
 import Empresa from "../../models/Empresa";
-import { getEmpresa } from "../../services/FuncionesEmpresa";
+import { getEmpresa } from "../../services/EmpresaApi";
 import Pais from "../../models/Pais";
 import Provincia from "../../models/Provincia";
 import Localidad from "../../models/Localidad";
 import Domicilio from "../../models/Domicilio";
-import { saveLocalidad } from "../../services/LocalidadServiceApi";
+import { saveLocalidad } from "../../services/LocalidadApi";
 import { saveDomicilio } from "../../services/DomicilioApi";
 
 interface ModalProps {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Table, FormControl, Image } from 'react-bootstrap';
 import { ModalArticuloInsumo } from './ModalArticuloInsumo';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
-import { getInsumoByEstaEliminado, updateEstadoEliminadoInsumo } from '../../services/FuncionesArticuloInsumoApi';
+import { getInsumoByEstaEliminado, updateEstadoEliminadoInsumo } from '../../services/ArticuloInsumoApi';
 import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 import { ConfirmModal } from './ConfirmModal';

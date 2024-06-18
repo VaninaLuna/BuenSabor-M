@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getArbolCategorias, getCategoriaPadreDesdeHijo, getCategoriaPorID, saveCategoria } from '../../services/FuncionesCategoriaApi';
+import { getArbolCategorias, getCategoriaPadreDesdeHijo, getCategoriaPorID, saveCategoria } from '../../services/CategoriaApi';
 
 interface ModalProps {
     showModal: boolean;

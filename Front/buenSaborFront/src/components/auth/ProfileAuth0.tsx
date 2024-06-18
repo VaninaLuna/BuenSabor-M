@@ -6,14 +6,14 @@ import Cliente from "../../models/Cliente";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
-import { getPaises } from "../../services/PaisAPI";
-import { getPronviciasPorPais } from "../../services/ProvinciaAPI";
-import { getLocalidadesPorProvincia } from "../../services/LocalidadServiceApi";
+import { getLocalidadesPorProvincia } from "../../services/LocalidadApi";
 import Pais from "../../models/Pais";
 import Provincia from "../../models/Provincia";
 import Localidad from "../../models/Localidad";
 import Domicilio from "../../models/Domicilio";
 import { updateData } from "../../services/UsuarioClienteAPI";
+import { getPaises } from "../../services/PaisApi";
+import { getPronviciasPorPais } from "../../services/ProvinciaApi";
 
 const Profile = () => {
     const { user, isAuthenticated, isLoading } = useAuth0();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import ArticuloInsumo from "../../models/ArticuloInsumo";
-import { getArticulosInsumosByEsParaElaborar } from "../../services/FuncionesArticuloInsumoApi";
-import { getArticulosManufacturados } from "../../services/FuncionesArticuloManufacturadoApi";
+import { getArticulosInsumosByEsParaElaborar } from "../../services/ArticuloInsumoApi";
+import { getArticulosManufacturados } from "../../services/ArticuloManufacturadoApi";
 import ArticuloManufacturado from "../../models/ArticuloManufacturado";
 import ArticuloDTO from "../../models/ArticuloDTO";
 import { Form } from "react-bootstrap";

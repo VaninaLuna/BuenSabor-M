@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Col, Row } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
-import { getArbolCategorias } from '../../services/FuncionesCategoriaApi';
+import { getArbolCategorias } from '../../services/CategoriaApi';
 import UnidadMedida from '../../models/UnidadMedida';
-import { getUnidadesMedidas } from '../../services/FuncionesUnidadMedidaApi';
-import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../../services/FuncionesArticuloManufacturadoApi';
+import { getUnidadesMedidas } from '../../services/UnidadMedidaApi';
+import { getArticuloManufacturadoPorID, saveArticuloManufacturado } from '../../services/ArticuloManufacturadoApi';
 import ArticuloManufacturado from '../../models/ArticuloManufacturado';
 import { ModalAgregarInsumo } from './ModalAgregarInsumo';
 import ArticuloInsumo from '../../models/ArticuloInsumo';

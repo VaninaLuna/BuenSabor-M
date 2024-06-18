@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table, FormControl, Modal, Button, Image, FormCheck } from 'react-bootstrap';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
-import { getArticulosInsumosByEsParaElaborar } from '../../services/FuncionesArticuloInsumoApi';
+import { getArticulosInsumosByEsParaElaborar } from '../../services/ArticuloInsumoApi';
 
 interface ModalProps {
     showModalInsumos: boolean;

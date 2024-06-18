@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRoles } from "../services/FuncionesRolesApi";
+import { getRoles } from "../services/RolesApi";
 import Rol from "../models/Rol";
 
 export function useRoles() {
