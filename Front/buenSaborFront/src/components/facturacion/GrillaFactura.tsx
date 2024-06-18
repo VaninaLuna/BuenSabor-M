@@ -64,7 +64,7 @@ export function GrillaFactura() {
 
 
 
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover size="sm" responsive>
                     <thead>
                         <tr>
                             <th>Nro. Factura</th>

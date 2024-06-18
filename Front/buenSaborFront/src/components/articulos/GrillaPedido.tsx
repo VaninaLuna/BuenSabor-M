@@ -105,7 +105,7 @@ export function GrillaPedido() {
                         {listos ? "Ver Todos" : "Ver Listos"}
                     </Button>
                 </div>
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover size="sm" responsive>
                     <thead>
                         <tr>
                             <th>Nro Pedido</th>

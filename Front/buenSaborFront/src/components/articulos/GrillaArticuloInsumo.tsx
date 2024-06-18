@@ -116,7 +116,7 @@ export function GrillaArticuloInsumo() {
 
                 </div>
 
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover size="sm" responsive>
                     <thead>
                         <tr>
                             {/* <th style={{ maxWidth: "80px" }}>ID</th> */}

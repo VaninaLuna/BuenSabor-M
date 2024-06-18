@@ -87,7 +87,7 @@ export function GrillaUnidadMedida() {
 
                 <br />
 
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover size="sm" responsive>
                     <thead>
                         <tr>
                             <th>Denominacion</th>
