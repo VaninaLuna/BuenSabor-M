@@ -17,7 +17,7 @@ interface ModalProps {
 }
 
 export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
-    const [categorias, setCategoria] = useState<Categoria[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [manufacturado, setArticuloManufacturado] = useState<ArticuloManufacturado>(new ArticuloManufacturado());
     const [imagenes, setImagenes] = useState<string[]>(['']);
@@ -72,7 +72,9 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
 
     useEffect(() => {
         getArbolCategorias()
-            .then(data => setCategoria(data))
+            .then(data => {
+                setCategorias(renderCategorias(data))
+            })
             .catch(e => console.error(e));
 
         getUnidadesMedidas()
@@ -181,14 +183,18 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setShowModalInsumos(false);
     };
 
-    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-        return categorias.filter(c => !c.eliminado).flatMap((categoria: Categoria) => {
-            const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
-            return <React.Fragment key={categoria.id}>
-                <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
-                {renderCategorias(subCategoriasNoEliminadas)}
-            </React.Fragment>;
-        });
+    const renderCategorias = (categorias: Categoria[]): Categoria[] => {
+        const todasCategorias: Categoria[] = [];
+        const agregarCategorias = (categorias: Categoria[]) => {
+            categorias.filter(c => !c.eliminado).forEach(categoria => {
+                todasCategorias.push(categoria);
+                if (categoria.subCategorias) {
+                    agregarCategorias(categoria.subCategorias);
+                }
+            });
+        };
+        agregarCategorias(categorias);
+        return todasCategorias;
     };
 
 
@@ -231,7 +237,9 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
                             <Form.Label>Categoria</Form.Label>
                             <Form.Select aria-label="Default select example" name="categoria" value={manufacturado?.categoria?.id || 0} onChange={handleInputChange}>
                                 <option value={0}>Seleccionar Categoria</option>
-                                {renderCategorias(categorias)}
+                                {categorias.map((categoria: Categoria) =>
+                                    <option key={categoria.id} value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                                )}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group as={Col} className="mb-3">

@@ -3,7 +3,7 @@ import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import Categoria from '../../models/Categoria';
 import { getArbolCategorias } from '../../services/CategoriaApi';
 import UnidadMedida from '../../models/UnidadMedida';
-import { getUnidadesMedidas } from '../../services/UnidadMedidaApi';
+import { getUMByEstaEliminado } from '../../services/UnidadMedidaApi';
 import ArticuloInsumo from '../../models/ArticuloInsumo';
 import { getArticuloInsumoPorID, saveArticuloInsumo } from '../../services/ArticuloInsumoApi';
 
@@ -15,8 +15,7 @@ interface ModalProps {
 }
 
 export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
-
-    const [categorias, setCategoria] = useState<Categoria[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
     const [imagenes, setImagenes] = useState<string[]>(['']);
@@ -57,13 +56,16 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
 
     useEffect(() => {
         getArbolCategorias()
-            .then(data => setCategoria(data))
+            .then(data => {
+                setCategorias(renderCategorias(data))
+            })
             .catch(e => console.error(e));
 
-        getUnidadesMedidas()
+        getUMByEstaEliminado(false)
             .then(data => setUnidadesMedida(data))
             .catch(e => console.error(e));
-    }, [/*visibleUnidad, visibleCategoria*/])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => {
         if (!selectedId) {
@@ -169,15 +171,29 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
         window.location.reload();
     };
 
-    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-        return categorias.filter(c => !c.eliminado).flatMap((categoria: Categoria) => {
-            const subCategoriasNoEliminadas = categoria.subCategorias.filter(subCat => !subCat.eliminado);
-            return <React.Fragment key={categoria.id}>
-                <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
-                {renderCategorias(subCategoriasNoEliminadas)}
-            </React.Fragment>;
-        });
+    // const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
+    //     return categorias.filter(c => !c.eliminado).map((categoria: Categoria) => (
+    //         <React.Fragment key={categoria.id}>
+    //             <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+    //             {categoria.subCategorias && renderCategorias(categoria.subCategorias)}
+    //         </React.Fragment>
+    //     ));
+    // }
+
+    const renderCategorias = (categorias: Categoria[]): Categoria[] => {
+        const todasCategorias: Categoria[] = [];
+        const agregarCategorias = (categorias: Categoria[]) => {
+            categorias.filter(c => !c.eliminado).forEach(categoria => {
+                todasCategorias.push(categoria);
+                if (categoria.subCategorias) {
+                    agregarCategorias(categoria.subCategorias);
+                }
+            });
+        };
+        agregarCategorias(categorias);
+        return todasCategorias;
     };
+
 
     return (
         <Modal show={showModal} onHide={handleCloseAndClear} size="xl">
@@ -233,9 +249,15 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
                         <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Categoria</Form.Label>
-                                <Form.Select aria-label="Default select example" name="categoria" value={insumo?.categoria.id} onChange={handleInputChange} hidden={nuevaCategoria.length != 0}>
+                                <Form.Select aria-label="Default select example" name="categoria"
+                                    value={insumo?.categoria?.id || 0}
+                                    onChange={handleInputChange}
+                                    hidden={nuevaCategoria.length !== 0}>
                                     <option value={0}>Seleccionar Categoria</option>
-                                    {renderCategorias(categorias)}
+                                    {/* {renderCategorias(categoriasPadre)} */}
+                                    {categorias.map((categoria: Categoria) =>
+                                        <option key={categoria.id} value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
+                                    )}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
