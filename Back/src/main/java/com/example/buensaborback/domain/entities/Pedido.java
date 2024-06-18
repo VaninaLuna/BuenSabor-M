@@ -25,7 +25,6 @@ public class Pedido extends Base{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate fechaPedido;
     private String estado;
-    private boolean eliminado;
 
     @OneToMany(mappedBy = "pedido",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

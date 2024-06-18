@@ -15,6 +15,5 @@ public interface PedidoService extends BaseService<Pedido,Long>{
     List<PedidoCocinaDTO> findPedidosByTiempoEstimado() throws Exception;
     List<PedidosPorMesAnioDTO> findPedidosGroupedByMonthAndYear() throws Exception;
     List<PedidosPorArticuloDTO> findPedidosGroupedByArticulo()throws Exception;
-    List<Pedido> findByEliminado(boolean eliminado) throws Exception;
 
 }

@@ -177,8 +177,8 @@ export async function deletePedidoPorId(id: number) {
 
 
 //Delete logico
-export async function updateEstadoEliminadoPedido(id: number) {
-    const endpoint = `http://localhost:8080/pedido/cambiar_estado_eliminado/${id}`;
+export async function cancelarPedido(id: number) {
+    const endpoint = `http://localhost:8080/pedido/cancelarPedido/${id}`;
 
     try {
         const response = await fetch(endpoint, {
@@ -199,8 +199,8 @@ export async function updateEstadoEliminadoPedido(id: number) {
 }
 
 //Get eliminados o no eliminados
-export async function getPedidoByEstaEliminado(eliminado: boolean) {
-    const endpoint = `http://localhost:8080/pedido/esta_eliminado/${eliminado}`;
+export async function getPedidosCancelados() {
+    const endpoint = `http://localhost:8080/pedido/cancelado`;
 
     try {
         const response = await fetch(endpoint);

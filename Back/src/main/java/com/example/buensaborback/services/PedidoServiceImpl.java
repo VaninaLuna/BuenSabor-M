@@ -74,13 +74,4 @@ public class PedidoServiceImpl extends BaseServiceImpl<Pedido,Long> implements P
             throw new Exception(e.getMessage());
         }
     }
-
-    @Override
-    public List<Pedido> findByEliminado(boolean eliminado) throws Exception {
-        try{
-            return pedidoRepository.findByEliminado(eliminado);
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-    }
 }

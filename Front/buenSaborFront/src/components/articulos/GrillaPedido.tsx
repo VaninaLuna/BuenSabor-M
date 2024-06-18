@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Pedido from "../../models/Pedido";
 import { Button, Modal, Table } from "react-bootstrap";
-import { getPedidoByEstaEliminado, getPedidosByCliente, getPedidosByCocinero, updateEstadoEliminadoPedido, updateEstadoPedido } from "../../services/PedidoApi";
+import { cancelarPedido, getPedidos, getPedidosByCliente, getPedidosByCocinero, getPedidosCancelados, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
 import { ConfirmModal } from "./ConfirmModal";
@@ -13,7 +13,7 @@ export function GrillaPedido() {
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
     //Estados del envio
-    const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado"])
+    const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado", "Cancelado"])
 
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
@@ -33,8 +33,10 @@ export function GrillaPedido() {
             datos = await getPedidosByCliente(usuarioLogueado.cliente.id)
         } else if (usuarioLogueado && usuarioLogueado.rol.rolName == RolName.COCINERO) {
             datos = await getPedidosByCocinero()
+        } else if (eliminados) {
+            datos = await getPedidosCancelados();
         } else {
-            datos = await getPedidoByEstaEliminado(eliminados);
+            datos = await getPedidos();
         }
         setPedidos(datos);
     };
@@ -80,7 +82,7 @@ export function GrillaPedido() {
 
         console.log(id)
 
-        await updateEstadoEliminadoPedido(id);
+        await cancelarPedido(id);
         getListaPedidos();
     }
 
@@ -88,7 +90,6 @@ export function GrillaPedido() {
         getListaPedidos();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eliminados]);
-
 
     return (
         <>
@@ -127,24 +128,23 @@ export function GrillaPedido() {
                                 </td>
 
                                 <td>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(pedido)}>Detalle</Button>
                                     {
                                         (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
                                         <>
                                             {
-                                                !eliminados &&
-                                                <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }}
+                                                !eliminados && pedido.estado !== "Cancelado" &&
+                                                <Button variant="outline-danger" style={{ maxHeight: "40px" }}
                                                     onClick={() => confirmUpdateEstadoDelete(pedido.id)}>Cancelar</Button>
                                             }
                                         </>
                                     }
-                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(pedido)}>Detalle</Button>
                                 </td>
 
                             </tr>
                         )}
                     </tbody>
                 </Table>
-
                 <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
                     <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados) }}>
                         {eliminados ? "Ver Actuales" : "Ver Cancelados"}

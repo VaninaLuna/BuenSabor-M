@@ -175,21 +175,21 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
         }
     }
 
-    @GetMapping("/esta_eliminado/{eliminado}")
-    public ResponseEntity<?> gerByEstaEliminado(@PathVariable boolean eliminado) {
+    @GetMapping("/cancelado")
+    public ResponseEntity<?> getByCancelado() {
         try {
-            return ResponseEntity.ok(servicio.findByEliminado(eliminado));
+            return ResponseEntity.ok(servicio.findByEstado("Cancelado"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
 
-    @PutMapping("/cambiar_estado_eliminado/{id}")
-    public ResponseEntity<?> cambiarEstadoEliminado(@PathVariable Long id) {
+    @PutMapping("/cancelarPedido/{id}")
+    public ResponseEntity<?> cancelarPedido(@PathVariable Long id) {
         try {
             var object = servicio.findById(id);
 
-            object.setEliminado(!object.isEliminado());
+            object.setEstado("Cancelado");
 
             return ResponseEntity.ok(servicio.update(object.getId(), object));
         } catch (Exception e) {
