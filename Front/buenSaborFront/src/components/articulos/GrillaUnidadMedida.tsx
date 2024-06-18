@@ -91,7 +91,10 @@ export function GrillaUnidadMedida() {
                     <thead>
                         <tr>
                             <th>Denominacion</th>
-                            <th>Opciones</th>
+                            {
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                <th style={{ minWidth: "220px" }}>Opciones</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>

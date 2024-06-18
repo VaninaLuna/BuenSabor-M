@@ -181,27 +181,29 @@ export function GrillaArticuloManufacturado() {
                                                     articulomanufacturado.preparacion
                                                 }
                                             </span>
-                                            <Button variant="secondary" className="ml-auto" onClick={() => handleShowPreparation(articulomanufacturado.preparacion)}>Más</Button>
+                                            <Button variant="secondary" className="ml-auto" onClick={() => handleShowPreparation(articulomanufacturado.preparacion)}>+</Button>
                                         </div>
                                     </OverlayTrigger>
                                 </td>
                                 <td>
                                     {
-                                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                                        (usuarioLogueado && usuarioLogueado.rol && (usuarioLogueado.rol.rolName == RolName.ADMIN || usuarioLogueado.rol.rolName == RolName.COCINERO)) &&
                                         <>
-                                            <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
-                                            {
+                                            <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
+                                                onClick={() => { setSelectedId(articulomanufacturado.id); handleOpenEdit(); }}>Modificar</Button>
+                                            {usuarioLogueado.rol.rolName == RolName.ADMIN && (
                                                 eliminados
                                                     ?
-                                                    <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                                    <Button variant="outline-info" style={{ maxHeight: "40px", marginRight: '10px' }}
                                                         onClick={() => confirmUpdateEstadoDelete(articulomanufacturado.id, 'restaurar')}>Restaurar</Button>
                                                     :
-                                                    <Button variant="outline-danger" style={{ maxHeight: "40px" }}
+                                                    <Button variant="outline-danger" style={{ maxHeight: "40px", marginRight: '10px' }}
                                                         onClick={() => confirmUpdateEstadoDelete(articulomanufacturado.id, 'eliminar')}>Eliminar</Button>
+                                            )
                                             }
                                         </>
                                     }
-                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px" }} onClick={() => handleShowDetails(articulomanufacturado)}>Detalle</Button>
                                 </td>
                             </tr>
                         )}
