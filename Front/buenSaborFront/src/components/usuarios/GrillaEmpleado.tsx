@@ -39,7 +39,7 @@ export function GrillaEmpleado() {
                         style={{ margin: 20, width: '300px', height: '50px' }}
                     />
                 </div>
-                <Table striped bordered hover size="sm" responsive>
+                <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
                             <th>Nombre</th>

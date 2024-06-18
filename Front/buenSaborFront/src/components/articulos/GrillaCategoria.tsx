@@ -120,7 +120,7 @@ export function GrillaCategoria() {
                     categoriaSeleccionada={categoriaSeleccionada}
                 />
                 <br />
-                <Table striped bordered hover size="sm" responsive>
+                <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
                             <th>Denominacion</th>

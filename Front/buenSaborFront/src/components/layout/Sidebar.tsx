@@ -1,6 +1,6 @@
 
 import { NavLink } from 'react-router-dom';
-import { cilBarChart, cilBuilding, cilCreditCard, cilFastfood, cilPeople, cilBasket } from "@coreui/icons";
+import { cilBarChart, cilCreditCard, cilFastfood, cilPeople, cilBasket } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CImage, CNavGroup, CNavItem, CSidebar, CSidebarNav } from "@coreui/react";
 import '@coreui/coreui/dist/css/coreui.min.css';
@@ -55,7 +55,7 @@ export function SidebarAdmin({ rolName }: { rolName: RolName }) {
 
     return (
         <>
-            {
+            {/* {
                 rolName == RolName.ADMIN &&
                 <CNavGroup
                     toggler={
@@ -77,7 +77,7 @@ export function SidebarAdmin({ rolName }: { rolName: RolName }) {
                         </NavLink>
                     </CNavItem>
                 </CNavGroup>
-            }
+            } */}
 
             <CNavGroup
                 toggler={
@@ -125,12 +125,12 @@ export function SidebarAdmin({ rolName }: { rolName: RolName }) {
                         </CNavItem>
                     </>
                 }
-                <CNavItem>
+                {/* <CNavItem>
                     <NavLink to="/promociones" className="nav-link">
                         <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
                         Promociones
                     </NavLink>
-                </CNavItem>
+                </CNavItem> */}
             </CNavGroup>
 
             {
