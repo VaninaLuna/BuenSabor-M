@@ -5,6 +5,7 @@ import { Button, Table, Form, Modal, Image, OverlayTrigger, Tooltip } from "reac
 import { ModalArticuloManufacturado } from "./ModalArticuloManufacturado";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
+import { ConfirmModal } from "./ConfirmModal";
 
 export function GrillaArticuloManufacturado() {
     const [showModal, setShowModal] = useState(false);
@@ -20,6 +21,11 @@ export function GrillaArticuloManufacturado() {
 
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
+
+    //Modal Confirmar eliminacion
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
+    const [confirmMessage, setConfirmMessage] = useState('');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -46,6 +52,24 @@ export function GrillaArticuloManufacturado() {
         setEditing(false);
         setSelectedId(null);
         setSelectedArticulo(null);
+    };
+
+    const handleConfirmClose = () => {
+        setShowConfirmModal(false);
+        setConfirmAction(null);
+    };
+
+    const handleConfirm = () => {
+        if (confirmAction) {
+            confirmAction();
+        }
+        handleConfirmClose();
+    };
+
+    const confirmUpdateEstadoDelete = (idUMedida: number, actionType: 'eliminar' | 'restaurar') => {
+        setConfirmAction(() => () => updateEstadoDelete(idUMedida));
+        setConfirmMessage(`¿Está seguro que desea ${actionType} ?`);
+        setShowConfirmModal(true);
     };
 
     const updateEstadoDelete = async (id: number) => {
@@ -170,10 +194,10 @@ export function GrillaArticuloManufacturado() {
                                                 eliminados
                                                     ?
                                                     <Button variant="outline-info" style={{ maxHeight: "40px" }}
-                                                        onClick={() => updateEstadoDelete(articulomanufacturado.id)}>Restaurar</Button>
+                                                        onClick={() => confirmUpdateEstadoDelete(articulomanufacturado.id, 'restaurar')}>Restaurar</Button>
                                                     :
                                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-                                                        onClick={() => updateEstadoDelete(articulomanufacturado.id)}>Eliminar</Button>
+                                                        onClick={() => confirmUpdateEstadoDelete(articulomanufacturado.id, 'eliminar')}>Eliminar</Button>
                                             }
                                         </>
                                     }
@@ -232,6 +256,13 @@ export function GrillaArticuloManufacturado() {
                     </Modal.Footer>
                 </Modal>
             </div>
+
+            <ConfirmModal
+                show={showConfirmModal}
+                handleClose={handleConfirmClose}
+                handleConfirm={handleConfirm}
+                message={confirmMessage}
+            />
         </>
     );
 }

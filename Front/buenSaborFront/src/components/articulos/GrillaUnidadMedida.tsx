@@ -13,7 +13,9 @@ export function GrillaUnidadMedida() {
     const [editing, setEditing] = useState(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [uMedidas, setUMedidas] = useState<UnidadMedida[]>([]);
+    //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
+    //Modal Confirmar eliminacion
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
     const [confirmMessage, setConfirmMessage] = useState('');
@@ -63,6 +65,7 @@ export function GrillaUnidadMedida() {
 
     useEffect(() => {
         getListadoUMedidas();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eliminados]);
 
     return (

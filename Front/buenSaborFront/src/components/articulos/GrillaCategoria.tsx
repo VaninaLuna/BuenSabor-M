@@ -6,13 +6,22 @@ import { ModalCategoria } from './ModalCategoria';
 import { Button } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
+import { ConfirmModal } from './ConfirmModal';
 
 export function GrillaCategoria() {
     const [showCategoriaModal, setShowCategoriaModal] = useState(false);
     const [editing, setEditing] = useState(false);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria | null>(null);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
+
+    //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
+
+    //Modal Confirmar eliminacion
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
+    const [confirmMessage, setConfirmMessage] = useState('');
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
     const usuarioLogueado: UsuarioCliente = JSON.parse(jsonUsuario) as UsuarioCliente;
@@ -33,7 +42,25 @@ export function GrillaCategoria() {
         setCategoriaSeleccionada(null);
     };
 
-    const cambiarEstadoCategoria = async (idCategoria: number) => {
+    const handleConfirmClose = () => {
+        setShowConfirmModal(false);
+        setConfirmAction(null);
+    };
+
+    const handleConfirm = () => {
+        if (confirmAction) {
+            confirmAction();
+        }
+        handleConfirmClose();
+    };
+
+    const confirmUpdateEstadoDelete = (idUMedida: number, actionType: 'eliminar' | 'restaurar') => {
+        setConfirmAction(() => () => updateEstadoDelete(idUMedida));
+        setConfirmMessage(`¿Está seguro que desea ${actionType} ?`);
+        setShowConfirmModal(true);
+    };
+
+    const updateEstadoDelete = async (idCategoria: number) => {
         await updateEstadoEliminadoC(idCategoria);
         getListadoCategorias();
     }
@@ -59,9 +86,9 @@ export function GrillaCategoria() {
                                     onClick={() => { setCategoriaSeleccionada(categoria); handleOpen(); }}>Modificar</Button>
                                 {eliminados
                                     ? <Button variant="outline-info" style={{ maxHeight: "40px" }}
-                                        onClick={() => cambiarEstadoCategoria(categoria.id)}>Restaurar</Button>
+                                        onClick={() => confirmUpdateEstadoDelete(categoria.id, 'restaurar')}>Restaurar</Button>
                                     : <Button variant="outline-danger" style={{ maxHeight: "40px" }}
-                                        onClick={() => cambiarEstadoCategoria(categoria.id)}>Eliminar</Button>
+                                        onClick={() => confirmUpdateEstadoDelete(categoria.id, 'eliminar')}>Eliminar</Button>
                                 }
                             </td>
                         )}
@@ -116,6 +143,13 @@ export function GrillaCategoria() {
                     </Button>
                 </div>
             </div>
+
+            <ConfirmModal
+                show={showConfirmModal}
+                handleClose={handleConfirmClose}
+                handleConfirm={handleConfirm}
+                message={confirmMessage}
+            />
         </>
     );
 }
