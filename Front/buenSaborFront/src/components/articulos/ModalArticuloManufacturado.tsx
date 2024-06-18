@@ -135,6 +135,15 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
             setTxtValidacion("Debe ingresar al menos una imagen");
             return;
         }
+        console.log(manufacturado.articuloManufacturadoDetalles)
+        if (manufacturado.articuloManufacturadoDetalles.length <= 0) {
+            setTxtValidacion("Debe ingresar al menos un insumo al detalle");
+            return;
+        }
+        if (manufacturado && manufacturado.articuloManufacturadoDetalles && !manufacturado.articuloManufacturadoDetalles.every(d => d.cantidad > 0)) {
+            setTxtValidacion("La cantidad del insumo debe ser mayor  a CERO");
+            return;
+        }
         if (manufacturado.unidadMedida.denominacion === undefined || manufacturado.unidadMedida.denominacion === "") {
             setTxtValidacion("Debe ingresar una unidad de medida");
             return;
