@@ -65,12 +65,24 @@ const PieChart = () => {
         responsive: true,
         plugins: {
             legend: {
+                labels: {
+                    color: 'white' // Color de los labels de la leyenda
+                },
                 position: 'right' as const, // Pone las etiquetas al lado derecho del gráfico
+            },
+            labels: {
+                color: 'white' // Color de los labels de la leyenda
             },
             title: {
                 display: true,
                 text: 'Cantidad de Pedidos por articulos',
+                color: 'white'
             },
+            tooltip: {
+                titleColor: 'white', // Color del título del tooltip
+                bodyColor: 'white', // Color del cuerpo del tooltip
+                backgroundColor: 'rgba(0, 0, 0, 0.7)' // Fondo del tooltip
+            }
         },
     };
 

@@ -57,10 +57,49 @@ const BarChart = () => {
         fetchData();
     }, []);
 
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white' // Color de los labels de la leyenda
+                }
+            },
+            title: {
+                display: true,
+                text: 'Pedidos por Mes y Año',
+                color: 'white', // Color del título
+            },
+            tooltip: {
+                titleColor: 'white', // Color del título del tooltip
+                bodyColor: 'white', // Color del cuerpo del tooltip
+                backgroundColor: 'rgba(0, 0, 0, 0.7)' // Fondo del tooltip
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: 'white' // Color de los labels del eje X
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.2)' // Color de las líneas de la cuadrícula
+                }
+            },
+            y: {
+                ticks: {
+                    color: 'white' // Color de los labels del eje Y
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.2)' // Color de las líneas de la cuadrícula
+                }
+            }
+        }
+    };
+
     return (
         <div>
             {chartData ? (
-                <Bar data={chartData} />
+                <Bar data={chartData} options={options} />
             ) : (
                 <p>Cargando datos del gráfico...</p>
             )}

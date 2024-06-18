@@ -21,9 +21,13 @@ export function Home() {
                 <CCarousel controls transition="crossfade" indicators dark className="custom-carousel">
                     {carruselItems}
                 </CCarousel>
-                <h3 className="text-center text-light">Horario de atención: </h3>
-                <p className="text-center text-light"><strong>Lunes a domingos de 20:00 a 12:00</strong></p>
-                <p className="text-center text-light"><strong>Sábados y domingos de 11:00 a 15:00</strong></p>
+                <br />
+                <div style={{ width: "400px", alignSelf: "center", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: "15px" }}>
+                    <h3 className="text-center text-light">Horario de atención: </h3>
+                    <p className="text-center text-light"><strong>Lunes a domingos de 20:00 a 12:00</strong></p>
+                    <p className="text-center text-light"><strong>Sábados y domingos de 11:00 a 15:00</strong></p>
+                </div>
+
             </div>
         </>
     );
