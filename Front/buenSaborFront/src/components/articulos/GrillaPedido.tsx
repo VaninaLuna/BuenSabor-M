@@ -175,13 +175,18 @@ export function GrillaPedido() {
 
                             {selectedPedido &&
                                 <>
+                                    <h5>Informacion del Cliente</h5>
                                     <Row>
                                         <Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Informacion del Cliente</span> <br /></Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Nombre: </span> {selectedPedido.cliente.nombre}</Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Apellido: </span> {selectedPedido.cliente.apellido}</Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Email: </span> {selectedPedido.cliente.email}</Col>
                                             <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {selectedPedido.cliente.telefono}</Col>
+                                        </Col>
+                                        <Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Localidad: </span> {selectedPedido.cliente.domicilio.localidad.nombre}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Calle: </span> {selectedPedido.cliente.domicilio.calle}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Numero: </span> {selectedPedido.cliente.domicilio.numero}</Col>
                                         </Col>
                                     </Row>
                                     <br />
@@ -224,7 +229,7 @@ export function GrillaPedido() {
                         </Modal.Footer>
                     </Modal>
                 }
-            </div>
+            </div >
         </>
     );
 }
