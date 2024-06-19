@@ -257,12 +257,12 @@ export function SidebarCliente() {
                         Articulos
                     </NavLink>
                 </CNavItem>
-                <CNavItem>
+                {/* <CNavItem>
                     <NavLink to="/promociones" className="nav-link">
                         <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
                         Promociones
                     </NavLink>
-                </CNavItem>
+                </CNavItem> */}
             </CNavGroup>
             <CNavGroup
                 toggler={
