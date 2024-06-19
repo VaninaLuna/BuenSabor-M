@@ -189,18 +189,20 @@ const Profile = () => {
                         src={user.picture}
                         alt={user.name}
                         style={{
-                            maxWidth: "150px",
-                            maxHeight: "150px",
+                            maxWidth: "210px",
+                            maxHeight: "210px",
                             borderRadius: "50%",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                            margin: "0 auto"
+                            margin: "0 auto",
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            padding:"25px"
                         }}
                     />
                 </Row>
 
                 <Form style={{
                     color: "whitesmoke",
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
                     padding: '20px',
                     borderRadius: '10px',
                     margin: "auto"
@@ -212,14 +214,20 @@ const Profile = () => {
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control type="email" value={cliente.email} readOnly />
                             </Form.Group>
+                            <Row>
+                                <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Nombre</Form.Label>
                                 <Form.Control type="text" value={cliente.nombre} readOnly />
                             </Form.Group>
+                            </Col>
+                            <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Apellido</Form.Label>
                                 <Form.Control type="text" name="apellido" value={cliente?.apellido || ""} onChange={handleInputChange} readOnly={usuario?.cliente.apellido ? true : false} />
                             </Form.Group>
+                            </Col>
+                            </Row>
                             <Form.Group className="mb-3">
                                 <Form.Label>Fecha de Nacimiento</Form.Label>
                                 <Form.Control type="date" name="fechaNacimiento" value={fechaNacimiento || ""} onChange={handleInputChange} />
@@ -235,14 +243,20 @@ const Profile = () => {
                                 <Form.Label>Calle</Form.Label>
                                 <Form.Control type="text" name="calle" value={domicilio?.calle} onChange={handleInputChange} />
                             </Form.Group>
+                            <Row>
+                                <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Numero</Form.Label>
                                 <Form.Control type="number" name="numero" value={domicilio?.numero} onChange={handleInputChange} />
                             </Form.Group>
+                            </Col>
+                            <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>CP</Form.Label>
                                 <Form.Control type="number" name="cp" value={domicilio?.cp} onChange={handleInputChange} />
                             </Form.Group>
+                            </Col>
+                            </Row>
                             <Form.Group className="mb-3">
                                 <Form.Label>Pais</Form.Label>
                                 <Form.Control as="select" value={paisSeleccionado?.id || ''} onChange={e => setPaisSeleccionado(paises.find(pais => pais.id === Number(e.target.value)) || null)}>
@@ -252,6 +266,8 @@ const Profile = () => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
+                            <Row>
+                                <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Provincia</Form.Label>
                                 <Form.Control as="select" value={provinciaSeleccionada?.id || ''} onChange={e => setProvinciaSeleccionada(provincias.find(provincia => provincia.id === Number(e.target.value)) || null)}>
@@ -261,6 +277,8 @@ const Profile = () => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
+                            </Col>
+                            <Col>
                             <Form.Group className="mb-3">
                                 <Form.Label>Localidad</Form.Label>
                                 <Form.Control as="select" value={localidadSeleccionada?.id || ''} onChange={e => setLocalidadSeleccionada(localidades.find(localidad => localidad.id === Number(e.target.value)) || null)}>
@@ -270,14 +288,16 @@ const Profile = () => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
+                            </Col>
+                            </Row>
 
                         </Col>
                     </Row>
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <button type="button" style={{
-                            backgroundColor: '#007bff',
+                            backgroundColor: '#EE7F46', 
+                            border: '#EE7F46',                           
                             color: 'white',
-                            border: 'none',
                             padding: '10px 20px',
                             borderRadius: '5px',
                             cursor: 'pointer'
