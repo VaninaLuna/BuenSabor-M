@@ -53,7 +53,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         setNewCategoria({ ...newCategoria, categoriaPadre: selectedCategoria || null });
     };
 
-    const generateCodigo = (parentCodigo: string | null, siblings: Categoria[]): string => {
+    const generateCodigo = (parentCodigo: string | null, categoriaPadre: Categoria[]): string => {
         if (!parentCodigo) {
             // No parent means it's a root category
             const lastRootCodigo = categorias
@@ -63,10 +63,11 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             return `${lastRootCodigo + 1}`;
         } else {
             // It's a subcategory
-            const lastSiblingCodigo = siblings
-                .map(c => parseInt(c.codigo.split('.').pop()!))
-                .sort((a, b) => b - a)[0] || 0;
-            return `${parentCodigo}.${lastSiblingCodigo + 1}`;
+            const ultimoCodigo = categoriaPadre[0].subCategorias
+            .map(s => parseInt(s.codigo.split('.').pop()!))
+            .sort((a, b) => b - a)[0] || 0;
+            
+            return `${parentCodigo}.${ultimoCodigo + 1}`;
         }
     };
 
@@ -77,19 +78,18 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             return;
         }
         const parentCodigo = newCategoria.categoriaPadre?.codigo || null;
-        const siblings = categorias.filter(c => c.categoriaPadre?.id === newCategoria.categoriaPadre?.id);
-        newCategoria.codigo = generateCodigo(parentCodigo, siblings).concat(".");
+        const categoriaPadre = categorias.filter(c => c.id === newCategoria.categoriaPadre?.id && c.subCategorias);
+        newCategoria.codigo = generateCodigo(parentCodigo, categoriaPadre);
         await saveCategoria(newCategoria);
         window.location.reload();
     };
 
-    const renderCategorias = (categorias: Categoria[], /*prefix: string = '' */): JSX.Element[] => {
-        return categorias.map((categoria: Categoria, /*index: number */) => {
-            // const currentPrefix = prefix ? `${prefix}.${index + 1}` : `${index + 1}`;
+    const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
+        return categorias.map((categoria: Categoria) => {
             return (
                 <React.Fragment key={categoria.id}>
                     <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
-                    {renderCategorias(categoria.subCategorias, /*currentPrefix*/)}
+                    {renderCategorias(categoria.subCategorias)}
                 </React.Fragment>
             );
         });
@@ -103,10 +103,12 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
 
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
+                    { newCategoria.codigo && 
                     <Form.Group className="mb-3">
                         <Form.Label>Codigo</Form.Label>
                         <Form.Control type="text" name="codigo" value={newCategoria.codigo || ''} onChange={handleInputChange} disabled />
                     </Form.Group>
+                    }
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>
                         <Form.Control type="text" name="denominacion" value={newCategoria.denominacion || ''} onChange={handleInputChange} />

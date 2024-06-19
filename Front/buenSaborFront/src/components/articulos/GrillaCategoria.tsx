@@ -32,7 +32,7 @@ export function GrillaCategoria() {
     };
 
     const handleOpen = async () => {
-        setEditing(true)
+        setEditing(false)
         setShowCategoriaModal(true)
     }
 
@@ -79,7 +79,7 @@ export function GrillaCategoria() {
             return mostrarCategoria ? (
                 <React.Fragment key={categoria.id}>
                     <tr>
-                        <td>{categoria.codigo} {categoria.denominacion}</td>
+                        <td>{categoria.codigo}. {categoria.denominacion}</td>
                         {usuarioLogueado?.rol?.rolName === RolName.ADMIN && (
                             <td>
                                 <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
