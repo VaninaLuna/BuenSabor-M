@@ -118,6 +118,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
 
         const fechaPedido = new Date();
 
+        //Validar horario de atencion
         const validarDia = fechaPedido.getDay();
         const validarHoras = fechaPedido.getHours();
 
