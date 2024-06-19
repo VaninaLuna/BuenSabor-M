@@ -31,17 +31,18 @@ CREATE TABLE `articulo` (
   KEY `FKlf2hbqm1r4qx36lkr0b4mix6b` (`unidad_medida_id`),
   CONSTRAINT `FK35xlp590328eybh2pf5ublsne` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`id`),
   CONSTRAINT `FKlf2hbqm1r4qx36lkr0b4mix6b` FOREIGN KEY (`unidad_medida_id`) REFERENCES `unidad_medida` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `articulo` */
 
-insert  into `articulo`(`id`,`denominacion`,`precio_venta`,`categoria_id`,`unidad_medida_id`) values (1,'Vino',20,1,1),(2,'Harina',12,2,2),(3,'Pan',20,2,2),(4,'Pan de Hamburguesa',20,2,3),(5,'Medallon de carne vacuno',25,2,3),(6,'Queso Cheddar',8,2,3),(7,'Salsa de tomate',6,2,1),(8,'Queso Mozzarella',4,2,2),(9,'Hamburguesa con Queso',20,2,3),(10,'Pizza Mozzarella',25,2,3),(11,'Hamburguesa doble carne',30,2,3),(12,'Papas',7,2,2),(13,'Bacon',7,2,2),(14,'Papas fritas',6,2,2),(15,'Papas Fritas Buen Saborcito',25,2,2),(16,'Pollo',8,2,2),(17,'Cereales para rebozar',5,2,2),(18,'Pollo Crispy',25,2,3),(19,'Agua Mineral sin Gas',10,1,1),(20,'Gaseosa',15,1,1);
+insert  into `articulo`(`id`,`denominacion`,`precio_venta`,`categoria_id`,`unidad_medida_id`) values (1,'Pan de Hamburguesa',15,5,3),(2,'Medallon de carne vacuno',18,6,3),(3,'Queso Cheddar',8,10,3),(4,'Papas',8,4,2),(5,'Pollo',15,7,2),(6,'Harina',8,8,2),(7,'Queso Mozzarella',8,10,2),(8,'Salsa de tomate',5,5,5),(9,'Tomate',5,4,2),(10,'Lechuga',5,4,2),(11,'Rebozador',3,4,2),(12,'Panceta',8,5,3),(13,'Agua Mineral sin Gas',20,2,3),(14,'Cerveza Corona',15,3,3),(15,'Gaseosa Coca Cola',15,2,3),(16,'Pizza Mozzarella',100,5,3),(17,'Hamburguesa con Queso',100,17,3),(18,'Papas fritas',70,18,2),(19,'Pollo Crispy',120,18,2),(20,'Papas Especiales',150,18,2),(21,'Ensalada Buen Sabor',200,13,2),(22,'Hamburguesa doble',220,17,3);
 
 /*Table structure for table `articulo_insumo` */
 
 DROP TABLE IF EXISTS `articulo_insumo`;
 
 CREATE TABLE `articulo_insumo` (
+  `eliminado` bit(1) NOT NULL,
   `es_para_elaborar` bit(1) NOT NULL,
   `precio_compra` double DEFAULT NULL,
   `stock_actual` int(11) DEFAULT NULL,
@@ -53,7 +54,7 @@ CREATE TABLE `articulo_insumo` (
 
 /*Data for the table `articulo_insumo` */
 
-insert  into `articulo_insumo`(`es_para_elaborar`,`precio_compra`,`stock_actual`,`stock_maximo`,`id`) values ('\0',10,2,20,1),('',12,2,112,2),('',10,100,200,4),('',15,100,200,5),('',5,100,200,6),('',3,50,70,7),('',2,20,50,8),('',5,40,50,12),('',4,40,50,13),('',5,100,200,16),('',3,100,200,17),('\0',5,100,200,19),('\0',10,100,200,20);
+insert  into `articulo_insumo`(`eliminado`,`es_para_elaborar`,`precio_compra`,`stock_actual`,`stock_maximo`,`id`) values ('\0','',10,199,500,1),('\0','',12,399,800,2),('\0','',5,398,800,3),('\0','',5,9600,20000,4),('\0','',10,20000,40000,5),('\0','',5,19400,40000,6),('\0','',5,14400,30000,7),('\0','',3,9600,20000,8),('\0','',3,20000,30000,9),('\0','',3,20000,30000,10),('\0','',2,20000,30000,11),('\0','',5,400,800,12),('\0','\0',10,400,800,13),('\0','\0',10,199,400,14),('\0','\0',10,197,400,15);
 
 /*Table structure for table `articulo_manufacturado` */
 
@@ -61,6 +62,7 @@ DROP TABLE IF EXISTS `articulo_manufacturado`;
 
 CREATE TABLE `articulo_manufacturado` (
   `descripcion` varchar(255) DEFAULT NULL,
+  `eliminado` bit(1) NOT NULL,
   `preparacion` varchar(255) DEFAULT NULL,
   `tiempo_estimado_minutos` int(11) DEFAULT NULL,
   `id` bigint(20) NOT NULL,
@@ -70,7 +72,7 @@ CREATE TABLE `articulo_manufacturado` (
 
 /*Data for the table `articulo_manufacturado` */
 
-insert  into `articulo_manufacturado`(`descripcion`,`preparacion`,`tiempo_estimado_minutos`,`id`) values ('pan','pan',5,3),('Hamburguesa de carne a la parrilla, con queso cheddar fundido y pan brioch','Se colocan los medallones de carne a la parrilla, una vez en su punto justo se le colocan 2 fetas de cheddar y se dejan fundir siendo uno. Se coloca el medallon de carne y queso dentro del pan para lograr sabores unicos',15,9),('Pizza a la piedra con mozzarella','Se prepara la masa, se la deja leudar unos minutos, se la estira y se la coloca en el piso del horno de barro. Una vez cocida se le coloca la salsa y el queso. Vuelve al horno una vez que este fundido el queso. Esta lista para comer',15,10),('Hamburguesa doble carne y queso','Se colocan los medallones de carne a la parrilla, una vez en su punto justo se le colocan 2 fetas de cheddar y se dejan fundir siendo uno. Se coloca el medallon de carne y queso dentro del pan para lograr sabores unicos',20,11),('Papas fritas','Se pelan las papas, se fríen a la temperatura correcta para lograr el punto perfecto',10,14),('Papas, con chedda y bacon','Se pelan las papas, se fríen a la temperatura correcta para lograr el punto perfecto, se les coloca cheddar y bacon crocante',15,15),('Pechuga de pollo rebozada','Se corta el pollo, se lo reboza con cereales especialmente seleccionados y se los fríe. Logrando el mejor sabor',15,18);
+insert  into `articulo_manufacturado`(`descripcion`,`eliminado`,`preparacion`,`tiempo_estimado_minutos`,`id`) values ('Pizza a la piedra con mozzarella','\0','Se prepara la masa, se la deja leudar unos minutos, se la estira y se la coloca en el piso del horno de barro. Una vez cocida se le coloca la salsa y el queso. Vuelve al horno una vez que este fundido el queso. Esta lista para comer',15,16),('Hamburguesa de carne a la parrilla, con queso cheddar fundido y pan brioch','\0','Se colocan los medallones de carne a la parrilla, una vez en su punto justo se le colocan 2 fetas de cheddar y se dejan fundir siendo uno. Se coloca el medallon de carne y queso dentro del pan para lograr sabores unicos',15,17),('Papas fritas condimentadas','\0','Se pelan las papas, se fríen a la temperatura correcta para lograr el punto perfecto',15,18),('Pechuga de pollo rebozada','\0','Se corta el pollo, se lo reboza con cereales especialmente seleccionados y se los fríe. Logrando el mejor sabor',20,19),('Papas, con chedda y bacon','\0','Se pelan las papas, se fríen a la temperatura correcta para lograr el punto perfecto, se les coloca cheddar y bacon crocante',20,20),('Contiene tomate, lechuga y pollo','\0','Se cortan lo vegetales y el pollo. Se mezclan los ingredientes y condimentan para lograr un sabor único',15,21),('Hamburguesa doble carne y queso','\0','Se colocan los medallones de carne a la parrilla, una vez en su punto justo se le colocan 2 fetas de cheddar y se dejan fundir siendo uno. Se coloca el medallon de carne y queso dentro del pan para lograr sabores unicos',20,22);
 
 /*Table structure for table `articulo_manufacturado_detalle` */
 
@@ -86,11 +88,11 @@ CREATE TABLE `articulo_manufacturado_detalle` (
   KEY `FKcwnptwtrvdenu9tetlffab6dp` (`articulo_manufacturado_id`),
   CONSTRAINT `FKcwnptwtrvdenu9tetlffab6dp` FOREIGN KEY (`articulo_manufacturado_id`) REFERENCES `articulo_manufacturado` (`id`),
   CONSTRAINT `FKee8sad16ogk7in2nlh0vc3y9b` FOREIGN KEY (`articulo_insumo_id`) REFERENCES `articulo_insumo` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `articulo_manufacturado_detalle` */
 
-insert  into `articulo_manufacturado_detalle`(`id`,`cantidad`,`articulo_insumo_id`,`articulo_manufacturado_id`) values (1,1,2,3),(2,-2,12,14),(3,1,4,9),(4,1,5,9),(5,2,6,9),(6,1,2,10),(7,1,8,10),(8,1,7,10),(9,1,4,11),(10,2,5,11),(11,4,6,11),(12,2,13,15),(13,1,12,15),(14,3,6,15),(15,10,16,18),(16,5,17,18);
+insert  into `articulo_manufacturado_detalle`(`id`,`cantidad`,`articulo_insumo_id`,`articulo_manufacturado_id`) values (1,300,6,16),(2,300,7,16),(3,200,8,16),(4,1,1,17),(5,1,2,17),(6,2,3,17),(7,400,4,18),(8,200,5,19),(9,400,11,19),(10,300,4,20),(11,10,3,20),(12,5,12,20),(13,200,9,21),(14,200,10,21),(15,200,5,21),(16,1,1,22),(17,2,2,22),(18,4,3,22),(19,4,12,22);
 
 /*Table structure for table `categoria` */
 
@@ -98,13 +100,18 @@ DROP TABLE IF EXISTS `categoria`;
 
 CREATE TABLE `categoria` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(255) DEFAULT NULL,
   `denominacion` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `eliminado` bit(1) NOT NULL,
+  `categoria_padre_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKif4f273okqr2edqkm0xqxjlyk` (`categoria_padre_id`),
+  CONSTRAINT `FKif4f273okqr2edqkm0xqxjlyk` FOREIGN KEY (`categoria_padre_id`) REFERENCES `categoria` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `categoria` */
 
-insert  into `categoria`(`id`,`denominacion`) values (1,'Bebidas'),(2,'Alimentos');
+insert  into `categoria`(`id`,`codigo`,`denominacion`,`eliminado`,`categoria_padre_id`) values (1,'1','Bebidas','\0',NULL),(2,'1.1','Sin Alcohol','\0',1),(3,'1.2','Con ALcohol','\0',1),(4,'2','Materia Prima','\0',NULL),(5,'3','Alimentos','\0',NULL),(6,'3.1','Carne Vacuna','\0',5),(7,'3.2','Pollo','\0',5),(8,'2.1','Harina','\0',4),(9,'4','Lacteos','\0',NULL),(10,'4.1','Queso','\0',9),(11,'4.2','Leche','\0',9),(12,'5','Vegetales','\0',NULL),(13,'6','Ensaladas','\0',NULL),(14,'5.1','Tuberculos','\0',12),(15,'8','Sandwich','\0',NULL),(16,'8.1','Lomo','\0',15),(17,'8.2','Hamburguesa','\0',15),(18,'9','Frituras','\0',NULL),(27,'9.1','Papas','',18),(31,'9.2','Pollo','',18),(33,'2.2','Harina Integral','\0',4);
 
 /*Table structure for table `cliente` */
 
@@ -121,11 +128,11 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_id7jmosqg8hkqiqw4vf50xipm` (`usuario_id`),
   CONSTRAINT `FK9wu56im8hnincjveq4kw4ectv` FOREIGN KEY (`usuario_id`) REFERENCES `usuario_cliente` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `cliente` */
 
-insert  into `cliente`(`id`,`apellido`,`email`,`fecha_nacimiento`,`nombre`,`telefono`,`usuario_id`) values (1,'Lattuca','lucas@buensa.com','1995-04-27','lucas','011 25387415',5),(2,'luna','vani.lunaa@gmail.com',NULL,'vanina','',6),(3,NULL,'cocinero@buensa.com',NULL,'cocinero','',7);
+insert  into `cliente`(`id`,`apellido`,`email`,`fecha_nacimiento`,`nombre`,`telefono`,`usuario_id`) values (1,NULL,'cocinero@buensa.com',NULL,'cocinero','',4),(2,'luna','vani.lunaa@gmail.com','1991-08-15','vanina','2616514342',5),(3,'Garcia','cliente@buensa.com','1987-04-20','cliente','11 5236 98541',6),(4,NULL,'cajero@buensa.com',NULL,'cajero','',7);
 
 /*Table structure for table `domicilio` */
 
@@ -143,11 +150,11 @@ CREATE TABLE `domicilio` (
   KEY `FK8t63gx4v022qapv45vdwld71j` (`localidad_id`),
   CONSTRAINT `FK8t63gx4v022qapv45vdwld71j` FOREIGN KEY (`localidad_id`) REFERENCES `localidad` (`id`),
   CONSTRAINT `FKpj1i9rvwxyyjsdwcest6lxdn0` FOREIGN KEY (`cliente_id`) REFERENCES `cliente` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `domicilio` */
 
-insert  into `domicilio`(`id`,`calle`,`cp`,`numero`,`cliente_id`,`localidad_id`) values (1,'Las Palmeras',5521,3510,1,1);
+insert  into `domicilio`(`id`,`calle`,`cp`,`numero`,`cliente_id`,`localidad_id`) values (1,'Las Palmeras',5521,3510,2,1),(2,'Lisandro Moyano',5539,2010,3,2);
 
 /*Table structure for table `empresa` */
 
@@ -179,11 +186,11 @@ CREATE TABLE `factura` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_ngujt6d9ti8crahqfrfb4p9d8` (`pedido_id`),
   CONSTRAINT `FKn6q9mbkc0n4g1uux57clh2bq0` FOREIGN KEY (`pedido_id`) REFERENCES `pedido` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `factura` */
 
-insert  into `factura`(`id`,`fecha_facturacion`,`forma_pago`,`monto_descuento`,`mp_preference_id`,`total_costo`,`total_venta`,`pedido_id`) values (1,'2024-06-11','Efectivo',2,'',10,18,1);
+insert  into `factura`(`id`,`fecha_facturacion`,`forma_pago`,`monto_descuento`,`mp_preference_id`,`total_costo`,`total_venta`,`pedido_id`) values (1,'2024-06-19','Efectivo',11.5,'',3610,103.5,1),(2,'2024-06-19','MercadoPago',18.5,'',2042,166.5,2),(3,'2024-06-19','MercadoPago',0,'',10,15,3),(4,'2024-06-19','Efectivo',11.5,'',3610,103.5,4);
 
 /*Table structure for table `imagen` */
 
@@ -196,11 +203,11 @@ CREATE TABLE `imagen` (
   PRIMARY KEY (`id`),
   KEY `FKnlwl1vdnd0vsn7m8bhkvs85dh` (`articulo_id`),
   CONSTRAINT `FKnlwl1vdnd0vsn7m8bhkvs85dh` FOREIGN KEY (`articulo_id`) REFERENCES `articulo` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `imagen` */
 
-insert  into `imagen`(`id`,`url`,`articulo_id`) values (6,'https://http2.mlstatic.com/D_NQ_NP_914235-MLA50160201502_062022-O.webp',1),(7,'https://images.ecestaticos.com/WBp24vmd9x9S722ZiqGWgPaf0w0=/0x109:2119x1301/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F6be%2F87b%2F448%2F6be87b448c2cf27ea55a994c163556d6.jpg',2),(8,'https://cuk-it.com/wp-content/uploads/2020/11/pan-hamburguesa.webp',3),(9,'https://cuk-it.com/wp-content/uploads/2020/11/pan-hamburguesa.webp',4),(10,'https://www.carnave.com.ar/wp-content/uploads/2021/03/Medallones-de-Carne-Vacuna-x2.jpg',5),(11,'https://comosefabrica.com/img/entradas/queso-cheddar.jpg',6),(12,'https://www.conasi.eu/blog/wp-content/uploads/2019/05/salsa-de-tomate-casera-des.jpg',7),(13,'https://pizzeriarurale.wordpress.com/wp-content/uploads/2017/05/tipos-de-queso-mozzarella-bufala-queso-mozzarella.jpg',8),(17,'https://elpoderdelconsumidor.org/wp-content/uploads/2015/11/Papas.jpg',12),(18,'https://images.immediate.co.uk/production/volatile/sites/30/2019/11/Bacon-rashers-in-a-pan-72c07f4.jpg?resize=700%2C366',13),(20,'https://sabor.eluniverso.com/wp-content/uploads/2023/09/1hqq-scaled.jpg',9),(21,'https://saborargento.com.ar/wp-content/uploads/2023/09/Receta-de-Pizza-Muzzarella.jpg',10),(22,'https://media-cdn.tripadvisor.com/media/photo-s/18/92/e1/89/hamburguesa-double-b.jpg',11),(24,'https://scm-assets.constant.co/scm/unilever/86c9fcb727c4d90deffba18b2593a9cf/84b57886-fee2-4f98-8920-027f8afd654c.png',14),(25,'https://www.comedera.com/wp-content/uploads/2022/11/papas-fritas-con-queso-cheddar-PG_PFCQCY30320002.jpg',15),(26,'https://canduran.com/wp/wp-content/uploads/2017/02/pimienta-alimentos-crudos-blanco-fresco_1203-5518.jpg',16),(27,'https://s1.elespanol.com/2018/11/06/ciencia/nutricion/cereales-nutricion-nutricion_351228002_104673600_1024x576.jpg',17),(28,'https://clubhouseve.com/wp-content/uploads/2018/06/pollo-crispy.jpeg',18),(29,'https://statics.dinoonline.com.ar/imagenes/full_600x600_ma/3040004_f.jpg',19),(30,'https://dcdn.mitiendanube.com/stores/001/151/835/products/77908950009971-d6396175b7ca20416b15890784336194-640-0.jpg',20);
+insert  into `imagen`(`id`,`url`,`articulo_id`) values (1,'https://cdn.recetasderechupete.com/wp-content/uploads/2017/05/Pan-de-hamburguesa.jpg',1),(2,'https://www.carnave.com.ar/wp-content/uploads/2021/03/Medallones-de-Carne-Vacuna-x2.jpg',2),(3,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdLd6x1SooBkaY3CuHfWSOWOEB57dlR-EQdQ&s',3),(4,'https://elpoderdelconsumidor.org/wp-content/uploads/2015/11/Papas.jpg',4),(5,'https://i.blogs.es/8ceb02/pollo_entero/1366_2000.jpg',5),(6,'https://images.ecestaticos.com/WBp24vmd9x9S722ZiqGWgPaf0w0=/0x109:2119x1301/1200x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F6be%2F87b%2F448%2F6be87b448c2cf27ea55a994c163556d6.jpg',6),(7,'https://www.lavanguardia.com/files/article_main_microformat/uploads/2019/01/14/5e997adde64f0.jpeg',7),(8,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIH9IOLYHGD-CPb8MFtKb352AL5Tx0eiQzYw&s',8),(9,'https://www.hola.com/imagenes/estar-bien/20230727236387/tomate-propiedades-saludables-dieta/1-286-101/tomate-t.jpg?im=Resize=(680)',9),(10,'https://s2.abcstatics.com/media/bienestar/2020/09/01/lechuga-kSlD--1248x698@abc.jpg',10),(11,'https://www.mandy.com.ar/images/img_rebozadores-1.jpg',11),(13,'https://enriquetomas.com/cdn/shop/articles/diferencia-entre-tocino-y-panceta.jpg?v=1690363223',12),(14,'https://statics.dinoonline.com.ar/imagenes/full_600x600_ma/3040004_f.jpg',13),(16,'https://dcdn.mitiendanube.com/stores/001/151/835/products/77908950009971-d6396175b7ca20416b15890784336194-640-0.jpg',15),(17,'https://media.f2h.shop/media/catalog/product/cache/ab45d104292f1bb63d093e6be8310c97/c/o/corona_710_ml.png',14),(18,'https://saborargento.com.ar/wp-content/uploads/2023/09/Receta-de-Pizza-Muzzarella.jpg',16),(19,'https://sabor.eluniverso.com/wp-content/uploads/2023/09/1hqq-scaled.jpg',17),(20,'https://scm-assets.constant.co/scm/unilever/86c9fcb727c4d90deffba18b2593a9cf/84b57886-fee2-4f98-8920-027f8afd654c.png',18),(21,'https://clubhouseve.com/wp-content/uploads/2018/06/pollo-crispy.jpeg',19),(22,'https://www.comedera.com/wp-content/uploads/2022/11/papas-fritas-con-queso-cheddar-PG_PFCQCY30320002.jpg',20),(23,'https://www.comedera.com/wp-content/uploads/2015/10/ensalada-de-pollo.jpg',21),(24,'https://media-cdn.tripadvisor.com/media/photo-s/18/92/e1/98/hamburguesa-la-neta-doble.jpg',22);
 
 /*Table structure for table `imagen_promocion` */
 
@@ -252,20 +259,20 @@ DROP TABLE IF EXISTS `pedido`;
 
 CREATE TABLE `pedido` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `estado` varchar(255) DEFAULT NULL,
   `fecha_pedido` date DEFAULT NULL,
   `hora_estimada_finalizacion` time(6) DEFAULT NULL,
   `total` double NOT NULL,
   `total_costo` double NOT NULL,
   `cliente_id` bigint(20) DEFAULT NULL,
-  `estado` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK30s8j2ktpay6of18lbyqn3632` (`cliente_id`),
   CONSTRAINT `FK30s8j2ktpay6of18lbyqn3632` FOREIGN KEY (`cliente_id`) REFERENCES `cliente` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `pedido` */
 
-insert  into `pedido`(`id`,`fecha_pedido`,`hora_estimada_finalizacion`,`total`,`total_costo`,`cliente_id`,`estado`) values (1,'2024-06-11','22:51:57.000000',18,10,1,'Aprobado');
+insert  into `pedido`(`id`,`estado`,`fecha_pedido`,`hora_estimada_finalizacion`,`total`,`total_costo`,`cliente_id`) values (1,'Aprobado','2024-06-19','13:43:57.000000',103.5,3610,2),(2,'Recibido','2024-06-19','13:59:18.000000',166.5,2042,2),(3,'Recibido','2024-06-19','13:48:31.000000',15,10,2),(4,'Recibido','2024-06-19','14:06:07.000000',103.5,3610,3);
 
 /*Table structure for table `pedido_detalle` */
 
@@ -282,11 +289,11 @@ CREATE TABLE `pedido_detalle` (
   KEY `FKaxtxfsueb7pagpev7p4r4mbin` (`id_pedido`),
   CONSTRAINT `FK8aese3d9j24apl1varc12tp7c` FOREIGN KEY (`id_articulo`) REFERENCES `articulo` (`id`),
   CONSTRAINT `FKaxtxfsueb7pagpev7p4r4mbin` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `pedido_detalle` */
 
-insert  into `pedido_detalle`(`id`,`cantidad`,`sub_total`,`id_articulo`,`id_pedido`) values (1,1,20,1,1);
+insert  into `pedido_detalle`(`id`,`cantidad`,`sub_total`,`id_articulo`,`id_pedido`) values (1,1,15,15,1),(2,1,100,16,1),(3,1,100,17,2),(4,1,70,18,2),(5,1,15,14,2),(6,1,15,15,3),(7,1,15,15,4),(8,1,100,16,4);
 
 /*Table structure for table `provincia` */
 
@@ -347,12 +354,13 @@ DROP TABLE IF EXISTS `unidad_medida`;
 CREATE TABLE `unidad_medida` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `denominacion` varchar(255) DEFAULT NULL,
+  `eliminado` bit(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 /*Data for the table `unidad_medida` */
 
-insert  into `unidad_medida`(`id`,`denominacion`) values (1,'Litros'),(2,'Kilos'),(3,'Unidad');
+insert  into `unidad_medida`(`id`,`denominacion`,`eliminado`) values (1,'Kilos','\0'),(2,'Gramos','\0'),(3,'Unidades','\0'),(4,'Litros','\0'),(5,'Mililitros','\0'),(6,'Cm3',''),(7,'Toneladas','');
 
 /*Table structure for table `usuario_cliente` */
 
@@ -369,7 +377,7 @@ CREATE TABLE `usuario_cliente` (
 
 /*Data for the table `usuario_cliente` */
 
-insert  into `usuario_cliente`(`id`,`nombre_usuario`,`id_rol`) values (5,'lucas',1),(6,'vani.lunaa',2),(7,'cocinero',4);
+insert  into `usuario_cliente`(`id`,`nombre_usuario`,`id_rol`) values (4,'cocinero',4),(5,'vani.lunaa',1),(6,'cliente',2),(7,'cajero',3);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
