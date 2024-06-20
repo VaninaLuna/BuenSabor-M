@@ -9,7 +9,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -25,8 +27,9 @@ public class Empresa extends Base{
     private String razonSocial;
     private String cuil;
 
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "empresa", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @JsonIgnoreProperties("empresa")
-    private Set<Sucursal> sucursales = new HashSet<>();
+    //@JsonIgnoreProperties("empresa")
+    @JsonManagedReference
+    private List<Sucursal> sucursales = new ArrayList<>();
 }
