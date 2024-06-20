@@ -1,7 +1,10 @@
 package com.example.buensaborback.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @NoArgsConstructor
@@ -11,14 +14,12 @@ import lombok.*;
 @Entity
 @ToString
 @Builder
-public class ImagenPromocion extends Base{
-    @Lob
-    @Column(name = "imagen", columnDefinition = "LONGBLOB")
-    private byte[] imagen;
-    private String imagenPath;
+public class PromocionDetalle extends Base {
+
+    private Integer cantidad;
 
     @ManyToOne
     @JoinColumn(name = "promocion_id")
-    @JsonBackReference(value = "imagen_promocion")
+    @JsonBackReference
     private Promocion promocion;
 }
