@@ -9,6 +9,7 @@ export function GrillaSucursal() {
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [selectedIdEmpresa, setSelectedIdEmpresa] = useState<number>(0);
 
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
     const [filtro, setFiltro] = useState('');
@@ -61,6 +62,7 @@ export function GrillaSucursal() {
                     handleClose={handleClose}
                     showModal={showModal}
                     editing={editing}
+                    selectedIdEmpresa={selectedIdEmpresa}
                     selectedId={selectedId}
                 />
 
@@ -101,7 +103,8 @@ export function GrillaSucursal() {
                                 <td>{sucursal.casaMatriz ? "Si" : "No"}</td>
                                 <td>{sucursal.domicilio.localidad.nombre}</td>
                                 <td>
-                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(sucursal.id); handleOpenEdit(); }}>Modificar</Button>
+                                    <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
+                                        onClick={() => { setSelectedId(sucursal.id); setSelectedIdEmpresa(sucursal.empresa.id); handleOpenEdit(); }}>Modificar</Button>
                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteSucursal(sucursal.id)}>Eliminar</Button>
                                 </td>
                             </tr>

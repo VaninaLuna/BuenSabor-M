@@ -1,27 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Accordion, Button, Col, Form, Modal, Row } from "react-bootstrap";
 import Sucursal from "../../models/Sucursal";
 import { useEffect, useState } from "react";
 import { getSucursalPorId, saveSucursal } from "../../services/SucursalApi";
-import Empresa from "../../models/Empresa";
-import { getEmpresa } from "../../services/EmpresaApi";
 import Pais from "../../models/Pais";
 import Provincia from "../../models/Provincia";
 import Localidad from "../../models/Localidad";
 import Domicilio from "../../models/Domicilio";
-import { saveLocalidad } from "../../services/LocalidadApi";
+import { getLocalidadesPorProvincia } from "../../services/LocalidadApi";
 import { saveDomicilio } from "../../services/DomicilioApi";
+import { getEmpresaPorID } from "../../services/EmpresaApi";
+import { getPaises } from "../../services/PaisApi";
+import { getPronviciasPorPais } from "../../services/ProvinciaApi";
 
 interface ModalProps {
     showModal: boolean;
     handleClose: () => void;
     editing?: boolean;
+    selectedIdEmpresa: number;
     selectedId?: number | null;
 }
 
-export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedIdEmpresa, selectedId }) => {
 
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
-    const [empresas, setEmpresas] = useState<Empresa[]>([]);
+    // const [empresas, setEmpresas] = useState<Empresa[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const [pais, setPais] = useState<Pais>(new Pais())
@@ -29,12 +32,23 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const [localidad, setLocalidad] = useState<Localidad>(new Localidad())
     const [domicilio, setDomicilio] = useState<Domicilio>(new Domicilio())
 
+    // Estados para los elementos del combo box
+    const [paises, setPaises] = useState<Pais[]>([]);
+    const [provincias, setProvincias] = useState<Provincia[]>([]);
+    const [localidades, setLocalidades] = useState<Localidad[]>([]);
+
+    // Estados para las selecciones del usuario
+    const [paisSeleccionado, setPaisSeleccionado] = useState<Pais | null>(null);
+    const [provinciaSeleccionada, setProvinciaSeleccionada] = useState<Provincia | null>(null);
+    const [localidadSeleccionada, setLocalidadSeleccionada] = useState<Localidad | null>(null);
+
     const handleCloseAndClear = () => {
         setTxtValidacion("");
         handleClose();
     };
 
     useEffect(() => {
+        console.log(selectedIdEmpresa)
         if (!selectedId) {
             setSucursal(new Sucursal());
         } else {
@@ -48,27 +62,37 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                 })
                 .catch(e => console.error(e));
         }
+        //Obtener los paises
+        getPaises().then((paises) => {
+            setPaises(paises);
+            const paisUsuario = paises.find(p => p.id === sucursal.domicilio.localidad.provincia.pais.id);
+            setPaisSeleccionado(paisUsuario || null);
+        });
     }, [selectedId])
 
-
+    // Obtener las provincias cuando el usuario selecciona un país
     useEffect(() => {
-        getEmpresa()
-            .then((data: Empresa[]) => {
+        if (paisSeleccionado) {
+            getPronviciasPorPais(paisSeleccionado.id).then((provincias) => {
+                setProvincias(provincias);
+                const provinciaUsuario = provincias.find(p => p.id === sucursal.domicilio.localidad.provincia.id);
+                setProvinciaSeleccionada(provinciaUsuario || null);
+            });
+        }
+    }, [paisSeleccionado]);
 
-                const formatEmpresas = data.map(empresa => ({
-                    id: empresa.id,
-                    cuil: empresa.cuil,
-                    nombre: empresa.nombre,
-                    razonSocial: empresa.razonSocial
-                }));
+    // Obtener las localidades cuando el usuario selecciona una provincia
+    useEffect(() => {
+        if (provinciaSeleccionada) {
+            getLocalidadesPorProvincia(provinciaSeleccionada.id).then((localidades) => {
+                setLocalidades(localidades);
+                const localidadUsuario = localidades.find(l => l.id === sucursal.domicilio.localidad.id);
+                setLocalidadSeleccionada(localidadUsuario || null);
+            });
+        }
+    }, [provinciaSeleccionada]);
 
-                setEmpresas(formatEmpresas);
-            })
-            .catch(e => console.error(e))
-    }, [])
-
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         let value: string | boolean;
 
         if (e.target.type === 'checkbox') {
@@ -80,15 +104,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         // Limpiamos el mensaje de validación
         setTxtValidacion("");
 
-        if (e.target.name === 'empresa') {
-            const selectedEmpresa = empresas.find(empresa => empresa.id === Number(value));
-
-            if (selectedEmpresa) {
-                setSucursal({ ...sucursal, empresa: selectedEmpresa });
-            }
-
-
-        } else if (e.target.name === 'calle') {
+        if (e.target.name === 'calle') {
 
             const calleValue = value.toString();
             setDomicilio({ ...domicilio, [e.target.name]: calleValue })
@@ -136,29 +152,16 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
             setTxtValidacion("Debe ingresar una horario de cierre");
             return;
         }
-        if (sucursal.empresa.nombre === undefined || sucursal.empresa.nombre === "") {
-            setTxtValidacion("Debe ingresar una empresa");
-            return;
-        }
 
+        const empresa = await getEmpresaPorID(selectedIdEmpresa)
         const sucursalActualizado = { ...sucursal };
-
-        const paisActualizado = { ...pais };
-        const provinciaActualizado = { ...provincia };
-        const localidadActualizado = { ...localidad };
-
-        provinciaActualizado.pais = paisActualizado;
-
-        localidadActualizado.provincia = provinciaActualizado;
-
-        const localidadFromDB = await saveLocalidad(localidadActualizado)
-
-        console.log(JSON.stringify(localidadActualizado));
-
-        console.log("\n")
+        sucursalActualizado.empresa = empresa;
 
         const domicilioActualizado = { ...domicilio };
-        domicilioActualizado.localidad = localidadFromDB;
+
+        const newLocalidad = JSON.parse(JSON.stringify(localidadSeleccionada)) as Localidad;
+        domicilioActualizado.localidad = newLocalidad;
+        domicilioActualizado.cliente = null
 
         const domicilioFromDB = await saveDomicilio(domicilioActualizado);
 
@@ -240,27 +243,45 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                                 <Row>
                                     <Col>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Localidad</Form.Label>
-                                            <Form.Control type="text" name="localidad" value={localidad?.nombre} onChange={handleInputChange} />
+                                            <Form.Label>Pais</Form.Label>
+                                            {/* <Form.Control type="text" name="pais" value={pais?.nombre} onChange={handleInputChange} /> */}
+                                            <Form.Control as="select" value={paisSeleccionado?.id || ''} onChange={e => setPaisSeleccionado(paises.find(pais => pais.id === Number(e.target.value)) || null)}>
+                                                <option value="">Seleccione un país</option>
+                                                {paises.map(pais => (
+                                                    <option key={pais.id} value={pais.id}>{pais.nombre}</option>
+                                                ))}
+                                            </Form.Control>
                                         </Form.Group>
                                     </Col>
                                     <Col>
                                         <Form.Group className="mb-3">
                                             <Form.Label>Provincia</Form.Label>
-                                            <Form.Control type="text" name="provincia" value={provincia?.nombre} onChange={handleInputChange} />
+                                            {/* <Form.Control type="text" name="provincia" value={provincia?.nombre} onChange={handleInputChange} /> */}
+                                            <Form.Control as="select" value={provinciaSeleccionada?.id || ''} onChange={e => setProvinciaSeleccionada(provincias.find(provincia => provincia.id === Number(e.target.value)) || null)}>
+                                                <option value="">Seleccione una provincia</option>
+                                                {provincias.map(provincia => (
+                                                    <option key={provincia.id} value={provincia.id}>{provincia.nombre}</option>
+                                                ))}
+                                            </Form.Control>
                                         </Form.Group>
                                     </Col>
                                     <Col>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Pais</Form.Label>
-                                            <Form.Control type="text" name="pais" value={pais?.nombre} onChange={handleInputChange} />
+                                            <Form.Label>Localidad</Form.Label>
+                                            {/* <Form.Control type="text" name="localidad" value={localidad?.nombre} onChange={handleInputChange} /> */}
+                                            <Form.Control as="select" value={localidadSeleccionada?.id || ''} onChange={e => setLocalidadSeleccionada(localidades.find(localidad => localidad.id === Number(e.target.value)) || null)}>
+                                                <option value="">Seleccione una localidad</option>
+                                                {localidades.map(localidad => (
+                                                    <option key={localidad.id} value={localidad.id}>{localidad.nombre}</option>
+                                                ))}
+                                            </Form.Control>
                                         </Form.Group>
                                     </Col>
                                 </Row>
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
-                    <Row>
+                    {/* <Row>
                         <Col>
                             <Form.Group className="mb-3 mt-3">
                                 <Form.Label>Empresa</Form.Label>
@@ -272,7 +293,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                    </Row>
+                    </Row> */}
 
                     <div>
                         <p style={{ color: 'red', lineHeight: 5, padding: 5 }}>{txtValidacion}</p>

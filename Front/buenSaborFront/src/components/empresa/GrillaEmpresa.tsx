@@ -3,27 +3,31 @@ import { Button, Table, FormControl } from 'react-bootstrap';
 
 
 import Empresa from '../../models/Empresa';
-import { deleteEmpresaPorID, getEmpresa } from '../../services/EmpresaApi';
+import { deleteEmpresaPorID, getEmpresas } from '../../services/EmpresaApi';
 import { ModalEmpresa } from './ModalEmpresa';
+import { ModalSucursal } from './ModalSucursal';
 
 
 export function GrillaEmpresa() {
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState(false);
-    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<number>(0);
+
+    const [showModalSucursal, setShowModalSucursal] = useState(false);
+    const [editingSucursal, setEditingSucursal] = useState(false);
 
     const [empresa, setEmpresa] = useState<Empresa[]>([]);
     const [filtro, setFiltro] = useState('');
 
     const getListadoEmpresas = async () => {
-        const datos: Empresa[] = await getEmpresa();
+        const datos: Empresa[] = await getEmpresas();
         setEmpresa(datos);
     };
 
     const handleOpenCreate = () => {
         setShowModal(true);
         setEditing(false);
-        setSelectedId(null);
+        setSelectedId(0);
     };
 
     const handleOpenEdit = () => {
@@ -31,10 +35,19 @@ export function GrillaEmpresa() {
         setEditing(true);
     };
 
+    const handleCloseSucursal = () => {
+        setShowModalSucursal(false);
+        setEditingSucursal(false);
+        setSelectedId(0);
+    };
+    const handleOpenCreateSucursal = () => {
+        setShowModalSucursal(true);
+    };
+
     const handleClose = () => {
         setShowModal(false);
         setEditing(false);
-        setSelectedId(null);
+        setSelectedId(0);
     };
 
     const deleteEmpresa = async (idEmpresa: number) => {
@@ -64,6 +77,12 @@ export function GrillaEmpresa() {
                     showModal={showModal}
                     editing={editing}
                     selectedId={selectedId}
+                />
+                <ModalSucursal
+                    handleClose={handleCloseSucursal}
+                    showModal={showModalSucursal}
+                    editing={editingSucursal}
+                    selectedIdEmpresa={selectedId}
                 />
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -96,6 +115,7 @@ export function GrillaEmpresa() {
                                 <td>{empresa.cuil}</td>
                                 <td>
                                     <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenEdit(); }}>Modificar</Button>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenCreateSucursal() }}>Agregar Sucursal</Button>
                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteEmpresa(empresa.id)}>Eliminar</Button>
                                     {/* <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(empresa)}>Detalle</Button> */}
                                 </td>

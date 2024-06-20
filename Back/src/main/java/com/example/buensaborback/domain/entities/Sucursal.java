@@ -29,5 +29,6 @@ public class Sucursal extends Base{
     @ManyToOne()
     @JoinColumn(name = "empresa_id")
     @JsonIgnoreProperties("sucursales")
+    @JsonBackReference
     private Empresa empresa;
 }

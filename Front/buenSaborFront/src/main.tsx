@@ -11,8 +11,8 @@ import { GrillaArticuloInsumo } from './components/articulos/GrillaArticuloInsum
 import Sidebar from './components/layout/Sidebar.tsx';
 import NavBar from './components/layout/Navbar.tsx';
 import { Home } from './components/layout/Home.tsx';
-// import { GrillaEmpresa } from './components/empresa/GrillaEmpresa.tsx';
-// import { GrillaSucursal } from './components/empresa/GrillaSucursal.tsx';
+import { GrillaEmpresa } from './components/empresa/GrillaEmpresa.tsx';
+import { GrillaSucursal } from './components/empresa/GrillaSucursal.tsx';
 import { Articulos } from './components/articulos/articulos.tsx';
 import RolUsuario from './components/controlAcceso/RolUsuario.tsx';
 import { RolName } from './models/RolName.ts';
@@ -62,13 +62,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path='/home' element={<Home />} />
                 <Route path="/articulos" element={<Articulos />} />
                 {/* EMPRESA */}
-                {/* <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
+                <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
                   <Route path="/empresas" element={<GrillaEmpresa />} />
                 </Route>
 
                 <Route element={<RolUsuario roles={[RolName.ADMIN]} />}>
                   <Route path="/sucursales" element={<GrillaSucursal />} />
-                </Route> */}
+                </Route>
 
                 <Route element={<RolUsuario roles={[RolName.ADMIN, RolName.CAJERO]} />}>
                   <Route path="/promociones" element={<Promociones />} />

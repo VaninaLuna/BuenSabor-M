@@ -1,6 +1,6 @@
 import Empresa from "../models/Empresa";
 
-export async function getEmpresa() {
+export async function getEmpresas() {
     const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/empresa/all';
 
     try {
