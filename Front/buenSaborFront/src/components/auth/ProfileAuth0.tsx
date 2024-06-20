@@ -12,8 +12,8 @@ import Provincia from "../../models/Provincia";
 import Localidad from "../../models/Localidad";
 import Domicilio from "../../models/Domicilio";
 import { updateData } from "../../services/UsuarioClienteAPI";
-import { getPaises } from "../../services/PaisAPI";
-import { getPronviciasPorPais } from "../../services/ProvinciaAPI";
+import { getPronviciasPorPais } from "../../services/ProvinciaApi";
+import { getPaises } from "../../services/PaisApi";
 
 const Profile = () => {
     const { user, isAuthenticated, isLoading } = useAuth0();
@@ -195,7 +195,7 @@ const Profile = () => {
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                             margin: "0 auto",
                             backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                            padding:"25px"
+                            padding: "25px"
                         }}
                     />
                 </Row>
@@ -216,17 +216,17 @@ const Profile = () => {
                             </Form.Group>
                             <Row>
                                 <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Nombre</Form.Label>
-                                <Form.Control type="text" value={cliente.nombre} readOnly />
-                            </Form.Group>
-                            </Col>
-                            <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Apellido</Form.Label>
-                                <Form.Control type="text" name="apellido" value={cliente?.apellido || ""} onChange={handleInputChange} readOnly={usuario?.cliente.apellido ? true : false} />
-                            </Form.Group>
-                            </Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Nombre</Form.Label>
+                                        <Form.Control type="text" value={cliente.nombre} readOnly />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Apellido</Form.Label>
+                                        <Form.Control type="text" name="apellido" value={cliente?.apellido || ""} onChange={handleInputChange} readOnly={usuario?.cliente.apellido ? true : false} />
+                                    </Form.Group>
+                                </Col>
                             </Row>
                             <Form.Group className="mb-3">
                                 <Form.Label>Fecha de Nacimiento</Form.Label>
@@ -245,17 +245,17 @@ const Profile = () => {
                             </Form.Group>
                             <Row>
                                 <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Numero</Form.Label>
-                                <Form.Control type="number" name="numero" value={domicilio?.numero} onChange={handleInputChange} />
-                            </Form.Group>
-                            </Col>
-                            <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>CP</Form.Label>
-                                <Form.Control type="number" name="cp" value={domicilio?.cp} onChange={handleInputChange} />
-                            </Form.Group>
-                            </Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Numero</Form.Label>
+                                        <Form.Control type="number" name="numero" value={domicilio?.numero} onChange={handleInputChange} />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>CP</Form.Label>
+                                        <Form.Control type="number" name="cp" value={domicilio?.cp} onChange={handleInputChange} />
+                                    </Form.Group>
+                                </Col>
                             </Row>
                             <Form.Group className="mb-3">
                                 <Form.Label>Pais</Form.Label>
@@ -268,35 +268,35 @@ const Profile = () => {
                             </Form.Group>
                             <Row>
                                 <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Provincia</Form.Label>
-                                <Form.Control as="select" value={provinciaSeleccionada?.id || ''} onChange={e => setProvinciaSeleccionada(provincias.find(provincia => provincia.id === Number(e.target.value)) || null)}>
-                                    <option value="">Seleccione una provincia</option>
-                                    {provincias.map(provincia => (
-                                        <option key={provincia.id} value={provincia.id}>{provincia.nombre}</option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                            </Col>
-                            <Col>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Localidad</Form.Label>
-                                <Form.Control as="select" value={localidadSeleccionada?.id || ''} onChange={e => setLocalidadSeleccionada(localidades.find(localidad => localidad.id === Number(e.target.value)) || null)}>
-                                    <option value="">Seleccione una localidad</option>
-                                    {localidades.map(localidad => (
-                                        <option key={localidad.id} value={localidad.id}>{localidad.nombre}</option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                            </Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Provincia</Form.Label>
+                                        <Form.Control as="select" value={provinciaSeleccionada?.id || ''} onChange={e => setProvinciaSeleccionada(provincias.find(provincia => provincia.id === Number(e.target.value)) || null)}>
+                                            <option value="">Seleccione una provincia</option>
+                                            {provincias.map(provincia => (
+                                                <option key={provincia.id} value={provincia.id}>{provincia.nombre}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Localidad</Form.Label>
+                                        <Form.Control as="select" value={localidadSeleccionada?.id || ''} onChange={e => setLocalidadSeleccionada(localidades.find(localidad => localidad.id === Number(e.target.value)) || null)}>
+                                            <option value="">Seleccione una localidad</option>
+                                            {localidades.map(localidad => (
+                                                <option key={localidad.id} value={localidad.id}>{localidad.nombre}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
                             </Row>
 
                         </Col>
                     </Row>
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <button type="button" style={{
-                            backgroundColor: '#EE7F46', 
-                            border: '#EE7F46',                           
+                            backgroundColor: '#EE7F46',
+                            border: '#EE7F46',
                             color: 'white',
                             padding: '10px 20px',
                             borderRadius: '5px',
