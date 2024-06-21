@@ -3,16 +3,21 @@ import Sucursal from "../../models/Sucursal";
 import { deleteSucursalPorId, getSucursales } from "../../services/SucursalApi";
 import { Button, FormControl, Table } from "react-bootstrap";
 import { ModalSucursal } from "./ModalSucursal";
+import { ModalCategorias } from "./ModalCategorias";
 
 export function GrillaSucursal() {
 
     const [showModal, setShowModal] = useState(false);
     const [editing, setEditing] = useState(false);
     const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [selectedSucursal, setSelectedSucursal] = useState<Sucursal>(new Sucursal());
     const [selectedIdEmpresa, setSelectedIdEmpresa] = useState<number>(0);
+    const [onlyShowCategorias, setOnlyShowCategorias] = useState(false);
 
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
     const [filtro, setFiltro] = useState('');
+
+    const [showModalCategorias, setShowModalCategorias] = useState(false);
 
     const getListadoSucursales = async () => {
         const datos: Sucursal[] = await getSucursales();
@@ -34,6 +39,11 @@ export function GrillaSucursal() {
         setShowModal(false);
         setEditing(false);
         setSelectedId(null);
+        setShowModalCategorias(false);
+    };
+
+    const handleShowCategorias = () => {
+        setShowModalCategorias(true);
     };
 
     const deleteSucursal = async (idSucursal: number) => {
@@ -66,10 +76,13 @@ export function GrillaSucursal() {
                     selectedId={selectedId}
                     getListadoSucursales={getListadoSucursales}
                 />
-
+                <ModalCategorias
+                    onlyShowCategorias={onlyShowCategorias}
+                    selectedSucursal={selectedSucursal}
+                    showModalCategorias={showModalCategorias}
+                    handleClose={handleClose}
+                />
                 <br />
-
-
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <FormControl
                         placeholder="Filtrar por ID o Denominacion"
@@ -91,7 +104,9 @@ export function GrillaSucursal() {
                             <th>Horario Cierre</th>
                             <th>Casa Matriz</th>
                             <th>Localidad</th>
-                            <th style={{ minWidth: "220px" }}>Opciones</th>
+                            <th>Provincia</th>
+                            <th style={{ width: "180px" }}>Categoria</th>
+                            <th style={{ width: "200px" }}>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,6 +118,13 @@ export function GrillaSucursal() {
                                 <td>{sucursal.horarioCierre}</td>
                                 <td>{sucursal.casaMatriz ? "Si" : "No"}</td>
                                 <td>{sucursal.domicilio.localidad.nombre}</td>
+                                <td>{sucursal.domicilio.localidad.provincia.nombre}</td>
+                                <td>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }}
+                                        onClick={() => { setSelectedSucursal(sucursal); handleShowCategorias(); setOnlyShowCategorias(false) }}>Agregar</Button>
+                                    <Button variant="outline-info" style={{ maxHeight: "40px" }}
+                                        onClick={() => { setSelectedSucursal(sucursal); handleShowCategorias(); setOnlyShowCategorias(true) }}>Ver</Button>
+                                </td>
                                 <td>
                                     <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }}
                                         onClick={() => { setSelectedId(sucursal.id); setSelectedIdEmpresa(sucursal.empresa.id); handleOpenEdit(); }}>Modificar</Button>
