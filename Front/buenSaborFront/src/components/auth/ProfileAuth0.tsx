@@ -12,8 +12,8 @@ import Provincia from "../../models/Provincia";
 import Localidad from "../../models/Localidad";
 import Domicilio from "../../models/Domicilio";
 import { updateData } from "../../services/UsuarioClienteAPI";
-import { getPronviciasPorPais } from "../../services/ProvinciaApi";
-import { getPaises } from "../../services/PaisApi";
+import { getPaises } from "../../services/PaisAPI";
+import { getPronviciasPorPais } from "../../services/ProvinciaAPI";
 
 const Profile = () => {
     const { user, isAuthenticated, isLoading } = useAuth0();

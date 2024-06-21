@@ -118,6 +118,7 @@ export function GrillaCategoria() {
                     showModal={showCategoriaModal}
                     editing={editing}
                     categoriaSeleccionada={categoriaSeleccionada}
+                    getListadoCategorias={getListadoCategorias}
                 />
                 <br />
                 <Table striped bordered hover size="sm">

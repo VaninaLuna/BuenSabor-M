@@ -12,9 +12,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     selectedId?: number | null;
+    getListadoArticulosInsumos: () => void;
 }
 
-export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId, getListadoArticulosInsumos }) => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [insumo, setArticuloInsumo] = useState<ArticuloInsumo>(new ArticuloInsumo());
@@ -26,6 +27,7 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
     const handleCloseAndClear = () => {
         setImagenes(['']);
         setTxtValidacion("");
+        setArticuloInsumo(new ArticuloInsumo())
         handleClose();
     };
 
@@ -168,17 +170,11 @@ export const ModalArticuloInsumo: React.FC<ModalProps> = ({ showModal, handleClo
 
         console.log(JSON.stringify(insumoActualizado));
         await saveArticuloInsumo(insumoActualizado);
-        window.location.reload();
-    };
 
-    // const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-    //     return categorias.filter(c => !c.eliminado).map((categoria: Categoria) => (
-    //         <React.Fragment key={categoria.id}>
-    //             <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
-    //             {categoria.subCategorias && renderCategorias(categoria.subCategorias)}
-    //         </React.Fragment>
-    //     ));
-    // }
+        handleCloseAndClear()
+        getListadoArticulosInsumos()
+
+    };
 
     const renderCategorias = (categorias: Categoria[]): Categoria[] => {
         const todasCategorias: Categoria[] = [];

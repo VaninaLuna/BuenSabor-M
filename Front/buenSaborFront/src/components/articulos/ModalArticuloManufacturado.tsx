@@ -14,9 +14,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     selectedId?: number | null;
+    getListadoArticulosManufacturados: () => void;
 }
 
-export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId, getListadoArticulosManufacturados }) => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [unidades, setUnidadesMedida] = useState<UnidadMedida[]>([]);
     const [manufacturado, setArticuloManufacturado] = useState<ArticuloManufacturado>(new ArticuloManufacturado());
@@ -170,7 +171,9 @@ export const ModalArticuloManufacturado: React.FC<ModalProps> = ({ showModal, ha
         setArticuloManufacturado(manufacturadoActualizado);
         console.log(manufacturadoActualizado);
         await saveArticuloManufacturado(manufacturadoActualizado);
-        window.location.reload();
+
+        handleCloseAndClear()
+        getListadoArticulosManufacturados()
     };
 
     const agregarInsumoModal = () => {

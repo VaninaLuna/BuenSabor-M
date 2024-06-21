@@ -8,9 +8,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     categoriaSeleccionada?: Categoria | null;
+    getListadoCategorias: () => void;
 }
 
-export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, categoriaSeleccionada }) => {
+export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, editing, categoriaSeleccionada, getListadoCategorias }) => {
 
     const [newCategoria, setNewCategoria] = useState<Categoria>(new Categoria());
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -64,9 +65,9 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         } else {
             // It's a subcategory
             const ultimoCodigo = categoriaPadre[0].subCategorias
-            .map(s => parseInt(s.codigo.split('.').pop()!))
-            .sort((a, b) => b - a)[0] || 0;
-            
+                .map(s => parseInt(s.codigo.split('.').pop()!))
+                .sort((a, b) => b - a)[0] || 0;
+
             return `${parentCodigo}.${ultimoCodigo + 1}`;
         }
     };
@@ -81,11 +82,13 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
         const categoriaPadre = categorias.filter(c => c.id === newCategoria.categoriaPadre?.id && c.subCategorias);
         newCategoria.codigo = generateCodigo(parentCodigo, categoriaPadre);
         await saveCategoria(newCategoria);
-        window.location.reload();
+
+        handleCloseAndClear();
+        getListadoCategorias()
     };
 
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
-        return categorias.map((categoria: Categoria) => {
+        return categorias.filter(c => !c.eliminado).map((categoria: Categoria) => {
             return (
                 <React.Fragment key={categoria.id}>
                     <option value={categoria.id}>{categoria.codigo} {categoria.denominacion}</option>
@@ -103,11 +106,11 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
 
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                    { newCategoria.codigo && 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Codigo</Form.Label>
-                        <Form.Control type="text" name="codigo" value={newCategoria.codigo || ''} onChange={handleInputChange} disabled />
-                    </Form.Group>
+                    {newCategoria.codigo &&
+                        <Form.Group className="mb-3">
+                            <Form.Label>Codigo</Form.Label>
+                            <Form.Control type="text" name="codigo" value={newCategoria.codigo || ''} onChange={handleInputChange} disabled />
+                        </Form.Group>
                     }
                     <Form.Group className="mb-3">
                         <Form.Label>Denominacion</Form.Label>

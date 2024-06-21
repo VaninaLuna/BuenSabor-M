@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getReporteFechas } from '../../services/ReporteApi';
 
 const ReporteExcel = () => {
     const [fechaDesde, setFechaDesde] = useState('');
@@ -10,9 +11,7 @@ const ReporteExcel = () => {
 
         if (validateForm()) {
 
-            const response = await fetch(`http://localhost:8080/report/excel?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`);
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(new Blob([blob]));
+            const url = await getReporteFechas(fechaDesde, fechaHasta);
             const a = document.createElement('a');
             a.href = url;
             a.download = `reporte_pedidos_${fechaDesde}_${fechaHasta}.xlsx`;

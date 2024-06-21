@@ -10,8 +10,8 @@ import Domicilio from "../../models/Domicilio";
 import { getLocalidadesPorProvincia } from "../../services/LocalidadApi";
 import { saveDomicilio } from "../../services/DomicilioApi";
 import { getEmpresaPorID } from "../../services/EmpresaApi";
-import { getPaises } from "../../services/PaisApi";
-import { getPronviciasPorPais } from "../../services/ProvinciaApi";
+import { getPronviciasPorPais } from "../../services/ProvinciaAPI";
+import { getPaises } from "../../services/PaisAPI";
 
 interface ModalProps {
     showModal: boolean;
@@ -19,9 +19,10 @@ interface ModalProps {
     editing?: boolean;
     selectedIdEmpresa: number;
     selectedId?: number | null;
+    getListadoSucursales: () => void;
 }
 
-export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedIdEmpresa, selectedId }) => {
+export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedIdEmpresa, selectedId, getListadoSucursales }) => {
 
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
     // const [empresas, setEmpresas] = useState<Empresa[]>([]);
@@ -44,6 +45,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
 
     const handleCloseAndClear = () => {
         setTxtValidacion("");
+        setSucursal(new Sucursal())
         handleClose();
     };
 
@@ -174,7 +176,9 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         setSucursal(sucursalActualizado);
 
         await saveSucursal(sucursalActualizado);
-        window.location.reload();
+
+        handleCloseAndClear()
+        getListadoSucursales()
 
     };
 

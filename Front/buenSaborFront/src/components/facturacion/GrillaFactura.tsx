@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Modal, Row, Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
 import Factura from "../../models/Factura";
-import { getFacturas, getFacturasByCliente } from "../../services/FacturaApi";
+import { getFacturaPDF, getFacturas, getFacturasByCliente } from "../../services/FacturaApi";
 import { RolName } from "../../models/RolName";
 
 export function GrillaFactura() {
@@ -53,7 +53,7 @@ export function GrillaFactura() {
     }, []);
 
     const handleDownloadPdf = (factura: Factura) => {
-        const url = `http://localhost:8080/factura/download_pdf_factura/${factura.id}`
+        const url = getFacturaPDF(factura.id)
         window.open(url, "_blank");
     };
 

@@ -52,7 +52,7 @@ export function GrillaEmpresa() {
 
     const deleteEmpresa = async (idEmpresa: number) => {
         await deleteEmpresaPorID(idEmpresa);
-        window.location.reload();
+        getListadoEmpresas();
     };
 
     useEffect(() => {
@@ -77,6 +77,7 @@ export function GrillaEmpresa() {
                     showModal={showModal}
                     editing={editing}
                     selectedId={selectedId}
+                    getListadoEmpresas={getListadoEmpresas}
                 />
                 <ModalSucursal
                     handleClose={handleCloseSucursal}
