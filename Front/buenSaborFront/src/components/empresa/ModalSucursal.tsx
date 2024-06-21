@@ -19,7 +19,7 @@ interface ModalProps {
     editing?: boolean;
     selectedIdEmpresa: number;
     selectedId?: number | null;
-    getListadoSucursales: () => void;
+    getListadoSucursales?: () => void;
 }
 
 export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedIdEmpresa, selectedId, getListadoSucursales }) => {
@@ -178,7 +178,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         await saveSucursal(sucursalActualizado);
 
         handleCloseAndClear()
-        getListadoSucursales()
+        if (getListadoSucursales) getListadoSucursales()
 
     };
 
