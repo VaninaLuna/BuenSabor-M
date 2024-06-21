@@ -59,7 +59,7 @@ export function GrillaSucursal() {
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '15px 15px' }}>Sucursales</h1>
                 <ModalSucursal
-                    handleClose={handleClose}
+                    handleCloseSucursal={handleClose}
                     showModal={showModal}
                     editing={editing}
                     selectedIdEmpresa={selectedIdEmpresa}
