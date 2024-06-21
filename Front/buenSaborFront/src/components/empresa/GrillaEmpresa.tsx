@@ -6,6 +6,7 @@ import Empresa from '../../models/Empresa';
 import { deleteEmpresaPorID, getEmpresas } from '../../services/EmpresaApi';
 import { ModalEmpresa } from './ModalEmpresa';
 import { ModalSucursal } from './ModalSucursal';
+import { ModalSucursales } from './ModalSucursales';
 
 
 export function GrillaEmpresa() {
@@ -15,6 +16,7 @@ export function GrillaEmpresa() {
 
     const [showModalSucursal, setShowModalSucursal] = useState(false);
     const [editingSucursal, setEditingSucursal] = useState(false);
+    const [showModalSucursales, setShowModalSucursales] = useState(false);
 
     const [empresa, setEmpresa] = useState<Empresa[]>([]);
     const [filtro, setFiltro] = useState('');
@@ -50,9 +52,18 @@ export function GrillaEmpresa() {
         setSelectedId(0);
     };
 
+    const handleCloseSucursales = () => {
+        setShowModalSucursales(false);
+        setSelectedId(0);
+    };
+
     const deleteEmpresa = async (idEmpresa: number) => {
         await deleteEmpresaPorID(idEmpresa);
         getListadoEmpresas();
+    };
+
+    const handleShowSucursales = () => {
+        setShowModalSucursales(true);
     };
 
     useEffect(() => {
@@ -80,10 +91,15 @@ export function GrillaEmpresa() {
                     getListadoEmpresas={getListadoEmpresas}
                 />
                 <ModalSucursal
-                    handleClose={handleCloseSucursal}
+                    handleCloseSucursal={handleCloseSucursal}
                     showModal={showModalSucursal}
                     editing={editingSucursal}
                     selectedIdEmpresa={selectedId}
+                />
+                <ModalSucursales
+                    empresaId={selectedId}
+                    handleCloseSucursales={handleCloseSucursales}
+                    showModalSucursales={showModalSucursales}
                 />
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -104,7 +120,8 @@ export function GrillaEmpresa() {
                             <th style={{ minWidth: "150px" }}>nombre</th>
                             <th>Razon Social</th>
                             <th>Cuil</th>
-                            <th style={{ minWidth: "220px" }}>Opciones</th>
+                            <th style={{ width: "200px" }}>Sucursales</th>
+                            <th style={{ width: "300px" }}>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,10 +132,12 @@ export function GrillaEmpresa() {
                                 <td>{empresa.razonSocial}</td>
                                 <td>{empresa.cuil}</td>
                                 <td>
+                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenCreateSucursal() }}>Agregar</Button>
+                                    <Button variant="outline-info" style={{ maxHeight: "40px" }} onClick={() => { setSelectedId(empresa.id); handleShowSucursales(); }}>Ver</Button>
+                                </td>
+                                <td>
                                     <Button variant="outline-warning" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenEdit(); }}>Modificar</Button>
-                                    <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => { setSelectedId(empresa.id); handleOpenCreateSucursal() }}>Agregar Sucursal</Button>
                                     <Button variant="outline-danger" style={{ maxHeight: "40px" }} onClick={() => deleteEmpresa(empresa.id)}>Eliminar</Button>
-                                    {/* <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetails(empresa)}>Detalle</Button> */}
                                 </td>
                             </tr>
                         )}

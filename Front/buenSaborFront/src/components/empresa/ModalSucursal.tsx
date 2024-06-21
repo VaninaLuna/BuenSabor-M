@@ -15,14 +15,14 @@ import { getPaises } from "../../services/PaisAPI";
 
 interface ModalProps {
     showModal: boolean;
-    handleClose: () => void;
+    handleCloseSucursal: () => void;
     editing?: boolean;
     selectedIdEmpresa: number;
     selectedId?: number | null;
     getListadoSucursales?: () => void;
 }
 
-export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedIdEmpresa, selectedId, getListadoSucursales }) => {
+export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleCloseSucursal, editing, selectedIdEmpresa, selectedId, getListadoSucursales }) => {
 
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
     // const [empresas, setEmpresas] = useState<Empresa[]>([]);
@@ -46,11 +46,10 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
     const handleCloseAndClear = () => {
         setTxtValidacion("");
         setSucursal(new Sucursal())
-        handleClose();
+        handleCloseSucursal();
     };
 
     useEffect(() => {
-        console.log(selectedIdEmpresa)
         if (!selectedId) {
             setSucursal(new Sucursal());
         } else {
