@@ -97,6 +97,7 @@ export function GrillaArticuloInsumo() {
                     showModal={showModal}
                     editing={editing}
                     selectedId={selectedId}
+                    getListadoArticulosInsumos={getListadoArticulosInsumos}
                 />
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

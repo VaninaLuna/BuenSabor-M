@@ -19,6 +19,7 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
     const handleCloseAndClear = () => {
         handleClose();
         setTxtValidacion("");
+        setUnidadMedida(new UnidadMedida());
     };
 
     useEffect(() => {
@@ -53,7 +54,7 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
 
         console.log(JSON.stringify(uMedida));
         await saveUnidadMedida(uMedida);
-        //window.location.reload();
+
         getListadoUMedidas();
         handleCloseAndClear();
     };

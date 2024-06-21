@@ -8,9 +8,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     selectedId?: number | null;
+    getListadoEmpresas: () => void;
 }
 
-export const ModalEmpresa: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalEmpresa: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId, getListadoEmpresas }) => {
 
     const [empresa, setEmpresa] = useState<Empresa>(new Empresa());
     const [txtValidacion, setTxtValidacion] = useState<string>("");
@@ -18,6 +19,7 @@ export const ModalEmpresa: React.FC<ModalProps> = ({ showModal, handleClose, edi
     const handleCloseAndClear = () => {
         setTxtValidacion("");
         handleClose();
+        setEmpresa(new Empresa())
     };
 
     useEffect(() => {
@@ -73,7 +75,9 @@ export const ModalEmpresa: React.FC<ModalProps> = ({ showModal, handleClose, edi
 
         console.log(JSON.stringify(empresaActualizada));
         await saveEmpresa(empresaActualizada);
-        window.location.reload();
+
+        handleCloseAndClear()
+        getListadoEmpresas()
     };
 
     return (

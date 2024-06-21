@@ -122,6 +122,7 @@ export function GrillaArticuloManufacturado() {
                     showModal={showModal}
                     editing={editing}
                     selectedId={selectedId}
+                    getListadoArticulosManufacturados={getListadoArticulosManufacturados}
                 />
                 <br />
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

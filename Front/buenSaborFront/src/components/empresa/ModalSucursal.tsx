@@ -16,9 +16,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     selectedId?: number | null;
+    getListadoSucursales: () => void;
 }
 
-export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId, getListadoSucursales }) => {
 
     const [sucursal, setSucursal] = useState<Sucursal>(new Sucursal());
     const [empresas, setEmpresas] = useState<Empresa[]>([]);
@@ -31,6 +32,7 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
 
     const handleCloseAndClear = () => {
         setTxtValidacion("");
+        setSucursal(new Sucursal())
         handleClose();
     };
 
@@ -171,7 +173,9 @@ export const ModalSucursal: React.FC<ModalProps> = ({ showModal, handleClose, ed
         setSucursal(sucursalActualizado);
 
         await saveSucursal(sucursalActualizado);
-        window.location.reload();
+
+        handleCloseAndClear()
+        getListadoSucursales()
 
     };
 

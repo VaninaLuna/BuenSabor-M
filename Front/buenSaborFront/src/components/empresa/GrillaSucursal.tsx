@@ -13,7 +13,7 @@ export function GrillaSucursal() {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
     const [filtro, setFiltro] = useState('');
 
-    const getListadoArticulosInsumos = async () => {
+    const getListadoSucursales = async () => {
         const datos: Sucursal[] = await getSucursales();
         setSucursales(datos);
     };
@@ -37,11 +37,11 @@ export function GrillaSucursal() {
 
     const deleteSucursal = async (idSucursal: number) => {
         await deleteSucursalPorId(idSucursal);
-        window.location.reload();
+        getListadoSucursales()
     };
 
     useEffect(() => {
-        getListadoArticulosInsumos();
+        getListadoSucursales();
     }, []);
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +62,7 @@ export function GrillaSucursal() {
                     showModal={showModal}
                     editing={editing}
                     selectedId={selectedId}
+                    getListadoSucursales={getListadoSucursales}
                 />
 
                 <br />
