@@ -2,7 +2,7 @@ import Localidad from "../models/Localidad";
 
 //GET
 export async function getLocalidades() {
-    const ENDPOINT = 'http://localhost:8080/localidad/all';
+    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/localidad/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getLocalidades() {
 }
 
 export async function getLocalidadPorId(id: number) {
-    const ENDPOINT = `http://localhost:8080/localidad/${id}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/localidad/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -36,7 +36,7 @@ export async function getLocalidadPorId(id: number) {
 }
 
 export async function getLocalidadesPorProvincia(idProvincia: number) {
-    const ENDPOINT = `http://localhost:8080/localidad/por_provincia/${idProvincia}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/localidad/por_provincia/${idProvincia}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -55,11 +55,11 @@ export async function getLocalidadesPorProvincia(idProvincia: number) {
 
 //POST - PUT
 export async function saveLocalidad(localidad?: Localidad) {
-    let endpoint = 'http://localhost:8080/localidad';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/localidad';
     let method: string = "POST";
 
     if (localidad && localidad.id !== 0) {
-        endpoint = `http://localhost:8080/localidad/${localidad.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/localidad/${localidad.id}`;
         method = "PUT";
     }
 
@@ -76,7 +76,7 @@ export async function saveLocalidad(localidad?: Localidad) {
 
 //DELETE
 export async function deleteLocalidadPorId(id: number) {
-    const ENDPOINT = `http://localhost:8080/localidad/${id}`
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/localidad/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

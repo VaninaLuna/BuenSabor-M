@@ -1,7 +1,7 @@
 import Rol from "../models/Rol";
 
 export async function getRoles() {
-    const ROLES_ENDPOINT = 'http://localhost:8080/rol/all';
+    const ROLES_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/rol/all';
 
     try {
         const response = await fetch(ROLES_ENDPOINT);

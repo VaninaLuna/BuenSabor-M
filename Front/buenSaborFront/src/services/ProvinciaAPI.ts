@@ -2,7 +2,7 @@ import Provincia from "../models/Provincia";
 
 //GET
 export async function getPronviciasPorPais(idPais: number) {
-    const ENDPOINT = `http://localhost:8080/provincia/por_pais/${idPais}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/provincia/por_pais/${idPais}`;
 
     try {
         const response = await fetch(ENDPOINT);

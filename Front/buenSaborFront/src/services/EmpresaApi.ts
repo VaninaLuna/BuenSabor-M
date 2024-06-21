@@ -1,7 +1,7 @@
 import Empresa from "../models/Empresa";
 
 export async function getEmpresas() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:8080/empresa/all';
+    const INSTRUMENTOS_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/empresa/all';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -18,7 +18,7 @@ export async function getEmpresas() {
 }
 
 export async function getEmpresaPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:8080/empresa/${id}`;
+    const INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/empresa/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -36,11 +36,11 @@ export async function getEmpresaPorID(id: number) {
 
 //POST - PUT
 export async function saveEmpresa(empresa?: Empresa) {
-    let endpoint = 'http://localhost:8080/empresa';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/empresa';
     let method: string = "POST";
 
     if (empresa && empresa.id !== 0) {
-        endpoint = `http://localhost:8080/empresa/${empresa.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/empresa/${empresa.id}`;
         method = "PUT";
     }
 
@@ -55,7 +55,7 @@ export async function saveEmpresa(empresa?: Empresa) {
 
 //DELETE
 export async function deleteEmpresaPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:8080/empresa/${id}`
+    const DELETE_INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/empresa/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
