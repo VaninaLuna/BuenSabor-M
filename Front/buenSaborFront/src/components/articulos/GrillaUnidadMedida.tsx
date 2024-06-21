@@ -27,6 +27,7 @@ export function GrillaUnidadMedida() {
     const getListadoUMedidas = async () => {
         const datos: UnidadMedida[] = await getUMByEstaEliminado(eliminados);
         setUMedidas(datos);
+
     };
 
     const handleOpen = async () => {
@@ -83,6 +84,7 @@ export function GrillaUnidadMedida() {
                     showModal={showUMedidaModal}
                     editing={editing}
                     selectedId={selectedId}
+                    getListadoUMedidas={getListadoUMedidas}
                 />
 
                 <br />

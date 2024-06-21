@@ -8,9 +8,10 @@ interface ModalProps {
     handleClose: () => void;
     editing?: boolean;
     selectedId?: number | null;
+    getListadoUMedidas: () => void;
 }
 
-export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId }) => {
+export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose, editing, selectedId, getListadoUMedidas }) => {
 
     const [uMedida, setUnidadMedida] = useState<UnidadMedida>(new UnidadMedida());
     const [txtValidacion, setTxtValidacion] = useState<string>("");
@@ -52,7 +53,9 @@ export const ModalUnidadMedida: React.FC<ModalProps> = ({ showModal, handleClose
 
         console.log(JSON.stringify(uMedida));
         await saveUnidadMedida(uMedida);
-        window.location.reload();
+        //window.location.reload();
+        getListadoUMedidas();
+        handleCloseAndClear();
     };
 
     return (
