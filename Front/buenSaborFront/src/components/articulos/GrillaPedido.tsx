@@ -112,7 +112,7 @@ export function GrillaPedido() {
                             <th>Fecha pedido</th>
                             <th>Hora estimada de finalizacion</th>
                             <th>Total</th>
-                            <th>Total costo</th>
+                            {/* <th>Total costo</th> */}
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
@@ -124,7 +124,7 @@ export function GrillaPedido() {
                                 <td>{pedido.fechaPedido}</td>
                                 <td>{pedido.horaEstimadaFinalizacion}</td>
                                 <td>{pedido.total}</td>
-                                <td>{pedido.totalCosto}</td>
+                                {/* <td>{pedido.totalCosto}</td> */}
                                 <td>
                                     <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados || pedido.estado == "Cancelado"}>
                                         {estadosEnvio.map((estado, index) =>
