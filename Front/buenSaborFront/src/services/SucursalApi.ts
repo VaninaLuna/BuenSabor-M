@@ -2,7 +2,7 @@ import Sucursal from "../models/Sucursal";
 
 //GET
 export async function getSucursales() {
-    const ENDPOINT = 'http://localhost:9000/sucursal/all';
+    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/sucursal/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getSucursales() {
 }
 
 export async function getSucursalesPorEmpresa(empresaId: number) {
-    const ENDPOINT = `http://localhost:9000/sucursal/empresa/${empresaId}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/sucursal/empresa/${empresaId}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -36,7 +36,7 @@ export async function getSucursalesPorEmpresa(empresaId: number) {
 }
 
 export async function getSucursalPorId(id: number) {
-    const ENDPOINT = `http://localhost:9000/sucursal/${id}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/sucursal/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -54,11 +54,11 @@ export async function getSucursalPorId(id: number) {
 
 //POST - PUT
 export async function saveSucursal(sucursal?: Sucursal) {
-    let endpoint = 'http://localhost:9000/sucursal';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/sucursal';
     let method: string = "POST";
 
     if (sucursal && sucursal.id !== 0) {
-        endpoint = `http://localhost:9000/sucursal/${sucursal.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/sucursal/${sucursal.id}`;
         method = "PUT";
     }
 
@@ -73,7 +73,7 @@ export async function saveSucursal(sucursal?: Sucursal) {
 
 //DELETE
 export async function deleteSucursalPorId(id: number) {
-    const ENDPOINT = `http://localhost:9000/sucursal/${id}`
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/sucursal/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

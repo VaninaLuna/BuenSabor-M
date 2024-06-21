@@ -2,7 +2,7 @@ import { UsuarioCliente } from "../models/Usuario";
 
 //GET
 export async function getUsuariosCliente() {
-    const ENDPOINT = 'http://localhost:9000/usuario_cliente/all';
+    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/usuario_cliente/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getUsuariosCliente() {
 }
 
 export async function getUsuarioClientePorId(id: number) {
-    const ENDPOINT = `http://localhost:9000/usuario_cliente/${id}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/usuario_cliente/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -36,7 +36,7 @@ export async function getUsuarioClientePorId(id: number) {
 }
 
 export async function getEmpleados() {
-    const ENDPOINT = `http://localhost:9000/usuario_cliente/empleados`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/usuario_cliente/empleados`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -53,7 +53,7 @@ export async function getEmpleados() {
 }
 
 export async function getClientes() {
-    const ENDPOINT = `http://localhost:9000/usuario_cliente/clientes`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/usuario_cliente/clientes`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -71,11 +71,11 @@ export async function getClientes() {
 
 //POST - PUT
 export async function saveUsuarioCliente(usuarioCliente?: UsuarioCliente) {
-    let endpoint = 'http://localhost:9000/usuario_cliente';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/usuario_cliente';
     let method: string = "POST";
 
     if (usuarioCliente && usuarioCliente.id !== 0) {
-        endpoint = `http://localhost:9000/usuario_cliente/${usuarioCliente.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/usuario_cliente/${usuarioCliente.id}`;
         method = "PUT";
     }
 
@@ -89,7 +89,7 @@ export async function saveUsuarioCliente(usuarioCliente?: UsuarioCliente) {
 }
 
 export async function updateData(usuarioCliente?: UsuarioCliente) {
-    const endpoint = 'http://localhost:9000/usuario_cliente';
+    const endpoint = 'https://buensabor-back-hpyp.onrender.com/usuario_cliente';
 
     await fetch(endpoint, {
         "method": "PUT",
@@ -102,7 +102,7 @@ export async function updateData(usuarioCliente?: UsuarioCliente) {
 
 //DELETE
 export async function deleteUsuarioClientePorId(id: number) {
-    const ENDPOINT = `http://localhost:9000/usuario_cliente/${id}`
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/usuario_cliente/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

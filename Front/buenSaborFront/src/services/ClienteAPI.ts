@@ -3,7 +3,7 @@ import Cliente from "../models/Cliente";
 
 //GET
 export async function getClientePorUsuarioClienteId(id: number) {
-    const ENDPOINT = `http://localhost:9000/cliente/usuario_cliente_id/${id}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/cliente/usuario_cliente_id/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -21,11 +21,11 @@ export async function getClientePorUsuarioClienteId(id: number) {
 
 //POST - PUT
 export async function saveCliente(cliente?: Cliente) {
-    let endpoint = 'http://localhost:9000/cliente';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/cliente';
     let method: string = "POST";
 
     if (cliente && cliente.id !== 0) {
-        endpoint = `http://localhost:9000/cliente/${cliente.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/cliente/${cliente.id}`;
         method = "PUT";
     }
 

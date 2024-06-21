@@ -4,7 +4,7 @@ import Pedido from "../models/Pedido";
 import PreferenceMP from "../models/mercadoPago/PreferenceMP";
 
 export async function savePreferenceMP(pedido?: Pedido) {
-    const endpoint = 'http://localhost:9000/pedido/create_preference_mp';
+    const endpoint = 'https://buensabor-back-hpyp.onrender.com/pedido/create_preference_mp';
 
     const response = await fetch(endpoint, {
         "method": "POST",

@@ -2,7 +2,7 @@ import ArticuloManufacturado from "../models/ArticuloManufacturado";
 
 //GET
 export async function getArticulosManufacturados() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:9000/articuloManufacturado/esta_eliminado/false';
+    const INSTRUMENTOS_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/articuloManufacturado/esta_eliminado/false';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -19,7 +19,7 @@ export async function getArticulosManufacturados() {
 }
 
 export async function getArticuloManufacturadoPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:9000/articuloManufacturado/${id}`;
+    const INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/articuloManufacturado/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -42,11 +42,11 @@ export async function getArticuloManufacturadoPorID(id: number) {
 //POST - PUT
 export async function saveArticuloManufacturado(articuloManufacturado?: ArticuloManufacturado) {
     const dataManufacturado = { ...articuloManufacturado, type: "articuloManufacturado" }
-    let endpoint = 'http://localhost:9000/articuloManufacturado';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/articuloManufacturado';
     let method: string = "POST";
 
     if (articuloManufacturado && articuloManufacturado.id !== 0) {
-        endpoint = `http://localhost:9000/articuloManufacturado/${articuloManufacturado.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/articuloManufacturado/${articuloManufacturado.id}`;
         method = "PUT";
     }
 
@@ -61,7 +61,7 @@ export async function saveArticuloManufacturado(articuloManufacturado?: Articulo
 
 //DELETE
 export async function deleteArticuloManufacturadoPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:9000/articuloManufacturado/${id}`
+    const DELETE_INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/articuloManufacturado/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
@@ -81,7 +81,7 @@ export async function deleteArticuloManufacturadoPorID(id: number) {
 
 //Delete logico
 export async function updateEstadoEliminadoManufacturado(id: number) {
-    const endpoint = `http://localhost:9000/articuloManufacturado/cambiar_estado_eliminado/${id}`;
+    const endpoint = `https://buensabor-back-hpyp.onrender.com/articuloManufacturado/cambiar_estado_eliminado/${id}`;
 
     try {
         const response = await fetch(endpoint, {
@@ -103,7 +103,7 @@ export async function updateEstadoEliminadoManufacturado(id: number) {
 
 //Get eliminados o no eliminados
 export async function getManufacturadoByEstaEliminado(eliminado: boolean) {
-    const endpoint = `http://localhost:9000/articuloManufacturado/esta_eliminado/${eliminado}`;
+    const endpoint = `https://buensabor-back-hpyp.onrender.com/articuloManufacturado/esta_eliminado/${eliminado}`;
 
     try {
         const response = await fetch(endpoint);

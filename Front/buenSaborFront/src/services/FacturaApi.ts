@@ -2,7 +2,7 @@ import Factura from "../models/Factura";
 
 //GET
 export async function getFacturas() {
-    const ENDPOINT = 'http://localhost:9000/factura/all';
+    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/factura/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getFacturas() {
 }
 
 export async function getFacturasByCliente(clienteId: number) {
-    const ENDPOINT = `http://localhost:9000/factura/byCliente/${clienteId}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/factura/byCliente/${clienteId}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -36,11 +36,11 @@ export async function getFacturasByCliente(clienteId: number) {
 }
 
 export function getFacturaPDF(id: number) {
-    return `http://localhost:9000/factura/download_pdf_factura/${id}`
+    return `https://buensabor-back-hpyp.onrender.com/factura/download_pdf_factura/${id}`
 }
 
 export async function sendMailFactura(facturaId: number, mailCliente: string) {
-    const ENDPOINT = `http://localhost:9000/factura/send_pdf_factura/${facturaId}/${mailCliente}`;
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/factura/send_pdf_factura/${facturaId}/${mailCliente}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -56,11 +56,11 @@ export async function sendMailFactura(facturaId: number, mailCliente: string) {
 
 //POST - PUT
 export async function saveFactura(factura?: Factura) {
-    let endpoint = 'http://localhost:9000/factura';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/factura';
     let method: string = "POST";
 
     if (factura && factura.id !== 0) {
-        endpoint = `http://localhost:9000/factura/${factura.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/factura/${factura.id}`;
         method = "PUT";
     }
 
@@ -77,7 +77,7 @@ export async function saveFactura(factura?: Factura) {
 
 //DELETE
 export async function deleteFacturaPorId(id: number) {
-    const ENDPOINT = `http://localhost:9000/factura/${id}`
+    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/factura/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

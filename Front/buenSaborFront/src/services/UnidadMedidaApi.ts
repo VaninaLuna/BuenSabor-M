@@ -1,7 +1,7 @@
 import UnidadMedida from "../models/UnidadMedida";
 
 export async function getUnidadesMedidas() {
-    const INSTRUMENTOS_ENDPOINT = 'http://localhost:9000/unidadMedida/all';
+    const INSTRUMENTOS_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/unidadMedida/all';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -18,7 +18,7 @@ export async function getUnidadesMedidas() {
 }
 
 export async function getUnidadMedidaPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `http://localhost:9000/unidadMedida/${id}`;
+    const INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/unidadMedida/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -35,11 +35,11 @@ export async function getUnidadMedidaPorID(id: number) {
 }
 
 export async function saveUnidadMedida(unidadMedida?: UnidadMedida) {
-    let endpoint = 'http://localhost:9000/unidadMedida';
+    let endpoint = 'https://buensabor-back-hpyp.onrender.com/unidadMedida';
     let method: string = "POST";
 
     if (unidadMedida && unidadMedida.id !== 0) {
-        endpoint = `http://localhost:9000/unidadMedida/${unidadMedida.id}`;
+        endpoint = `https://buensabor-back-hpyp.onrender.com/unidadMedida/${unidadMedida.id}`;
         method = "PUT";
     }
 
@@ -54,7 +54,7 @@ export async function saveUnidadMedida(unidadMedida?: UnidadMedida) {
 
 //DELETE
 export async function deleteUnidadMedidaPorID(id: number) {
-    const DELETE_INSTRUMENTO_ENDPOINT = `http://localhost:9000/unidadMedida/${id}`
+    const DELETE_INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/unidadMedida/${id}`
 
     try {
         const response = await fetch(DELETE_INSTRUMENTO_ENDPOINT, {
@@ -74,7 +74,7 @@ export async function deleteUnidadMedidaPorID(id: number) {
 
 //Delete logico
 export async function updateEstadoEliminadoUM(id: number) {
-    const endpoint = `http://localhost:9000/unidadMedida/cambiar_estado_eliminado/${id}`;
+    const endpoint = `https://buensabor-back-hpyp.onrender.com/unidadMedida/cambiar_estado_eliminado/${id}`;
 
     try {
         const response = await fetch(endpoint, {
@@ -96,7 +96,7 @@ export async function updateEstadoEliminadoUM(id: number) {
 
 //Get eliminados o no eliminados
 export async function getUMByEstaEliminado(eliminado: boolean) {
-    const endpoint = `http://localhost:9000/unidadMedida/esta_eliminado/${eliminado}`;
+    const endpoint = `https://buensabor-back-hpyp.onrender.com/unidadMedida/esta_eliminado/${eliminado}`;
 
     try {
         const response = await fetch(endpoint);

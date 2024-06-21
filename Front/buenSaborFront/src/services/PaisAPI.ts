@@ -2,7 +2,7 @@ import Pais from "../models/Pais";
 
 //GET
 export async function getPaises() {
-    const ENDPOINT = 'http://localhost:9000/pais/all';
+    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/pais/all';
 
     try {
         const response = await fetch(ENDPOINT);
