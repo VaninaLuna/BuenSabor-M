@@ -2,7 +2,24 @@ import Sucursal from "../models/Sucursal";
 
 //GET
 export async function getSucursales() {
-    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/sucursal/all';
+    const ENDPOINT = 'http://localhost:9000/sucursal/all';
+
+    try {
+        const response = await fetch(ENDPOINT);
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener los datos: ${response.status} ${response.statusText}`);
+        }
+
+        const json = await response.json();
+        return json as Sucursal[];
+    } catch (e) {
+        throw new Error('Error al hacer fetch de articuloInsumo')
+    }
+}
+
+export async function getSucursalesPorEmpresa(empresaId: number) {
+    const ENDPOINT = `http://localhost:9000/sucursal/empresa/${empresaId}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +36,7 @@ export async function getSucursales() {
 }
 
 export async function getSucursalPorId(id: number) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/sucursal/${id}`;
+    const ENDPOINT = `http://localhost:9000/sucursal/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -37,11 +54,11 @@ export async function getSucursalPorId(id: number) {
 
 //POST - PUT
 export async function saveSucursal(sucursal?: Sucursal) {
-    let endpoint = 'https://buensabor-back-hpyp.onrender.com/sucursal';
+    let endpoint = 'http://localhost:9000/sucursal';
     let method: string = "POST";
 
     if (sucursal && sucursal.id !== 0) {
-        endpoint = `https://buensabor-back-hpyp.onrender.com/sucursal/${sucursal.id}`;
+        endpoint = `http://localhost:9000/sucursal/${sucursal.id}`;
         method = "PUT";
     }
 
@@ -56,7 +73,7 @@ export async function saveSucursal(sucursal?: Sucursal) {
 
 //DELETE
 export async function deleteSucursalPorId(id: number) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/sucursal/${id}`
+    const ENDPOINT = `http://localhost:9000/sucursal/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

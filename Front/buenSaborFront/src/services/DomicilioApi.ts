@@ -2,7 +2,7 @@ import Domicilio from "../models/Domicilio";
 
 //GET
 export async function getDomicilios() {
-    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/domicilio/all';
+    const ENDPOINT = 'http://localhost:9000/domicilio/all';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getDomicilios() {
 }
 
 export async function getDomicilioPorId(id: number) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/domicilio/${id}`;
+    const ENDPOINT = `http://localhost:9000/domicilio/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -37,11 +37,11 @@ export async function getDomicilioPorId(id: number) {
 
 //POST - PUT
 export async function saveDomicilio(domicilio?: Domicilio) {
-    let endpoint = 'https://buensabor-back-hpyp.onrender.com/domicilio';
+    let endpoint = 'http://localhost:9000/domicilio';
     let method: string = "POST";
 
     if (domicilio && domicilio.id !== 0) {
-        endpoint = `https://buensabor-back-hpyp.onrender.com/domicilio/${domicilio.id}`;
+        endpoint = `http://localhost:9000/domicilio/${domicilio.id}`;
         method = "PUT";
     }
 
@@ -58,7 +58,7 @@ export async function saveDomicilio(domicilio?: Domicilio) {
 
 //DELETE
 export async function deleteDomicilioPorId(id: number) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/domicilio/${id}`
+    const ENDPOINT = `http://localhost:9000/domicilio/${id}`
 
     try {
         const response = await fetch(ENDPOINT, {

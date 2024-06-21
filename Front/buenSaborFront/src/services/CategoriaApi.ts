@@ -1,7 +1,7 @@
 import Categoria from "../models/Categoria";
 
 export async function getCategorias() {
-    const INSTRUMENTOS_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/categoria/all';
+    const INSTRUMENTOS_ENDPOINT = 'http://localhost:9000/categoria/all';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -18,7 +18,7 @@ export async function getCategorias() {
 }
 
 export async function getArbolCategorias() {
-    const INSTRUMENTOS_ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/categoria/arbol';
+    const INSTRUMENTOS_ENDPOINT = 'http://localhost:9000/categoria/arbol';
 
     try {
         const response = await fetch(INSTRUMENTOS_ENDPOINT);
@@ -35,7 +35,7 @@ export async function getArbolCategorias() {
 }
 
 export async function getCategoriaPorID(id: number) {
-    const INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/categoria/${id}`;
+    const INSTRUMENTO_ENDPOINT = `http://localhost:9000/categoria/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -52,7 +52,7 @@ export async function getCategoriaPorID(id: number) {
 }
 
 export async function getCategoriaPadreDesdeHijo(id: number) {
-    const INSTRUMENTO_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/categoria/padre/${id}`;
+    const INSTRUMENTO_ENDPOINT = `http://localhost:9000/categoria/padre/${id}`;
 
     try {
         const response = await fetch(INSTRUMENTO_ENDPOINT);
@@ -69,11 +69,11 @@ export async function getCategoriaPadreDesdeHijo(id: number) {
 }
 
 export async function saveCategoria(categoria?: Categoria) {
-    let endpoint = 'https://buensabor-back-hpyp.onrender.com/categoria';
+    let endpoint = 'http://localhost:9000/categoria';
     let method: string = "POST";
 
     if (categoria && categoria.id !== 0) {
-        endpoint = `https://buensabor-back-hpyp.onrender.com/categoria/${categoria.id}`;
+        endpoint = `http://localhost:9000/categoria/${categoria.id}`;
         method = "PUT";
     }
 
@@ -88,7 +88,7 @@ export async function saveCategoria(categoria?: Categoria) {
 
 //Delete logico
 export async function updateEstadoEliminadoC(id: number) {
-    const endpoint = `https://buensabor-back-hpyp.onrender.com/categoria/cambiar_estado_eliminado/${id}`
+    const endpoint = `http://localhost:9000/categoria/cambiar_estado_eliminado/${id}`
 
     try {
         const response = await fetch(endpoint, {

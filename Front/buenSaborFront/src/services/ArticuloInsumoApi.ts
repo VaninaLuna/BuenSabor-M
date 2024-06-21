@@ -3,7 +3,7 @@ import ArticuloInsumo from "../models/ArticuloInsumo";
 
 //GET
 export async function getArticulosInsumos() {
-    const ENDPOINT = 'https://buensabor-back-hpyp.onrender.com/articuloInsumo/esta_eliminado/false';
+    const ENDPOINT = 'http://localhost:9000/articuloInsumo/esta_eliminado/false';
 
     try {
         const response = await fetch(ENDPOINT);
@@ -19,7 +19,7 @@ export async function getArticulosInsumos() {
     }
 }
 export async function getArticulosInsumosByEsParaElaborar(esParaElaborar: boolean) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/esParaElaborar/${esParaElaborar}`;
+    const ENDPOINT = `http://localhost:9000/articuloInsumo/esParaElaborar/${esParaElaborar}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -36,7 +36,7 @@ export async function getArticulosInsumosByEsParaElaborar(esParaElaborar: boolea
 }
 
 export async function getArticuloInsumoPorID(id: number) {
-    const ENDPOINT = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/${id}`;
+    const ENDPOINT = `http://localhost:9000/articuloInsumo/${id}`;
 
     try {
         const response = await fetch(ENDPOINT);
@@ -55,11 +55,11 @@ export async function getArticuloInsumoPorID(id: number) {
 //POST - PUT
 export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
     const dataInsumo = { ...articuloInsumo, type: "articuloInsumo" }
-    let endpoint = 'https://buensabor-back-hpyp.onrender.com/articuloInsumo';
+    let endpoint = 'http://localhost:9000/articuloInsumo';
     let method: string = "POST";
 
     if (articuloInsumo && articuloInsumo.id !== 0) {
-        endpoint = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/${articuloInsumo.id}`;
+        endpoint = `http://localhost:9000/articuloInsumo/${articuloInsumo.id}`;
         method = "PUT";
     }
 
@@ -74,7 +74,7 @@ export async function saveArticuloInsumo(articuloInsumo?: ArticuloInsumo) {
 
 //DELETE
 export async function deleteArticuloInsumoPorID(id: number) {
-    const DELETE_ENDPOINT = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/${id}`
+    const DELETE_ENDPOINT = `http://localhost:9000/articuloInsumo/${id}`
 
     try {
         const response = await fetch(DELETE_ENDPOINT, {
@@ -94,7 +94,7 @@ export async function deleteArticuloInsumoPorID(id: number) {
 
 //Delete logico
 export async function updateEstadoEliminadoInsumo(id: number) {
-    const endpoint = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/cambiar_estado_eliminado/${id}`;
+    const endpoint = `http://localhost:9000/articuloInsumo/cambiar_estado_eliminado/${id}`;
 
     try {
         const response = await fetch(endpoint, {
@@ -116,7 +116,7 @@ export async function updateEstadoEliminadoInsumo(id: number) {
 
 //Get eliminados o no eliminados
 export async function getInsumoByEstaEliminado(eliminado: boolean) {
-    const endpoint = `https://buensabor-back-hpyp.onrender.com/articuloInsumo/esta_eliminado/${eliminado}`;
+    const endpoint = `http://localhost:9000/articuloInsumo/esta_eliminado/${eliminado}`;
 
     try {
         const response = await fetch(endpoint);

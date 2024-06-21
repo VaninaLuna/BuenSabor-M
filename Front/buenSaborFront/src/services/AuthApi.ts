@@ -2,7 +2,7 @@ import Usuario, { UsuarioLogin, UsuarioCliente, UsaurioRegistro } from "../model
 
 // ---------- LOGIN ----------------------
 export async function login(usuarioLogin?: UsuarioLogin) {
-    const endpoint = 'https://buensabor-back-hpyp.onrender.com/auth/login';
+    const endpoint = 'http://localhost:9000/auth/login';
 
     const response = await fetch(endpoint, {
         "method": "POST",
@@ -20,7 +20,7 @@ export async function login(usuarioLogin?: UsuarioLogin) {
 // ---------- REGISTER ------------------------
 export async function register(usuario: UsaurioRegistro) {
     // const u = {...usuario.usuario, cliente: usuario.cliente}
-    const endpoint = 'https://buensabor-back-hpyp.onrender.com/auth/register';
+    const endpoint = 'http://localhost:9000/auth/register';
 
     try {
         const response = await fetch(endpoint, {
@@ -46,7 +46,7 @@ export async function register(usuario: UsaurioRegistro) {
 
 
 export async function logout() {
-    const endpoint = 'https://buensabor-back-hpyp.onrender.com/auth/logout';
+    const endpoint = 'http://localhost:9000/auth/logout';
 
     try {
         const response = await fetch(endpoint, {
