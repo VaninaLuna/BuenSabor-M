@@ -120,7 +120,13 @@ public class PedidoController extends BaseControllerImpl<Pedido, PedidoServiceIm
                 tiempoCocina += ((long) detalle.getCantidad() * detalle.getTiempoEstimadoMinutos());
             }
 
-            var tiempoEstimado = tiempoCocina / (long) cocineros.size();
+            long tiempoEstimado = 0;
+
+            if (cocineros != null && !cocineros.isEmpty()) {
+                tiempoEstimado = tiempoCocina / cocineros.size();
+            } else {
+                tiempoEstimado = tiempoCocina;
+            }
 
             return ResponseEntity.ok(tiempoEstimado);
 
