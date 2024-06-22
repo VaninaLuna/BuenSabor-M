@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, FormControl, Modal, Row, Table } from "react-bootstrap";
 import { UsuarioCliente } from "../../models/Usuario";
 import Factura from "../../models/Factura";
 import { getFacturaPDF, getFacturas, getFacturasByCliente } from "../../services/FacturaApi";
@@ -12,6 +12,9 @@ export function GrillaFactura() {
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedFactura, setSelectedFactura] = useState<Factura | null>(null);
     //const [cliente, setCliente] = useState<Cliente>(new Cliente())
+
+    //Filtros
+    const [filtroNroFactura, setFiltroNroFactura] = useState('');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -57,12 +60,28 @@ export function GrillaFactura() {
         window.open(url, "_blank");
     };
 
+    const handleFilterNroFacturaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltroNroFactura(event.target.value);
+    };
+
+    const filteredFacturas = facturas.filter(factura => {
+        const facturaNro = String(factura.id).padStart(5, '0');
+        return filtroNroFactura ? facturaNro.includes(filtroNroFactura) : true;
+    });
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '15px 15px' }}>Facturacion</h1>
 
-
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                    <FormControl
+                        placeholder="Filtrar por Nro. de Factura"
+                        value={filtroNroFactura}
+                        onChange={handleFilterNroFacturaChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                </div>
 
                 <Table striped bordered hover size="sm">
                     <thead>
@@ -75,7 +94,7 @@ export function GrillaFactura() {
                         </tr>
                     </thead>
                     <tbody>
-                        {facturas.map((factura: Factura) =>
+                        {filteredFacturas.map((factura: Factura) =>
                             <tr key={factura.id}>
                                 <td>{String(factura.id).padStart(5, '0')}</td>
                                 <td>{factura.fechaFacturacion}</td>

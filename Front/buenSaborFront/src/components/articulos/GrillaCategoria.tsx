@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Categoria from '../../models/Categoria';
 import { updateEstadoEliminadoC, getArbolCategorias } from '../../services/CategoriaApi';
 import { ModalCategoria } from './ModalCategoria';
-import { Button } from 'react-bootstrap';
+import { Button, FormControl } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 import { ConfirmModal } from './ConfirmModal';
@@ -16,6 +16,9 @@ export function GrillaCategoria() {
 
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
+
+    //Filtro
+    const [filtro, setFiltro] = useState('');
 
     //Modal Confirmar eliminacion
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -69,6 +72,16 @@ export function GrillaCategoria() {
         getListadoCategorias();
     }, []);
 
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredCategorias = categorias.filter(categoria =>
+        categoria.denominacion.toLowerCase().includes(filtro.toLowerCase()) ||
+        categoria.codigo.toString().includes(filtro)
+    );
+
+
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
         return categorias.flatMap((categoria: Categoria) => {
             const subCategoriasEliminadas = categoria.subCategorias.filter(subCat => subCat.eliminado);
@@ -107,12 +120,20 @@ export function GrillaCategoria() {
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '15px 15px' }}>Categorias</h1>
-                {
-                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
-                    <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setCategoriaSeleccionada(null); handleOpen(); }}>
-                        Crear Categoria
-                    </Button>
-                }
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por Denominación o Código"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+                    {
+                        (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName == RolName.ADMIN) &&
+                        <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setCategoriaSeleccionada(null); handleOpen(); }}>
+                            Crear Categoria
+                        </Button>
+                    }
+                </div>
                 <ModalCategoria
                     handleClose={handleClose}
                     showModal={showCategoriaModal}
@@ -134,7 +155,7 @@ export function GrillaCategoria() {
                         </tr>
                     </thead>
                     <tbody>
-                        {renderCategorias(categorias)}
+                        {renderCategorias(filteredCategorias)}
                     </tbody>
                 </Table>
 

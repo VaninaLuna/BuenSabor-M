@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import UnidadMedida from '../../models/UnidadMedida';
 import { getUMByEstaEliminado, updateEstadoEliminadoUM } from '../../services/UnidadMedidaApi';
 import { ModalUnidadMedida } from './ModalUnidadMedida';
-import { Button } from 'react-bootstrap';
+import { Button, FormControl } from 'react-bootstrap';
 import { UsuarioCliente } from '../../models/Usuario';
 import { RolName } from '../../models/RolName';
 import { ConfirmModal } from './ConfirmModal';  // Asegúrate de importar el componente
@@ -19,6 +19,8 @@ export function GrillaUnidadMedida() {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
     const [confirmMessage, setConfirmMessage] = useState('');
+    //Filtro
+    const [filtro, setFiltro] = useState('');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -69,16 +71,35 @@ export function GrillaUnidadMedida() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eliminados]);
 
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltro(event.target.value);
+    };
+
+    const filteredUMedidas = uMedidas.filter(uMedida =>
+        uMedida.denominacion.toLowerCase().includes(filtro.toLowerCase())
+    );
+
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '15px 15px' }}> {eliminados ? "Unidades de Medida Eliminadas" : "Unidades de Medida"}</h1>
 
-                {usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName === RolName.ADMIN &&
-                    <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
-                        Crear Unidad de Medida
-                    </Button>
-                }
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControl
+                        placeholder="Filtrar por Denominacion"
+                        value={filtro}
+                        onChange={handleFilterChange}
+                        style={{ margin: 20, width: '300px', height: '50px' }}
+                    />
+
+                    {usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName === RolName.ADMIN &&
+                        <Button size="lg" style={{ margin: 20, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setSelectedId(null); handleOpen(); }}>
+                            Crear Unidad de Medida
+                        </Button>
+                    }
+                </div>
+
                 <ModalUnidadMedida
                     handleClose={handleClose}
                     showModal={showUMedidaModal}
@@ -86,7 +107,6 @@ export function GrillaUnidadMedida() {
                     selectedId={selectedId}
                     getListadoUMedidas={getListadoUMedidas}
                 />
-
                 <br />
 
                 <Table striped bordered hover size="sm">
@@ -100,7 +120,7 @@ export function GrillaUnidadMedida() {
                         </tr>
                     </thead>
                     <tbody>
-                        {uMedidas.map((uMedida: UnidadMedida, index) =>
+                        {filteredUMedidas.map((uMedida: UnidadMedida, index) =>
                             <tr key={index}>
                                 <td>{uMedida.denominacion}</td>
                                 {usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName === RolName.ADMIN &&

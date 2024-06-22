@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PedidoCliente } from "../../models/Pedido";
-import { Button, Col, Modal, Row, Table } from "react-bootstrap";
+import { Button, Col, FormControl, Modal, Row, Table } from "react-bootstrap";
 import { cancelarPedido, getPedidos, getPedidosByCliente, getPedidosByCocinero, getPedidosByEstado, getPedidosCancelados, updateEstadoPedido } from "../../services/PedidoApi";
 import { UsuarioCliente } from "../../models/Usuario";
 import { RolName } from "../../models/RolName";
@@ -18,6 +18,10 @@ export function GrillaPedido() {
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
     const [listos, setListos] = useState<boolean>(false);
+
+    //Filtro
+    const [filtroNroPedido, setFiltroNroPedido] = useState('');
+
 
 
     //Modal Confirmar eliminacion
@@ -95,13 +99,29 @@ export function GrillaPedido() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eliminados, listos]);
 
+    const handleFilterNroPedidoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFiltroNroPedido(event.target.value);
+    };
+
+    const filteredPedidos = pedidos.filter(pedido => {
+        const pedidoNro = String(pedido.id).padStart(5, '0');
+        return filtroNroPedido ? pedidoNro.includes(filtroNroPedido) : true;
+    });
+
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'top', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
                 <h1 style={{ marginTop: '20px', color: "whitesmoke", backgroundColor: 'rgba(0, 0, 0, 0.8)', padding: '15px 15px' }}>{listos ? "Pedidos Listos" : eliminados ? "Pedidos Cancelados" : "Pedidos"}</h1>
 
-                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
-                    <Button size="lg" style={{ margin: 10, backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setListos(!listos), setEliminados(false) }}>
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', margin: '20px' }}>
+                    <FormControl
+                        placeholder="Filtrar por Nro. de Pedido"
+                        value={filtroNroPedido}
+                        onChange={handleFilterNroPedidoChange}
+                        style={{ width: '300px', height: '50px', marginLeft: 'auto', marginRight: 'auto' }}
+                    />
+                    <Button size="lg" style={{ backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setListos(!listos), setEliminados(false) }}>
                         {listos ? "Ver Todos" : "Ver Listos"}
                     </Button>
                 </div>
@@ -118,7 +138,7 @@ export function GrillaPedido() {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidos.map((pedido: PedidoCliente) =>
+                        {filteredPedidos.map((pedido: PedidoCliente) =>
                             <tr key={pedido.id}>
                                 <td>{String(pedido.id).padStart(5, '0')}</td>
                                 <td>{pedido.fechaPedido}</td>
