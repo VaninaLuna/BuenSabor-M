@@ -231,7 +231,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                     }
                                 </ul>
                                 <div >
-                                    <button style={{ backgroundColor: "#e45a5a" }} title='Limpiar Todo' onClick={() => limpiarTodo()}>
+                                    <button title='Limpiar Todo' onClick={() => limpiarTodo()}>
                                         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1'
                                             stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
                                             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
@@ -304,7 +304,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                     </Form.Group>
                                                 )}
                                             </Form>
-                                            {formaPago && <button onClick={guardarPedido}> Generar Pedido </button>}
+                                            {formaPago && <button onClick={guardarPedido} style={{ backgroundColor: '#e06f72', border: '#e06f72' }}> Generar Pedido </button>}
                                         </>
                                     ) : <h5>Para realizar un pedido Inicie Sesion</h5>
                                 )}
