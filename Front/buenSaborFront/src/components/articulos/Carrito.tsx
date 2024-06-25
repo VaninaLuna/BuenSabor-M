@@ -124,20 +124,20 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         const fechaPedido = new Date();
 
         //Validar horario de atencion
-        // const validarDia = fechaPedido.getDay();
-        // const validarHoras = fechaPedido.getHours();
+        const validarDia = fechaPedido.getDay();
+        const validarHoras = fechaPedido.getHours();
 
-        // if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
-        //     setMessage("No puede realizar un pedido fuera del horario de apertura");
-        //     setShowModal(true);
-        //     setIsLoading(false);
-        //     return
-        // } else if (validarHoras >= 0 && validarHoras < 20) {
-        //     setMessage("No puede realizar un pedido fuera del horario de apertura");
-        //     setShowModal(true);
-        //     setIsLoading(false);
-        //     return
-        // }
+        if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
+            setMessage("No puede realizar un pedido fuera del horario de apertura");
+            setShowModal(true);
+            setIsLoading(false);
+            return
+        } else if (validarHoras >= 0 && validarHoras < 20) {
+            setMessage("No puede realizar un pedido fuera del horario de apertura");
+            setShowModal(true);
+            setIsLoading(false);
+            return
+        }
 
         for (const detalle of cart) {
             if (detalle.articulo.type === 'articuloManufacturado') {
