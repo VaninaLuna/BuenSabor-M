@@ -9,7 +9,7 @@ const LogoutAuth0Button = () => {
     const handleLogout = async () => {
         try {
             setAuth({ usuario: null });  // Restablecer el estado de autenticación
-            // localStorage.removeItem('usuario');
+            localStorage.removeItem('usuario');
             localStorage.clear();
 
             logout({ logoutParams: { returnTo: window.location.origin } })

@@ -306,7 +306,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                             </Form>
                                             {formaPago && <button onClick={guardarPedido} style={{ backgroundColor: '#e06f72', border: '#e06f72' }}> Generar Pedido </button>}
                                         </>
-                                    ) : <h5>Para realizar un pedido Inicie Sesion</h5>
+                                    ) : <h5 style={{ color: "red", marginTop: "50px" }}>Para realizar un pedido Inicie Sesion</h5>
                                 )}
                                 <br />
                                 <br />
