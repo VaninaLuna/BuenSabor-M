@@ -47,6 +47,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     const [pagoRealizado] = useState(false);
     const [tipoEnvio, setTipoEnvio] = useState('');
     const [formaPago, setFormaPago] = useState('');
+    const [totalDescuento, setTotalDescuento] = useState(0);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -119,18 +120,18 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         const fechaPedido = new Date();
 
         //Validar horario de atencion
-        const validarDia = fechaPedido.getDay();
-        const validarHoras = fechaPedido.getHours();
+        // const validarDia = fechaPedido.getDay();
+        // const validarHoras = fechaPedido.getHours();
 
-        if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
-            setMessage("No puede realizar un pedido fuera del horario de apertura");
-            setShowModal(true);
-            return
-        } else if (validarHoras >= 0 && validarHoras < 20) {
-            setMessage("No puede realizar un pedido fuera del horario de apertura");
-            setShowModal(true);
-            return
-        }
+        // if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
+        //     setMessage("No puede realizar un pedido fuera del horario de apertura");
+        //     setShowModal(true);
+        //     return
+        // } else if (validarHoras >= 0 && validarHoras < 20) {
+        //     setMessage("No puede realizar un pedido fuera del horario de apertura");
+        //     setShowModal(true);
+        //     return
+        // }
 
         for (const detalle of cart) {
             if (detalle.articulo.type === 'articuloManufacturado') {
@@ -190,6 +191,11 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     };
 
     useEffect(() => {
+        const subTotal = totalPedido - totalPedido * 0.1
+        setTotalDescuento(subTotal)
+    }, [totalPedido]);
+
+    useEffect(() => {
         if (pagoRealizado) {
             limpiarCarritoDespuesPago();
         }
@@ -214,30 +220,62 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                     )
                                 }
                             </ul>
-                            <div>
-                                <h3>Total: ${totalPedido}</h3>
+                            <div >
+                                <button style={{ backgroundColor: "#e45a5a" }} title='Limpiar Todo' onClick={() => limpiarTodo()}>
+                                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1'
+                                        stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
+                                        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                                        <path d='M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
+                                        <path d='M17 17a2 2 0 1 0 2 2' />
+                                        <path d='M17 17h-11v-11' />
+                                        <path d='M9.239 5.231l10.761 .769l-1 7h-2m-4 0h-7' />
+                                        <path d='M3 3l18 18' />
+                                    </svg>
+                                </button>
                             </div>
-                            <br />
-                            <button title='Limpiar Todo' onClick={() => limpiarTodo()}>
-                                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1' stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
-                                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                                    <path d='M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
-                                    <path d='M17 17a2 2 0 1 0 2 2' />
-                                    <path d='M17 17h-11v-11' />
-                                    <path d='M9.239 5.231l10.761 .769l-1 7h-2m-4 0h-7' />
-                                    <path d='M3 3l18 18' />
-                                </svg>
-                            </button>
                             <br />
                             <br />
 
+                            <div className="totals-container">
+
+                                {tipoEnvio === 'pickup' ? (
+                                    <>
+                                        <div className="total-row">
+                                            <h5>SubTotal:</h5>
+                                            <h5>${totalPedido}</h5>
+                                        </div>
+                                        <hr />
+                                        <div className="total-row">
+                                            <h6>Descuento (10%):</h6>
+                                            <h6>${totalPedido - totalDescuento}</h6>
+                                        </div>
+                                        <hr />
+                                        <div className="total-row">
+                                            <h4>Total:</h4>
+                                            <h4>${totalDescuento}</h4>
+                                        </div>
+                                    </>
+                                )
+                                    :
+                                    <>
+                                        <hr />
+                                        <div className="total-row">
+                                            <h4>Total:</h4>
+                                            <h4>${totalPedido}</h4>
+                                        </div>
+                                    </>
+                                }
+                            </div>
+                            <br />
+                            <br />
+                            <p style={{ marginBottom: "20px" }}><strong>10% de descuento retirando en el local</strong></p>
                             {pedidoGuardado && pedidoGuardado.id > 0 && formaPago === 'mp' ? (
                                 <CheckoutMP pedido={pedidoGuardado} tipoDePago={formaPago} tipoDeEnvio={tipoEnvio} />
                             ) : (
-                                (usuarioLogueado && usuarioLogueado.rol) && (
+                                (usuarioLogueado && usuarioLogueado.rol) ? (
                                     <>
                                         <Form>
-                                            <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
+                                            <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '10px' }}>
                                                 <Form.Check type="radio" label="Envío a domicilio"
                                                     id="delivery" checked={tipoEnvio === 'delivery'} onChange={handleTipoEnvioChange}
                                                 />
@@ -245,11 +283,8 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                     checked={tipoEnvio === 'pickup'} onChange={handleTipoEnvioChange}
                                                 />
                                             </Form.Group>
-
-                                            <p>10% de descuento retirando en tienda</p>
-
                                             {tipoEnvio && (
-                                                <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginTop: '50px', marginBottom: '50px' }}>
+                                                <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '50px' }}>
                                                     <Form.Check type="radio" label="MercadoPago" id="mp" disabled={tipoEnvio === 'delivery'}
                                                         checked={formaPago === 'mp'} onChange={handleFormaPagoChange}
                                                     />
@@ -259,23 +294,26 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                                                 </Form.Group>
                                             )}
                                         </Form>
-                                        <button onClick={guardarPedido}> Generar Pedido </button>
+                                        {formaPago && <button onClick={guardarPedido}> Generar Pedido </button>}
                                     </>
-                                )
+                                ) : <h5>Para realizar un pedido Inicie Sesion</h5>
                             )}
+                            <br />
+                            <br />
 
-                            <ModalMensaje
-                                showModal={showModal}
-                                pedido={pedidoGuardado}
-                                message={message}
-                                handleClose={handleCloseModal}
-                            />
+
                         </>
                     ) : (
                         <p>No hay productos en el carrito.</p>
                     )}
                 </COffcanvasBody>
             </COffcanvas >
+            <ModalMensaje
+                showModal={showModal}
+                pedido={pedidoGuardado}
+                message={message}
+                handleClose={handleCloseModal}
+            />
         </>
     );
 }

@@ -41,3 +41,16 @@ button {
     padding: 1px 8px 1px 8px;
   }
   
+  .totals-container {
+    width: 100%;
+  }
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .total-row h5, .total-row h4 {
+    margin: 0;
+  }
+  
