@@ -156,8 +156,9 @@ export function GrillaFactura() {
 
                                     <Row>
                                         <Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Monto Descontado: ${selectedFactura.montoDescuento}</span> </Col> <br />
-                                            <Col><h5>Total de la factura:  ${selectedFactura.totalVenta} </h5></Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>SubTotal: ${selectedFactura.montoDescuento + selectedFactura.totalVenta}</span> </Col>
+                                            <Col><span>Descuento (10%) : ${selectedFactura.montoDescuento}</span> </Col>
+                                            <Col style={{ marginTop: "20px" }}><h5>Total de la factura:  ${selectedFactura.totalVenta} </h5></Col>
                                         </Col>
                                     </Row>
                                 </>
