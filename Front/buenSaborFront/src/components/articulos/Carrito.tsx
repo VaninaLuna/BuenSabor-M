@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../styles/Carrito.css";
-import { CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader } from "@coreui/react";
+import { CCloseButton, COffcanvas, COffcanvasBody, COffcanvasHeader, CSpinner } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilCart } from "@coreui/icons";
 import PedidoDetalle from "../../models/PedidoDetalle";
@@ -48,6 +48,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     const [tipoEnvio, setTipoEnvio] = useState('');
     const [formaPago, setFormaPago] = useState('');
     const [totalDescuento, setTotalDescuento] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [jsonUsuario] = useState<any>(localStorage.getItem('usuario'));
@@ -100,10 +101,12 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
     }
 
     const guardarPedido = async () => {
+        setIsLoading(true);
         let demoraDelivery = 0
         if (cart.length === 0) {
             setMessage("Al menos debe agregar un articulo al carrito");
             setShowModal(true);
+            setIsLoading(false);
             return;
         }
 
@@ -111,6 +114,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             demoraDelivery = 10
             setMessage("Debe configurar su domicilio antes de generar un pedido con envío");
             setShowModal(true);
+            setIsLoading(false);
             return;
         }
 
@@ -126,10 +130,12 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
         // if ((validarDia == 0 || validarDia == 6) && (validarHoras >= 0 && validarHoras < 11 || (validarHoras >= 15 && validarHoras < 20))) {
         //     setMessage("No puede realizar un pedido fuera del horario de apertura");
         //     setShowModal(true);
+        //     setIsLoading(false);
         //     return
         // } else if (validarHoras >= 0 && validarHoras < 20) {
         //     setMessage("No puede realizar un pedido fuera del horario de apertura");
         //     setShowModal(true);
+        //     setIsLoading(false);
         //     return
         // }
 
@@ -173,6 +179,7 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
             setMessage("Hubo un error al guardar el pedido. Intente nuevamente.");
             setShowModal(true);
         }
+        setIsLoading(false);
 
     };
 
@@ -211,101 +218,106 @@ export function Carrito({ visible, setVisible }: { visible: boolean, setVisible:
                     <h4><CIcon className="text-success" size="xl" style={{ marginRight: '10px' }} icon={cilCart} />
                         Carrito de Compras</h4>
                     <hr />
-                    {cart && cart.length > 0 ? (
-                        <>
-                            <ul>
-                                {
-                                    cart.map(detalle =>
-                                        <CartItem key={detalle.articulo.id} item={detalle} addCarrito={addCarrito} removeItemCarrito={removeItemCarrito} />
+                    {isLoading ? (
+                        <CSpinner />
+                    ) : (
+                        cart && cart.length > 0 ? (
+                            <>
+                                <ul>
+                                    {
+                                        cart.map(detalle =>
+                                            <CartItem key={detalle.articulo.id} item={detalle} addCarrito={addCarrito} removeItemCarrito={removeItemCarrito} />
+                                        )
+                                    }
+                                </ul>
+                                <div >
+                                    <button style={{ backgroundColor: "#e45a5a" }} title='Limpiar Todo' onClick={() => limpiarTodo()}>
+                                        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1'
+                                            stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
+                                            <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                                            <path d='M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
+                                            <path d='M17 17a2 2 0 1 0 2 2' />
+                                            <path d='M17 17h-11v-11' />
+                                            <path d='M9.239 5.231l10.761 .769l-1 7h-2m-4 0h-7' />
+                                            <path d='M3 3l18 18' />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <br />
+                                <br />
+
+                                <div className="totals-container">
+
+                                    {tipoEnvio === 'pickup' ? (
+                                        <>
+                                            <div className="total-row">
+                                                <h5>SubTotal:</h5>
+                                                <h5>${totalPedido}</h5>
+                                            </div>
+                                            <hr />
+                                            <div className="total-row">
+                                                <h6>Descuento (10%):</h6>
+                                                <h6>${totalPedido - totalDescuento}</h6>
+                                            </div>
+                                            <hr />
+                                            <div className="total-row">
+                                                <h4>Total:</h4>
+                                                <h4>${totalDescuento}</h4>
+                                            </div>
+                                        </>
                                     )
-                                }
-                            </ul>
-                            <div >
-                                <button style={{ backgroundColor: "#e45a5a" }} title='Limpiar Todo' onClick={() => limpiarTodo()}>
-                                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' strokeWidth='1'
-                                        stroke='currentColor' fill='none' strokeLinecap='round' strokeLinejoin='round'>
-                                        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                                        <path d='M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
-                                        <path d='M17 17a2 2 0 1 0 2 2' />
-                                        <path d='M17 17h-11v-11' />
-                                        <path d='M9.239 5.231l10.761 .769l-1 7h-2m-4 0h-7' />
-                                        <path d='M3 3l18 18' />
-                                    </svg>
-                                </button>
-                            </div>
-                            <br />
-                            <br />
-
-                            <div className="totals-container">
-
-                                {tipoEnvio === 'pickup' ? (
-                                    <>
-                                        <div className="total-row">
-                                            <h5>SubTotal:</h5>
-                                            <h5>${totalPedido}</h5>
-                                        </div>
-                                        <hr />
-                                        <div className="total-row">
-                                            <h6>Descuento (10%):</h6>
-                                            <h6>${totalPedido - totalDescuento}</h6>
-                                        </div>
-                                        <hr />
-                                        <div className="total-row">
-                                            <h4>Total:</h4>
-                                            <h4>${totalDescuento}</h4>
-                                        </div>
-                                    </>
-                                )
-                                    :
-                                    <>
-                                        <hr />
-                                        <div className="total-row">
-                                            <h4>Total:</h4>
-                                            <h4>${totalPedido}</h4>
-                                        </div>
-                                    </>
-                                }
-                            </div>
-                            <br />
-                            <br />
-                            <p style={{ marginBottom: "20px" }}><strong>10% de descuento retirando en el local</strong></p>
-                            {pedidoGuardado && pedidoGuardado.id > 0 && formaPago === 'mp' ? (
-                                <CheckoutMP pedido={pedidoGuardado} tipoDePago={formaPago} tipoDeEnvio={tipoEnvio} />
-                            ) : (
-                                (usuarioLogueado && usuarioLogueado.rol) ? (
-                                    <>
-                                        <Form>
-                                            <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '10px' }}>
-                                                <Form.Check type="radio" label="Envío a domicilio"
-                                                    id="delivery" checked={tipoEnvio === 'delivery'} onChange={handleTipoEnvioChange}
-                                                />
-                                                <Form.Check type="radio" label="Retiro en el local" id="pickup"
-                                                    checked={tipoEnvio === 'pickup'} onChange={handleTipoEnvioChange}
-                                                />
-                                            </Form.Group>
-                                            {tipoEnvio && (
-                                                <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '50px' }}>
-                                                    <Form.Check type="radio" label="MercadoPago" id="mp" disabled={tipoEnvio === 'delivery'}
-                                                        checked={formaPago === 'mp'} onChange={handleFormaPagoChange}
+                                        :
+                                        <>
+                                            <hr />
+                                            <div className="total-row">
+                                                <h4>Total:</h4>
+                                                <h4>${totalPedido}</h4>
+                                            </div>
+                                        </>
+                                    }
+                                </div>
+                                <br />
+                                <br />
+                                <p style={{ marginBottom: "20px" }}><strong>10% de descuento retirando en el local</strong></p>
+                                {pedidoGuardado && pedidoGuardado.id > 0 && formaPago === 'mp' ? (
+                                    <CheckoutMP pedido={pedidoGuardado} tipoDePago={formaPago} tipoDeEnvio={tipoEnvio} />
+                                ) : (
+                                    (usuarioLogueado && usuarioLogueado.rol) ? (
+                                        <>
+                                            <Form>
+                                                <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '10px' }}>
+                                                    <Form.Check type="radio" label="Envío a domicilio"
+                                                        id="delivery" checked={tipoEnvio === 'delivery'} onChange={handleTipoEnvioChange}
                                                     />
-                                                    <Form.Check type="radio" label="Efectivo" id="efectivo" disabled={tipoEnvio === 'delivery'}
-                                                        checked={formaPago === 'efectivo'} onChange={handleFormaPagoChange}
+                                                    <Form.Check type="radio" label="Retiro en el local" id="pickup"
+                                                        checked={tipoEnvio === 'pickup'} onChange={handleTipoEnvioChange}
                                                     />
                                                 </Form.Group>
-                                            )}
-                                        </Form>
-                                        {formaPago && <button onClick={guardarPedido}> Generar Pedido </button>}
-                                    </>
-                                ) : <h5>Para realizar un pedido Inicie Sesion</h5>
-                            )}
-                            <br />
-                            <br />
+                                                {tipoEnvio && (
+                                                    <Form.Group className="d-flex" style={{ justifyContent: 'space-evenly', marginBottom: '50px' }}>
+                                                        <Form.Check type="radio" label="MercadoPago" id="mp" disabled={tipoEnvio === 'delivery'}
+                                                            checked={formaPago === 'mp'} onChange={handleFormaPagoChange}
+                                                        />
+                                                        <Form.Check type="radio" label="Efectivo" id="efectivo" disabled={tipoEnvio === 'delivery'}
+                                                            checked={formaPago === 'efectivo'} onChange={handleFormaPagoChange}
+                                                        />
+                                                    </Form.Group>
+                                                )}
+                                            </Form>
+                                            {formaPago && <button onClick={guardarPedido}> Generar Pedido </button>}
+                                        </>
+                                    ) : <h5>Para realizar un pedido Inicie Sesion</h5>
+                                )}
+                                <br />
+                                <br />
 
 
-                        </>
-                    ) : (
-                        <p>No hay productos en el carrito.</p>
-                    )}
+                            </>
+                        ) : (
+                            <p>No hay productos en el carrito.</p>
+                        )
+                    )
+                    }
                 </COffcanvasBody>
             </COffcanvas >
             <ModalMensaje
