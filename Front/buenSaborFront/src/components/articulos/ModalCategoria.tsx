@@ -85,6 +85,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
 
         handleCloseAndClear();
         getListadoCategorias()
+        window.location.reload();
     };
 
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {

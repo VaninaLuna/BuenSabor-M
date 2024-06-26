@@ -132,8 +132,12 @@ export function GrillaPedido() {
                             <th>Fecha pedido</th>
                             <th>Hora estimada de finalizacion</th>
                             <th>Total</th>
-                            <th>Total costo</th>
-                            <th>Estado</th>
+                            {/* <th>Total costo</th> */}
+                            {
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName != RolName.CLIENTE) &&
+                                <th>Estado</th>
+                            }
+
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -144,15 +148,22 @@ export function GrillaPedido() {
                                 <td>{pedido.fechaPedido}</td>
                                 <td>{pedido.horaEstimadaFinalizacion}</td>
                                 <td>{pedido.total}</td>
-                                <td>{pedido.totalCosto}</td>
-                                <td>
-                                    <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados || pedido.estado == "Cancelado"}>
-                                        {estadosEnvio.map((estado, index) =>
-                                            <option key={index} value={estado}>{estado}</option>
-                                        )}
-                                    </select>
+                                {/* <td>{pedido.totalCosto}</td> */}
+                                {
+                                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName != RolName.CLIENTE) &&
+                                    <>
+                                        <td>
 
-                                </td>
+                                            <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados || pedido.estado == "Cancelado"}>
+                                                {estadosEnvio.map((estado, index) =>
+                                                    <option key={index} value={estado}>{estado}</option>
+                                                )}
+                                            </select>
+
+                                        </td>
+                                    </>
+                                }
+
 
                                 <td>
                                     <Button variant="outline-success" style={{ maxHeight: "40px", marginRight: '10px' }} onClick={() => handleShowDetalles(pedido)}>Detalle</Button>
@@ -204,9 +215,9 @@ export function GrillaPedido() {
                                             <Col><span style={{ fontWeight: 'bold' }}>Telefono: </span> {selectedPedido.cliente.telefono}</Col>
                                         </Col>
                                         <Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Localidad: </span> {selectedPedido.cliente.domicilio.localidad.nombre}</Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Calle: </span> {selectedPedido.cliente.domicilio.calle}</Col>
-                                            <Col><span style={{ fontWeight: 'bold' }}>Numero: </span> {selectedPedido.cliente.domicilio.numero}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Localidad: </span> {selectedPedido.cliente.domicilio?.localidad.nombre}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Calle: </span> {selectedPedido.cliente.domicilio?.calle}</Col>
+                                            <Col><span style={{ fontWeight: 'bold' }}>Numero: </span> {selectedPedido.cliente.domicilio?.numero}</Col>
                                         </Col>
                                     </Row>
                                     <br />
