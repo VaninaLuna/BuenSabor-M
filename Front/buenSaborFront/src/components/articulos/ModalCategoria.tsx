@@ -15,6 +15,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
 
     const [newCategoria, setNewCategoria] = useState<Categoria>(new Categoria());
     const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [todasCategorias, setTodasCategorias] = useState<Categoria[]>([]);
     const [txtValidacion, setTxtValidacion] = useState<string>("");
 
     const handleCloseAndClear = () => {
@@ -28,6 +29,7 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             try {
                 const data = await getArbolCategorias();
                 setCategorias(data);
+                setTodasCategorias(renderTodasCategorias(data));
                 if (categoriaSeleccionada && categoriaSeleccionada.id) {
                     const categoriaPadre = await getCategoriaPadreDesdeHijo(categoriaSeleccionada.id)
                     categoriaPadre && categoriaPadre.id ? setNewCategoria({ ...categoriaSeleccionada, categoriaPadre })
@@ -79,13 +81,30 @@ export const ModalCategoria: React.FC<ModalProps> = ({ showModal, handleClose, e
             return;
         }
         const parentCodigo = newCategoria.categoriaPadre?.codigo || null;
-        const categoriaPadre = categorias.filter(c => c.id === newCategoria.categoriaPadre?.id && c.subCategorias);
+        //const codigoPadre = parentCodigo && parentCodigo.split('.').pop()!;
+        const categoriaPadre = todasCategorias.filter(c => c.id === newCategoria.categoriaPadre?.id && c.subCategorias);
+        console.log(todasCategorias)
+        console.log(categoriaPadre)
         newCategoria.codigo = generateCodigo(parentCodigo, categoriaPadre);
         await saveCategoria(newCategoria);
 
         handleCloseAndClear();
         getListadoCategorias()
         window.location.reload();
+    };
+
+    const renderTodasCategorias = (categorias: Categoria[]): Categoria[] => {
+        const todasCat: Categoria[] = [];
+        const agregarCategorias = (categorias: Categoria[]) => {
+            categorias.forEach(categoria => {
+                todasCat.push(categoria);
+                if (categoria.subCategorias) {
+                    agregarCategorias(categoria.subCategorias);
+                }
+            });
+        };
+        agregarCategorias(categorias);
+        return todasCat;
     };
 
     const renderCategorias = (categorias: Categoria[]): JSX.Element[] => {
