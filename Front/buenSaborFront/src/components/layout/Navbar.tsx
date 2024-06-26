@@ -16,12 +16,14 @@ import { register } from "../../services/AuthApi";
 import { AuthContext, AuthContextType } from "../context/AuthContext";
 import { ClienteRegistro } from "../../models/Cliente";
 import Rol from "../../models/Rol";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from "react-bootstrap";
 
 function NavBar() {
     const [visible, setVisible] = useState(false);
     const { user, isAuthenticated, logout } = useAuth0();
     const { auth, setAuth }: AuthContextType = useContext(AuthContext);
+    const navigate = useNavigate();
 
 
     const handleLogin = async () => {
@@ -53,6 +55,10 @@ function NavBar() {
         }
     };
 
+    const handleButtonClick = () => {
+        navigate('/pedidos');
+    }
+
     useEffect(() => {
         if (isAuthenticated && !auth.usuario) {
             handleLogin();
@@ -71,6 +77,15 @@ function NavBar() {
     return (
         <CNavbar expand="lg" style={{ backgroundColor: 'rgb(224, 224, 224)', height: '80px' }}>
             <CContainer fluid style={{ margin: 30 }}>
+                <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {(user && isAuthenticated) && (
+                        <li className="nav-item" style={{ paddingRight: "10px" }}>
+                            <Button className="btn btn-secondary" onClick={handleButtonClick}>
+                                Ver Pedidos
+                            </Button>
+                        </li>
+                    )}
+                </ul>
                 <CNavbarBrand className="navbar-center" href="/">
                     <CImage rounded src={title} width={250} height={80} />
                 </CNavbarBrand>

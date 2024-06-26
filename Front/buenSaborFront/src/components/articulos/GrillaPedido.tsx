@@ -7,13 +7,13 @@ import { RolName } from "../../models/RolName";
 import { ConfirmModal } from "./ConfirmModal";
 
 export function GrillaPedido() {
-
     const [pedidos, setPedidos] = useState<PedidoCliente[]>([]);
     //Modal detalles
     const [showModalDetalles, setShowModalDetalles] = useState(false);
     const [selectedPedido, setSelectedPedido] = useState<PedidoCliente | null>(null);
     //Estados del envio
     const [estadosEnvio] = useState<string[]>(["Recibido", "Aprobado", "En Preparacion", "Listo", "En camino", "Entregado", "Cancelado"])
+    const [estadosEnvioCocinero] = useState<string[]>(["Aprobado", "En Preparacion", "Listo", "Cancelado"])
 
     //estado para alternar entre obtener datos con eliminacion logica o no
     const [eliminados, setEliminados] = useState<boolean>(false);
@@ -21,8 +21,6 @@ export function GrillaPedido() {
 
     //Filtro
     const [filtroNroPedido, setFiltroNroPedido] = useState('');
-
-
 
     //Modal Confirmar eliminacion
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -121,9 +119,14 @@ export function GrillaPedido() {
                         onChange={handleFilterNroPedidoChange}
                         style={{ width: '300px', height: '50px', marginLeft: 'auto', marginRight: 'auto' }}
                     />
-                    <Button size="lg" style={{ backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setListos(!listos), setEliminados(false) }}>
-                        {listos ? "Ver Todos" : "Ver Listos"}
-                    </Button>
+                    {
+                        (usuarioLogueado && usuarioLogueado.rol &&
+                            (usuarioLogueado.rol.rolName === RolName.ADMIN || usuarioLogueado.rol.rolName === RolName.CAJERO))
+                        &&
+                        <Button size="lg" style={{ backgroundColor: '#EE7F46', border: '#EE7F46' }} onClick={() => { setListos(!listos), setEliminados(false) }}>
+                            {listos ? "Ver Todos" : "Ver Listos"}
+                        </Button>
+                    }
                 </div>
                 <Table striped bordered hover size="sm">
                     <thead>
@@ -134,7 +137,7 @@ export function GrillaPedido() {
                             <th>Total</th>
                             {/* <th>Total costo</th> */}
                             {
-                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName != RolName.CLIENTE) &&
+                                (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName) &&
                                 <th>Estado</th>
                             }
 
@@ -150,14 +153,19 @@ export function GrillaPedido() {
                                 <td>{pedido.total}</td>
                                 {/* <td>{pedido.totalCosto}</td> */}
                                 {
-                                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName != RolName.CLIENTE) &&
+                                    (usuarioLogueado && usuarioLogueado.rol && usuarioLogueado.rol.rolName) &&
                                     <>
                                         <td>
-
-                                            <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)} disabled={eliminados || pedido.estado == "Cancelado"}>
-                                                {estadosEnvio.map((estado, index) =>
-                                                    <option key={index} value={estado}>{estado}</option>
-                                                )}
+                                            <select value={pedido.estado} onChange={(e) => handleEstadoChange(pedido, e.target.value)}
+                                                disabled={eliminados || pedido.estado == "Cancelado" || usuarioLogueado.rol.rolName === RolName.CLIENTE}>
+                                                {usuarioLogueado.rol.rolName === RolName.COCINERO ?
+                                                    estadosEnvioCocinero.map((estado, index) =>
+                                                        <option key={index} value={estado}>{estado}</option>
+                                                    )
+                                                    :
+                                                    estadosEnvio.map((estado, index) =>
+                                                        <option key={index} value={estado}>{estado}</option>
+                                                    )}
                                             </select>
 
                                         </td>
@@ -183,11 +191,17 @@ export function GrillaPedido() {
                         )}
                     </tbody>
                 </Table>
-                <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
-                    <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados), setListos(false) }}>
-                        {eliminados ? "Ver Todos" : "Ver Cancelados"}
-                    </Button>
-                </div>
+
+                {
+                    (usuarioLogueado && usuarioLogueado.rol &&
+                        (usuarioLogueado.rol.rolName === RolName.ADMIN || usuarioLogueado.rol.rolName === RolName.CAJERO))
+                    &&
+                    <div style={{ width: '100%', display: "flex", justifyContent: 'flex-end' }}>
+                        <Button size="lg" style={{ margin: 10, backgroundColor: '#478372', border: '#478372' }} onClick={() => { setEliminados(!eliminados), setListos(false) }}>
+                            {eliminados ? "Ver Todos" : "Ver Cancelados"}
+                        </Button>
+                    </div>
+                }
 
                 <ConfirmModal
                     show={showConfirmModal}
